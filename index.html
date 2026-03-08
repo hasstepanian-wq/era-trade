@@ -62,26 +62,29 @@
         .content-section { display: none; }
         .content-section.active { display: block; }
 
+        /* Таблицы */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: rgba(255,255,255,0.02); }
+        th { text-align: left; padding: 15px; color: #64748b; border-bottom: 1px solid #1e293b; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 15px; border-bottom: 1px solid #0f172a; font-size: 14px; }
+        .status-badge { padding: 4px 8px; border-radius: 3px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .status-active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        
+        .btn-view { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-view:hover { background: var(--primary); color: #fff; }
+
         /* Финансы */
         .money-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 30px 0; }
         .money-card { background: var(--card-bg); padding: 25px; border-radius: 8px; border-left: 4px solid var(--primary); }
         .money-card span { font-size: 11px; color: #94a3b8; text-transform: uppercase; font-weight: 800; }
         .money-card div { font-size: 26px; font-weight: bold; margin-top: 10px; }
-        
         .btn-topup { background: #10b981; color: white; border: none; padding: 15px 30px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; }
-        .btn-topup:hover { background: #059669; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 30px; }
-        th { text-align: left; padding: 15px; color: #64748b; border-bottom: 1px solid #1e293b; font-size: 12px; text-transform: uppercase; }
-        td { padding: 15px; border-bottom: 1px solid #0f172a; font-size: 14px; }
-
-        /* МОДАЛКИ ОБЩИЕ */
+        /* МОДАЛКИ */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
         .modal { background: #fff; color: #333; width: 400px; padding: 40px; border-radius: 4px; position: relative; }
         .close { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 24px; color: #ccc; }
         .modal input { width: 100%; padding: 15px; margin: 10px 0 20px; border: 1px solid #ddd; border-radius: 4px; font-size: 16px; }
 
-        /* ФУТЕР */
         footer { background: #030a16; padding: 40px 5%; border-top: 1px solid #1e293b; }
         .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
         .f-col h4 { color: var(--primary); text-transform: uppercase; margin-bottom: 20px; font-size: 14px; }
@@ -104,7 +107,7 @@
                 <div class="clock" id="clock">00:00:00</div>
             </a>
             <nav>
-                <a href="#">Торги</a>
+                <a href="#">Реестр торгов</a>
                 <a href="#">Комиссионная продажа</a>
             </nav>
         </div>
@@ -163,23 +166,45 @@
                 <div class="money-card" style="border-left-color: #64748b;"><span>Всего</span><div>195 000.00 ₽</div></div>
             </div>
             <button class="btn-topup" onclick="toggleModal('modal-topup', true)">➕ Пополнить баланс</button>
-            
-            <h3 style="margin-top:50px;">История операций</h3>
-            <table>
-                <thead><tr><th>Дата</th><th>Операция</th><th>Сумма</th></tr></thead>
-                <tbody>
-                    <tr><td>08.03.2026</td><td>Пополнение счета</td><td style="color:#10b981">+ 150 000 ₽</td></tr>
-                    <tr><td>07.03.2026</td><td>Блок обеспечения лота #991</td><td style="color:#ef4444">- 45 000 ₽</td></tr>
-                </tbody>
-            </table>
         </div>
 
         <div id="tab-tenders" class="content-section">
-            <h1>Актуальные процедуры</h1>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1>Реестр актуальных торгов</h1>
+                <input type="text" placeholder="Поиск по названию или ИНН..." style="width: 300px; padding: 10px; background: #06162c; border: 1px solid #1e293b; color: #fff; border-radius: 4px;">
+            </div>
             <table>
-                <thead><tr><th>ID</th><th>Наименование</th><th>Цена</th><th>Действие</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>№ Процедуры</th>
+                        <th>Наименование лота</th>
+                        <th>Начальная цена</th>
+                        <th>Статус</th>
+                        <th>Действие</th>
+                    </tr>
+                </thead>
                 <tbody>
-                    <tr><td>#2026-01</td><td>Поставка спецтехники</td><td>1 200 000 ₽</td><td><button style="padding:5px 10px;">Смотреть</button></td></tr>
+                    <tr>
+                        <td style="color: var(--primary); font-weight: bold;">ERA-2026-001</td>
+                        <td>Поставка серверного оборудования для ПАО "Газпром"</td>
+                        <td>4 500 000.00 ₽</td>
+                        <td><span class="status-badge status-active">Прием заявок</span></td>
+                        <td><button class="btn-view">Просмотр</button></td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--primary); font-weight: bold;">ERA-2026-002</td>
+                        <td>Оказание клининговых услуг (Бизнес-центр "Олимп")</td>
+                        <td>850 000.00 ₽</td>
+                        <td><span class="status-badge status-active">Прием заявок</span></td>
+                        <td><button class="btn-view">Просмотр</button></td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--primary); font-weight: bold;">ERA-2026-003</td>
+                        <td>Закупка ГСМ (Сезон 2026)</td>
+                        <td>12 300 000.00 ₽</td>
+                        <td><span class="status-badge status-active">Прием заявок</span></td>
+                        <td><button class="btn-view">Просмотр</button></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -200,10 +225,8 @@
     <div class="modal">
         <span class="close" onclick="toggleModal('modal-topup', false)">&times;</span>
         <h2 style="color:#10b981; text-align:center;">ПОПОЛНЕНИЕ</h2>
-        <p style="font-size: 13px; color: #666; margin: 15px 0; text-align: center;">
-            Мин. сумма <span style="font-weight:bold">1 000 ₽</span>, кратно <span style="font-weight:bold">500 ₽</span>.
-        </p>
-        <input type="number" id="topup-amount" placeholder="Введите сумму (напр. 5000)">
+        <p style="font-size: 13px; color: #666; margin: 15px 0; text-align: center;">Мин. сумма <span style="font-weight:bold">1 000 ₽</span>, кратно <span style="font-weight:bold">500 ₽</span>.</p>
+        <input type="number" id="topup-amount" placeholder="5000">
         <div id="topup-error" style="color: #ef4444; font-size: 12px; margin-top: -15px; margin-bottom: 10px; display: none; text-align: center;"></div>
         <button class="btn-topup" style="width:100%;" onclick="validateTopup()">Сформировать счет</button>
     </div>
