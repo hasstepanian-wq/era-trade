@@ -123,4 +123,51 @@
             <div id="t-login" class="tab" onclick="setMode('login')">ВХОД</div>
             <div id="t-reg" class="tab" onclick="setMode('reg')">РЕГИСТРАЦИЯ</div>
         </div>
-        <div id="form-box
+        <div id="form-box"></div>
+        <button class="btn-submit" id="main-btn">Войти</button>
+    </div>
+</div>
+
+<script>
+    function updateTime() { document.getElementById('timer').innerText = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'}); }
+    setInterval(updateTime, 1000); updateTime();
+
+    function openM(m) { document.getElementById('modal-wrap').style.display = 'flex'; setMode(m); }
+    function closeM() { document.getElementById('modal-wrap').style.display = 'none'; }
+
+    function setMode(m) {
+        const box = document.getElementById('form-box');
+        const btn = document.getElementById('main-btn');
+        document.getElementById('t-login').className = 'tab' + (m === 'login' ? ' active' : '');
+        document.getElementById('t-reg').className = 'tab' + (m === 'reg' ? ' active' : '');
+
+        if(m === 'login') {
+            box.innerHTML = `
+                <div class="f-item" style="margin-bottom:20px"><label>Логин / ИНН</label><input type="text" placeholder="Введите ваш ИНН"></div>
+                <div class="f-item"><label>Пароль</label><input type="password" placeholder="********"></div>`;
+            btn.innerText = 'Войти в кабинет';
+        } else {
+            box.innerHTML = `
+                <div class="form-row">
+                    <div class="f-item"><label>Наименование организации</label><input type="text" placeholder="ООО 'Вектор'"></div>
+                    <div class="f-item"><label>ИНН</label><input type="text" placeholder="10 или 12 цифр"></div>
+                </div>
+                <div class="form-row">
+                    <div class="f-item"><label>ФИО Контактного лица</label><input type="text" placeholder="Иванов Иван Иванович"></div>
+                    <div class="f-item"><label>Должность</label><input type="text" placeholder="Генеральный директор"></div>
+                </div>
+                <div class="form-row">
+                    <div class="f-item"><label>Телефон</label><input type="text" placeholder="+7 (___) ___-__-__"></div>
+                    <div class="f-item"><label>Email</label><input type="email" placeholder="example@mail.ru"></div>
+                </div>
+                <div class="f-item"><label>Прикрепить документы (Устав, ОГРН, Паспорт)</label>
+                    <div class="file-upload" onclick="alert('Выбор файлов...')">Нажмите, чтобы загрузить сканы документов</div>
+                </div>`;
+            btn.innerText = 'Подать заявку на аккредитацию';
+        }
+    }
+    window.onclick = function(e) { if (e.target.className === 'overlay') closeM(); }
+</script>
+
+</body>
+</html>
