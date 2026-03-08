@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ЭТП ЭРА — Торговая платформа</title>
     <style>
-        :root { --primary: #0099d5; --dark-bg: #01040a; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --primary: #0099d5; --dark-bg: #01040a; --card-bg: #0a1f3d; }
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: 0.3s; }
         
         body, html { 
             height: 100vh; font-family: 'Segoe UI', sans-serif; 
@@ -21,7 +21,7 @@
             display: flex; justify-content: space-between; align-items: center; 
             z-index: 100; flex-shrink: 0;
         }
-        .logo-link { text-decoration: none; display: flex; flex-direction: column; align-items: center; color: #333; }
+        .logo-link { text-decoration: none; display: flex; flex-direction: column; align-items: center; color: #333; cursor: pointer; }
         .logo-img { height: 45px; }
         .clock { font-family: monospace; font-size: 14px; font-weight: 900; color: #1a202c; }
         
@@ -39,27 +39,42 @@
             background: rgba(10, 31, 61, 0.75); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255,255,255,0.1); width: 320px; height: 300px; 
             text-align: center; padding: 30px; border-radius: 4px; cursor: pointer; 
-            display: flex; flex-direction: column; justify-content: center; transition: 0.3s;
+            display: flex; flex-direction: column; justify-content: center;
         }
         .glass-card:hover { border-color: var(--primary); transform: translateY(-5px); background: rgba(13, 40, 77, 0.85); }
         .glass-card h3 { color: #fff; text-transform: uppercase; font-size: 18px; margin-bottom: 15px; }
         .glass-card p { font-size: 14px; color: #cbd5e0; line-height: 1.5; }
 
-        /* --- ТОТ САМЫЙ НОРМАЛЬНЫЙ ФУТЕР --- */
+        /* --- ФУТЕР --- */
         footer { background: #030a16; padding: 40px 5% 20px; border-top: 1px solid #1e293b; flex-shrink: 0; }
         .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
-        .f-col h4 { color: var(--primary); text-transform: uppercase; margin-bottom: 20px; font-size: 14px; letter-spacing: 1px; }
+        .f-col h4 { color: var(--primary); text-transform: uppercase; margin-bottom: 20px; font-size: 14px; }
         .f-col a, .f-col p { color: #94a3b8; text-decoration: none; font-size: 13px; line-height: 1.8; display: block; }
-        .f-col a:hover { color: #fff; }
         .copy { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); color: #475569; font-size: 11px; }
 
         /* --- ЛИЧНЫЙ КАБИНЕТ --- */
         #dashboard { display: none; height: 100vh; grid-template-columns: 260px 1fr; }
-        .sidebar { background: #06162c; border-right: 1px solid rgba(255,255,255,0.1); padding: 25px; display: flex; flex-direction: column; }
-        .sidebar h2 { font-size: 20px; color: var(--primary); margin-bottom: 40px; text-transform: uppercase; }
+        .sidebar { background: #06162c; border-right: 1px solid #1e293b; padding: 25px; display: flex; flex-direction: column; }
+        .sidebar h2 { font-size: 20px; color: var(--primary); margin-bottom: 40px; text-transform: uppercase; font-weight: 900; }
         .side-link { padding: 12px 15px; color: #cbd5e0; text-decoration: none; border-radius: 4px; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
         .side-link:hover, .side-link.active { background: var(--primary); color: #fff; }
-        .main-content { padding: 40px; overflow-y: auto; background: #01040a; }
+        
+        .main-content { padding: 40px; overflow-y: auto; background: var(--dark-bg); }
+        
+        /* Финансовые карточки */
+        .money-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 25px; }
+        .money-card { background: var(--card-bg); padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .money-card span { font-size: 11px; color: #94a3b8; text-transform: uppercase; font-weight: 800; }
+        .money-card div { font-size: 24px; font-weight: bold; margin-top: 10px; color: #fff; }
+        
+        .btn-topup { background: #10b981; color: white; border: none; padding: 12px 24px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 20px; text-transform: uppercase; font-size: 12px; }
+        .btn-topup:hover { background: #059669; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 30px; background: rgba(255,255,255,0.02); }
+        th { text-align: left; padding: 15px; color: #64748b; border-bottom: 1px solid #1e293b; font-size: 12px; text-transform: uppercase; }
+        td { padding: 15px; border-bottom: 1px solid #0f172a; font-size: 14px; }
+        .status-plus { color: #10b981; font-weight: bold; }
+        .status-minus { color: #ef4444; font-weight: bold; }
 
         /* --- МОДАЛКА --- */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
@@ -71,6 +86,7 @@
             #dashboard { grid-template-columns: 1fr; }
             .sidebar { display: none; }
             .grid-wrapper { flex-direction: column; align-items: center; }
+            .money-grid { grid-template-columns: 1fr; }
             .footer-grid { grid-template-columns: 1fr; text-align: center; }
             body, html { overflow-y: auto; }
         }
@@ -136,24 +152,47 @@
 <div id="dashboard">
     <div class="sidebar">
         <h2>ЭТП ЭРА</h2>
-        <div class="side-link active">Рабочий стол</div>
+        <div class="side-link active">Финансы</div>
         <div class="side-link">Мои заявки</div>
         <div class="side-link">Реестр торгов</div>
-        <div style="margin-top:auto; color:#ef4444; cursor:pointer; font-weight:bold;" onclick="location.reload()">ВЫХОД</div>
+        <div class="side-link">Документы</div>
+        <div style="margin-top:auto; color:#ef4444; cursor:pointer; font-weight:bold; padding:10px;" onclick="location.reload()">ВЫХОД</div>
     </div>
     <div class="main-content">
-        <h1>Здравствуйте, <span id="user-display">Артур</span>!</h1>
-        <div style="margin-top:20px; background:#0a1f3d; padding:25px; border-radius:8px; border:1px solid #1e293b;">
-            <h3 style="color:var(--primary)">Статус: На проверке</h3>
-            <p style="margin-top:10px; color:#94a3b8;">Ваши документы находятся на верификации. Это обычно занимает до 24 часов.</p>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <h1 style="font-size: 26px;">Лицевой счет: <span id="user-display">Артур</span></h1>
+                <p style="color: #94a3b8; margin-top: 5px;">ИНН: 7701234567 | ООО "ЭРА-ГРУПП"</p>
+            </div>
+            <div style="background: #f59e0b; color: #000; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: 800;">АККРЕДИТАЦИЯ: НА ПРОВЕРКЕ</div>
         </div>
+
+        <div class="money-grid">
+            <div class="money-card"><span>Доступно</span><div>150 000.00 ₽</div></div>
+            <div class="money-card" style="border-left-color: #f59e0b;"><span>Заблокировано</span><div>45 000.00 ₽</div></div>
+            <div class="money-card" style="border-left-color: #64748b;"><span>Всего</span><div>195 000.00 ₽</div></div>
+        </div>
+        
+        <button class="btn-topup" onclick="alert('Счет №881 на пополнение сформирован и отправлен на вашу почту.')">Пополнить баланс</button>
+
+        <h3 style="margin-top:50px; margin-bottom:15px; font-size: 16px; text-transform: uppercase; color: #64748b;">История операций</h3>
+        <table>
+            <thead>
+                <tr><th>Дата</th><th>Тип операции</th><th>Сумма</th><th>Статус</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>08.03.2026</td><td>Пополнение через р/с (ПП №12)</td><td class="status-plus">+ 150 000.00 ₽</td><td>Выполнено</td></tr>
+                <tr><td>07.03.2026</td><td>Обеспечение заявки (Лот #ERA-9912)</td><td class="status-minus">- 45 000.00 ₽</td><td>Заблокировано</td></tr>
+                <tr><td>05.03.2026</td><td>Регистрационный взнос</td><td class="status-minus">- 5 000.00 ₽</td><td>Списано</td></tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
 <div id="modal-box" class="overlay">
     <div class="modal">
         <span class="close" onclick="closeM()">&times;</span>
-        <h2>АВТОРИЗАЦИЯ</h2>
+        <h2 style="color:var(--primary); text-align:center; margin-bottom:20px;">ВХОД</h2>
         <div style="margin-bottom:15px">
             <label style="font-size:11px; font-weight:900; color:#64748b; display:block; margin-bottom:5px;">ЛОГИН / ИНН</label>
             <input type="text" id="u-login" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:4px;" placeholder="7701234567">
