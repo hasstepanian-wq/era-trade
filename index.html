@@ -19,12 +19,12 @@
             position: sticky; top: 0; z-index: 1000;
         }
         .header-left { display: flex; align-items: center; gap: 40px; }
-        .logo-box { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #333; }
+        .logo-box { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #333; cursor: pointer; }
         .logo-img { height: 45px; }
         .clock { font-family: monospace; font-size: 13px; font-weight: 800; color: #1a202c; }
         
         nav { display: flex; gap: 30px; }
-        nav a { color: #1a202c; text-decoration: none; font-weight: 800; font-size: 12px; text-transform: uppercase; }
+        nav a { color: #1a202c; text-decoration: none; font-weight: 800; font-size: 12px; text-transform: uppercase; cursor: pointer; }
         nav a:hover { color: var(--primary); }
         
         .btn-auth { background: var(--primary); color: #fff; padding: 12px 25px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px; }
@@ -102,12 +102,12 @@
 <div id="landing-page">
     <header>
         <div class="header-left">
-            <a href="#" class="logo-box" onclick="location.reload()">
+            <a class="logo-box" onclick="location.reload()">
                 <img src="logo-forsage-modified.png" class="logo-img">
                 <div class="clock" id="clock">00:00:00</div>
             </a>
             <nav>
-                <a href="#">Реестр торгов</a>
+                <a onclick="fastTrack('tab-tenders')">Реестр торгов</a>
                 <a href="#">Комиссионная продажа</a>
             </nav>
         </div>
@@ -143,14 +143,14 @@
 <div id="dashboard">
     <div class="sidebar">
         <h2>ЭТП ЭРА</h2>
-        <div class="side-link active" onclick="switchTab('tab-home', this)">Рабочий стол</div>
-        <div class="side-link" onclick="switchTab('tab-finance', this)">Финансы</div>
-        <div class="side-link" onclick="switchTab('tab-tenders', this)">Реестр торгов</div>
+        <div class="side-link" id="link-tab-home" onclick="switchTab('tab-home', this)">Рабочий стол</div>
+        <div class="side-link" id="link-tab-finance" onclick="switchTab('tab-finance', this)">Финансы</div>
+        <div class="side-link" id="link-tab-tenders" onclick="switchTab('tab-tenders', this)">Реестр торгов</div>
         <div style="margin-top:auto; color:#ef4444; font-weight:bold; cursor:pointer;" onclick="location.reload()">ВЫХОД</div>
     </div>
 
     <div class="main-content">
-        <div id="tab-home" class="content-section active">
+        <div id="tab-home" class="content-section">
             <h1>Добро пожаловать, <span class="user-nm">Артур</span>!</h1>
             <div style="margin-top:30px; background: rgba(245, 158, 11, 0.1); padding: 20px; border: 1px solid #f59e0b; border-radius: 4px;">
                 <h4 style="color: #f59e0b;">СТАТУС: АККРЕДИТАЦИЯ НА ПРОВЕРКЕ</h4>
@@ -238,10 +238,12 @@
 
     function toggleModal(id, show) {
         document.getElementById(id).style.display = show ? 'flex' : 'none';
-        if(id === 'modal-topup') {
-            document.getElementById('topup-error').style.display = 'none';
-            document.getElementById('topup-amount').style.border = '1px solid #ddd';
-        }
+    }
+
+    // Быстрый вход из хедера сразу в таблицу
+    function fastTrack(tabId) {
+        doLogin(); // Имитируем вход
+        switchTab(tabId, document.getElementById('link-' + tabId));
     }
 
     function doLogin() {
@@ -249,6 +251,7 @@
         document.querySelectorAll('.user-nm').forEach(el => el.innerText = n);
         document.getElementById('landing-page').style.display = 'none';
         document.getElementById('dashboard').style.display = 'grid';
+        switchTab('tab-home', document.getElementById('link-tab-home'));
         toggleModal('modal-auth', false);
     }
 
@@ -256,24 +259,17 @@
         document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.side-link').forEach(l => l.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
-        btn.classList.add('active');
+        if(btn) btn.classList.add('active');
     }
 
     function validateTopup() {
         const amt = parseInt(document.getElementById('topup-amount').value);
         const err = document.getElementById('topup-error');
-        const inp = document.getElementById('topup-amount');
-
-        if (isNaN(amt) || amt < 1000) {
-            err.innerText = "Минимальная сумма — 1 000 ₽";
+        if (isNaN(amt) || amt < 1000 || amt % 500 !== 0) {
+            err.innerText = "Ошибка суммы!";
             err.style.display = 'block';
-            inp.style.border = '2px solid #ef4444';
-        } else if (amt % 500 !== 0) {
-            err.innerText = "Сумма должна быть кратна 500 ₽";
-            err.style.display = 'block';
-            inp.style.border = '2px solid #ef4444';
         } else {
-            alert(`Счет на ${amt.toLocaleString()} ₽ сформирован!`);
+            alert(`Счет на ${amt} ₽ готов!`);
             toggleModal('modal-topup', false);
         }
     }
