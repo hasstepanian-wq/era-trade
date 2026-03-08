@@ -2,171 +2,129 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>ЭТП ЭРА — Электронная торговая площадка</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЭТП ЭРА</title>
     <style>
-        :root { --primary: #0099d5; --dark-bg: #06162c; }
-        * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: var(--dark-bg); color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
-
-        /* ХЕДЕР С ЛОГО И МЕНЮ */
-        header { background: #fff; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--primary); }
-        .header-left { display: flex; align-items: center; gap: 40px; }
-        .logo-box { display: flex; flex-direction: column; align-items: center; }
-        .logo-img { height: 60px; width: auto; }
-        .clock { font-family: monospace; font-size: 16px; color: #1a202c; font-weight: 900; margin-top: 5px; }
+        :root { --primary: #0099d5; --dark-bg: #030a16; }
         
-        nav a { color: #1a202c; text-decoration: none; font-weight: 800; text-transform: uppercase; font-size: 14px; margin-right: 25px; transition: 0.2s; }
-        nav a:hover { color: var(--primary); }
+        html, body { height: 100%; margin: 0; padding: 0; font-family: Arial, sans-serif; background: var(--dark-bg); color: #fff; display: flex; flex-direction: column; overflow: hidden; }
 
-        .btn-auth { background: var(--primary); color: #fff; padding: 12px 25px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+        /* ХЕДЕР СТРОГО БЕЛЫЙ И ЧИСТЫЙ (БЕЗ ПОЛОС) */
+        header {
+            background: #ffffff; padding: 12px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .logo-group { display: flex; flex-direction: column; align-items: flex-start; }
+        .logo-img { height: 50px; width: auto; display: block; }
+        .server-time { font-family: monospace; font-size: 15px; color: #1a202c; font-weight: 900; }
+        .m-time-label { font-size: 9px; color: #999; font-weight: bold; }
+
+        .btn-auth { background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; }
 
         /* БАННЕР */
-        .hero { width: 100%; height: 400px; background: url('sky_banner.jpg') no-repeat center center; background-size: cover; position: relative; }
-
-        /* КВАДРАТНЫЕ ПЛИТКИ ПО ЦЕНТРУ */
-        main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
-        .grid-container { display: flex; gap: 30px; margin-top: -80px; z-index: 10; padding: 0 20px; }
-        
-        .square-card {
-            width: 280px; height: 280px; /* СТРОГО КВАДРАТ */
-            background: #0a1f3d; border: 2px solid rgba(255,255,255,0.1);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; padding: 20px; transition: 0.3s; cursor: pointer;
+        .hero {
+            width: 100%; height: 420px; /* Увеличил высоту, чтобы все влезло */
+            background: url('sky_banner.jpg') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            flex-shrink: 0;
+            margin-bottom: 30px; /* Отступ до футера */
         }
-        .square-card:hover { border-color: var(--primary); transform: translateY(-10px); background: #0e2a52; }
-        .square-card h3 { color: var(--primary); text-transform: uppercase; margin-bottom: 15px; font-size: 20px; }
-        .square-card p { font-size: 14px; color: #94a3b8; margin: 0; }
 
-        /* ПОЛНОЦЕННЫЙ ФУТЕР */
-        footer { background: #030a16; padding: 50px 5% 30px; border-top: 1px solid #1e293b; margin-top: 50px; }
-        .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
-        .f-col h4 { color: var(--primary); text-transform: uppercase; margin-bottom: 20px; }
-        .f-col p, .f-col a { color: #94a3b8; text-decoration: none; font-size: 14px; line-height: 1.8; display: block; }
-        .copy { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); color: #475569; font-size: 12px; }
-
-        /* МОДАЛКА С ПОЛНОЙ ФОРМОЙ */
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; overflow-y: auto; padding: 20px 0; }
-        .modal { background: #fff; color: #333; width: 95%; max-width: 600px; border-radius: 8px; position: relative; padding: 40px; }
-        .modal-tabs { display: flex; border-bottom: 2px solid #eee; margin-bottom: 25px; }
-        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; font-weight: 800; color: #94a3b8; }
-        .tab.active { color: var(--primary); border-bottom: 3px solid var(--primary); margin-bottom: -2px; }
-
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
-        .f-item { display: flex; flex-direction: column; }
-        .f-item label { font-size: 11px; font-weight: 800; color: #64748b; margin-bottom: 5px; text-transform: uppercase; }
-        .f-item input, .f-item select { padding: 12px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 14px; }
+        /* ПЛИТКИ НА СЛАЙДЕРЕ, МЕНЬШЕ И КАК МАТОВОЕ СТЕКЛО */
+        .container {
+            max-width: 1100px; /* Чуть компактнее */
+            position: absolute; left: 50%; bottom: 40px; transform: translateX(-50%);
+            width: 90%;
+            display: flex; justify-content: center; gap: 20px;
+            z-index: 10;
+        }
         
-        .file-upload { border: 2px dashed #cbd5e0; padding: 20px; text-align: center; margin-top: 10px; cursor: pointer; }
-        .btn-submit { background: var(--primary); color: #fff; border: none; width: 100%; padding: 18px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
-        .close { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #cbd5e0; }
+        .card {
+            background: rgba(10, 31, 61, 0.4); /* Полупрозрачный фон */
+            backdrop-filter: blur(10px); /* ЭФФЕКТ МАТОВОГО СТЕКЛА */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px 15px; /* Уменьшил отступы на 15% */
+            border-radius: 4px; transition: 0.3s; cursor: pointer;
+            text-align: center; 
+            width: 30%; /* Уменьшил ширину на 15% */
+            display: flex; flex-direction: column; justify-content: center;
+            min-height: 180px; /* Уменьшил высоту на 15% */
+            box-sizing: border-box;
+        }
+        .card:hover { border-color: var(--primary); background: rgba(13, 40, 77, 0.5); transform: translateY(-3px); }
+        .card h3 { color: var(--primary); margin: 0 0 10px 0; text-transform: uppercase; font-size: 17px; }
+        .card p { margin: 0; font-size: 13px; line-height: 1.4; color: #cbd5e0; }
+
+        /* ФУТЕР ВНИЗУ */
+        footer {
+            margin-top: auto; /* Прижимает к низу */
+            background: #01040a; padding: 20px 5%;
+            border-top: 1px solid rgba(255,255,255,0.05); text-align: center;
+            color: #666; font-size: 13px;
+        }
+
+        /* МОДАЛКА */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
+        .modal { background: #fff; color: #1a202c; padding: 35px; border-radius: 4px; width: 90%; max-width: 380px; position: relative; }
+        .modal h2 { margin: 0 0 20px 0; border-bottom: 3px solid var(--primary); padding-bottom: 10px; text-transform: uppercase; font-size: 19px; }
+        .close { position: absolute; top: 12px; right: 15px; cursor: pointer; font-size: 26px; color: #cbd5e0; }
+        .f-btn { background: var(--primary); color: #fff; border: none; width: 100%; padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <header>
     <div class="header-left">
-        <div class="logo-box">
-            <img src="logo-forsage-modified.png" class="logo-img">
-            <div class="clock" id="timer">00:00:00</div>
+        <img src="logo-forsage-modified.png" alt="ФОРСАЖ" class="logo-img">
+        <div class="logo-group">
+            <div class="server-time" id="clock">00:00:00</div>
+            <div class="m-time-label">ВРЕМЯ СЕРВЕРА (МСК)</div>
         </div>
-        <nav>
-            <a href="#">Торги</a>
-            <a href="#">Комиссионная продажа</a>
-        </nav>
     </div>
-    <button class="btn-auth" onclick="openM('login')">Вход / Регистрация</button>
+    <div class="header-right">
+        <button class="btn-auth" onclick="showM(true)">ВХОД / РЕГИСТРАЦИЯ</button>
+    </div>
 </header>
 
-<main>
-    <div class="hero"></div>
-    <div class="grid-container">
-        <div class="square-card" onclick="openM('reg')">
+<div class="hero">
+    <div class="container">
+        <div class="card" onclick="showM(true)">
             <h3>Регистрация</h3>
-            <p>Аккредитация в системе за 24 часа. Мгновенная подача документов.</p>
+            <p>Стать участником системы за 24 часа. Мгновенная подача документов.</p>
         </div>
-        <div class="square-card" onclick="openM('login')">
+        <div class="card" onclick="showM(true)" style="border-color: var(--primary);">
             <h3>Участник</h3>
             <p>Вход в личный кабинет, поиск процедур и подача заявок.</p>
         </div>
-        <div class="square-card" onclick="openM('login')">
+        <div class="card" onclick="showM(true)">
             <h3>Организатор</h3>
             <p>Размещение лотов, проведение аукционов и выбор победителя.</p>
         </div>
     </div>
-</main>
+</div>
 
 <footer>
-    <div class="footer-grid">
-        <div class="f-col">
-            <h4>О платформе</h4>
-            <p>ЭТП ЭРА — современная экосистема для проведения торгов и закупок в цифровой среде.</p>
-        </div>
-        <div class="f-col">
-            <h4>Документы</h4>
-            <a href="#">Регламент площадки</a>
-            <a href="#">Инструкции пользователям</a>
-            <a href="#">Тарифы на услуги</a>
-        </div>
-        <div class="f-col">
-            <h4>Поддержка</h4>
-            <p>Тел: 8 (800) 555-35-35</p>
-            <p>Email: help@era-trade.ru</p>
-        </div>
-    </div>
-    <div class="copy">© 2026 ЭТП ЭРА. Электронная торговая площадка. Все права защищены.</div>
+    © 2026 ЭТП ЭРА. Электронная торговая площадка. Все права защищены.
 </footer>
 
-<div id="modal-wrap" class="overlay">
+<div id="m-wrap" class="overlay">
     <div class="modal">
-        <span class="close" onclick="closeM()">&times;</span>
-        <div class="modal-tabs">
-            <div id="t-login" class="tab" onclick="setMode('login')">ВХОД</div>
-            <div id="t-reg" class="tab" onclick="setMode('reg')">РЕГИСТРАЦИЯ</div>
-        </div>
-        <div id="form-box"></div>
-        <button class="btn-submit" id="main-btn">Войти</button>
+        <span class="close" onclick="showM(false)">&times;</span>
+        <h2>Авторизация</h2>
+        <div style="margin-bottom:15px"><label style="font-size:12px;font-weight:bold;">ИНН / ЛОГИН</label><input type="text" style="width:100%;padding:12px;border:1px solid #cbd5e0;margin-top:5px;" placeholder="Введите данные"></div>
+        <div style="margin-bottom:20px"><label style="font-size:12px;font-weight:bold;">ПАРОЛЬ</label><input type="password" style="width:100%;padding:12px;border:1px solid #cbd5e0;margin-top:5px;" placeholder="********"></div>
+        <button class="f-btn" onclick="showM(false)">ВОЙТИ</button>
     </div>
 </div>
 
 <script>
-    function updateTime() { document.getElementById('timer').innerText = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'}); }
-    setInterval(updateTime, 1000); updateTime();
-
-    function openM(m) { document.getElementById('modal-wrap').style.display = 'flex'; setMode(m); }
-    function closeM() { document.getElementById('modal-wrap').style.display = 'none'; }
-
-    function setMode(m) {
-        const box = document.getElementById('form-box');
-        const btn = document.getElementById('main-btn');
-        document.getElementById('t-login').className = 'tab' + (m === 'login' ? ' active' : '');
-        document.getElementById('t-reg').className = 'tab' + (m === 'reg' ? ' active' : '');
-
-        if(m === 'login') {
-            box.innerHTML = `
-                <div class="f-item" style="margin-bottom:20px"><label>Логин / ИНН</label><input type="text" placeholder="Введите ваш ИНН"></div>
-                <div class="f-item"><label>Пароль</label><input type="password" placeholder="********"></div>`;
-            btn.innerText = 'Войти в кабинет';
-        } else {
-            box.innerHTML = `
-                <div class="form-row">
-                    <div class="f-item"><label>Наименование организации</label><input type="text" placeholder="ООО 'Вектор'"></div>
-                    <div class="f-item"><label>ИНН</label><input type="text" placeholder="10 или 12 цифр"></div>
-                </div>
-                <div class="form-row">
-                    <div class="f-item"><label>ФИО Контактного лица</label><input type="text" placeholder="Иванов Иван Иванович"></div>
-                    <div class="f-item"><label>Должность</label><input type="text" placeholder="Генеральный директор"></div>
-                </div>
-                <div class="form-row">
-                    <div class="f-item"><label>Телефон</label><input type="text" placeholder="+7 (___) ___-__-__"></div>
-                    <div class="f-item"><label>Email</label><input type="email" placeholder="example@mail.ru"></div>
-                </div>
-                <div class="f-item"><label>Прикрепить документы (Устав, ОГРН, Паспорт)</label>
-                    <div class="file-upload" onclick="alert('Выбор файлов...')">Нажмите, чтобы загрузить сканы документов</div>
-                </div>`;
-            btn.innerText = 'Подать заявку на аккредитацию';
-        }
-    }
-    window.onclick = function(e) { if (e.target.className === 'overlay') closeM(); }
+    function tick() { document.getElementById('clock').innerText = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'}); }
+    setInterval(tick, 1000); tick();
+    function showM(s) { document.getElementById('m-wrap').style.display = s ? 'flex' : 'none'; }
+    window.onclick = function(e) { if (e.target.className === 'overlay') showM(false); }
 </script>
 
 </body>
