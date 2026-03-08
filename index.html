@@ -3,72 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЭТП ЭРА</title>
+    <title>ЭТП ЭРА — Торговая платформа</title>
     <style>
-        :root { --primary: #0099d5; --dark-blue: #0a1f3d; }
+        :root { --primary: #0099d5; --dark-bg: #01040a; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body, html { 
             height: 100vh; font-family: 'Segoe UI', sans-serif; 
-            background: #01040a; color: #fff; overflow: hidden; 
+            background: var(--dark-bg); color: #fff; overflow-x: hidden; 
         }
 
-        /* ХЕДЕР */
-        header {
-            background: #fff; padding: 10px 5%;
-            display: flex; justify-content: space-between; align-items: center;
-            position: relative; z-index: 10;
-        }
-        .logo-box { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #333; }
-        .logo-img { height: 45px; width: auto; }
-        .clock { font-family: monospace; font-size: 14px; font-weight: 900; margin-top: 2px; }
+        /* --- ЛЕНДИНГ --- */
+        #landing-page { display: flex; flex-direction: column; min-height: 100vh; }
         
-        nav a { color: #333; text-decoration: none; font-weight: 800; font-size: 12px; text-transform: uppercase; margin-left: 20px; }
-        .btn-auth { background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px; }
+        header { 
+            background: #ffffff; padding: 10px 5%; 
+            display: flex; justify-content: space-between; align-items: center; 
+            z-index: 100; flex-shrink: 0;
+        }
+        .logo-link { text-decoration: none; display: flex; flex-direction: column; align-items: center; color: #333; }
+        .logo-img { height: 45px; }
+        .clock { font-family: monospace; font-size: 14px; font-weight: 900; color: #1a202c; }
+        
+        nav a { color: #1a202c; text-decoration: none; font-weight: 800; font-size: 12px; text-transform: uppercase; margin-right: 20px; }
+        .btn-auth { background: var(--primary); color: #fff; padding: 10px 22px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px; }
 
-        /* ГЛАВНЫЙ ЭКРАН */
-        #landing-page { display: flex; flex-direction: column; height: 100vh; }
-        .hero {
-            flex: 1; background: url('sky_banner.jpg') no-repeat center center / cover;
-            display: flex; align-items: center; justify-content: center;
+        .hero { 
+            flex: 1; background: url('sky_banner.jpg') no-repeat center center / cover; 
+            display: flex; align-items: center; justify-content: center; padding: 40px 20px;
         }
-        .grid-wrapper {
-            display: flex; justify-content: center; gap: 30px; width: 100%; padding: 0 5%;
+
+        .grid-wrapper { display: flex; justify-content: center; gap: 30px; width: 100%; max-width: 1200px; }
+
+        .glass-card { 
+            background: rgba(10, 31, 61, 0.75); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1); width: 320px; height: 300px; 
+            text-align: center; padding: 30px; border-radius: 4px; cursor: pointer; 
+            display: flex; flex-direction: column; justify-content: center; transition: 0.3s;
         }
-        .glass-card {
-            background: rgba(10, 31, 61, 0.7); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 320px; height: 300px; border-radius: 4px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; padding: 30px; transition: 0.3s; cursor: pointer;
-        }
-        .glass-card:hover { border-color: var(--primary); transform: translateY(-5px); background: rgba(13, 40, 77, 0.8); }
-        .glass-card h3 { text-transform: uppercase; font-size: 18px; margin-bottom: 15px; letter-spacing: 1px; }
+        .glass-card:hover { border-color: var(--primary); transform: translateY(-5px); background: rgba(13, 40, 77, 0.85); }
+        .glass-card h3 { color: #fff; text-transform: uppercase; font-size: 18px; margin-bottom: 15px; }
         .glass-card p { font-size: 14px; color: #cbd5e0; line-height: 1.5; }
 
-        /* ЛИЧНЫЙ КАБИНЕТ (СКРЫТ) */
-        #dashboard { display: none; height: 100vh; grid-template-columns: 260px 1fr; background: #01040a; }
-        .sidebar { background: #06162c; padding: 30px; border-right: 1px solid #1e293b; display: flex; flex-direction: column; }
-        .sidebar h2 { color: var(--primary); margin-bottom: 40px; font-size: 20px; }
-        .side-link { padding: 12px; color: #cbd5e0; cursor: pointer; border-radius: 4px; margin-bottom: 5px; }
-        .side-link.active, .side-link:hover { background: var(--primary); color: #fff; }
-        .main-content { padding: 40px; overflow-y: auto; }
+        /* --- ТОТ САМЫЙ НОРМАЛЬНЫЙ ФУТЕР --- */
+        footer { background: #030a16; padding: 40px 5% 20px; border-top: 1px solid #1e293b; flex-shrink: 0; }
+        .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+        .f-col h4 { color: var(--primary); text-transform: uppercase; margin-bottom: 20px; font-size: 14px; letter-spacing: 1px; }
+        .f-col a, .f-col p { color: #94a3b8; text-decoration: none; font-size: 13px; line-height: 1.8; display: block; }
+        .f-col a:hover { color: #fff; }
+        .copy { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); color: #475569; font-size: 11px; }
 
-        /* МОДАЛКА */
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
-        .modal { background: #fff; color: #333; width: 400px; padding: 40px; border-radius: 4px; position: relative; }
+        /* --- ЛИЧНЫЙ КАБИНЕТ --- */
+        #dashboard { display: none; height: 100vh; grid-template-columns: 260px 1fr; }
+        .sidebar { background: #06162c; border-right: 1px solid rgba(255,255,255,0.1); padding: 25px; display: flex; flex-direction: column; }
+        .sidebar h2 { font-size: 20px; color: var(--primary); margin-bottom: 40px; text-transform: uppercase; }
+        .side-link { padding: 12px 15px; color: #cbd5e0; text-decoration: none; border-radius: 4px; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
+        .side-link:hover, .side-link.active { background: var(--primary); color: #fff; }
+        .main-content { padding: 40px; overflow-y: auto; background: #01040a; }
+
+        /* --- МОДАЛКА --- */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
+        .modal { background: #fff; color: #333; width: 90%; max-width: 400px; padding: 40px; border-radius: 4px; position: relative; }
         .close { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 24px; color: #ccc; }
-        .modal h2 { color: var(--primary); margin-bottom: 25px; text-align: center; }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 5px; color: #666; }
-        .input-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; outline: none; }
-        .btn-login { width: 100%; background: var(--primary); color: #fff; padding: 15px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-
-        footer { background: #030a16; padding: 15px; text-align: center; font-size: 11px; color: #475569; }
+        .btn-main { background: var(--primary); color: #fff; width: 100%; padding: 16px; border: none; margin-top: 20px; cursor: pointer; font-weight: bold; text-transform: uppercase; border-radius: 4px; }
 
         @media (max-width: 900px) {
+            #dashboard { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
             .grid-wrapper { flex-direction: column; align-items: center; }
-            .glass-card { width: 90%; height: auto; padding: 40px; }
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
             body, html { overflow-y: auto; }
         }
     </style>
@@ -77,14 +80,16 @@
 
 <div id="landing-page">
     <header>
-        <div class="logo-box">
-            <img src="logo-forsage-modified.png" class="logo-img">
-            <div class="clock" id="clock">00:00:00</div>
+        <div class="header-left">
+            <a href="#" class="logo-link" onclick="location.reload()">
+                <img src="logo-forsage-modified.png" class="logo-img">
+                <div class="clock" id="clock">00:00:00</div>
+            </a>
         </div>
         <nav>
             <a href="#">Торги</a>
             <a href="#">Комиссионная продажа</a>
-            <button class="btn-auth" style="margin-left:20px" onclick="openM()">ВХОД / РЕГИСТРАЦИЯ</button>
+            <button class="btn-auth" onclick="openM()">ВХОД / РЕГИСТРАЦИЯ</button>
         </nav>
     </header>
 
@@ -92,7 +97,7 @@
         <div class="grid-wrapper">
             <div class="glass-card" onclick="openM()">
                 <h3>Участник</h3>
-                <p>Вход в личный кабинет, поиск процедур и подача заявок.</p>
+                <p>Личный кабинет, поиск процедур и подача заявок онлайн.</p>
             </div>
             <div class="glass-card" onclick="openM()" style="border-color: var(--primary);">
                 <h3>Экспресс-регистрация</h3>
@@ -100,28 +105,47 @@
             </div>
             <div class="glass-card" onclick="openM()">
                 <h3>Организатор</h3>
-                <p>Размещение лотов, проведение аукционов и выбор победителя.</p>
+                <p>Размещение лотов и проведение прозрачных торговых процедур.</p>
             </div>
         </div>
     </div>
 
-    <footer>© 2026 ЭТП ЭРА. Электронная торговая площадка. Все права защищены.</footer>
+    <footer>
+        <div class="footer-grid">
+            <div class="f-col">
+                <h4>О платформе</h4>
+                <p>ЭТП ЭРА — современная цифровая экосистема для проведения торгов любого уровня сложности.</p>
+            </div>
+            <div class="f-col">
+                <h4>Документы</h4>
+                <a href="#">Регламент ЭТП</a>
+                <a href="#">Тарифы и сборы</a>
+                <a href="#">Инструкции пользователя</a>
+            </div>
+            <div class="f-col">
+                <h4>Поддержка</h4>
+                <p>8 (800) 555-35-35</p>
+                <p>пн-пт: 09:00 – 18:00 (МСК)</p>
+                <a href="mailto:help@era-trade.ru">help@era-trade.ru</a>
+            </div>
+        </div>
+        <div class="copy">© 2026 ЭТП ЭРА. Электронная торговая площадка. Все права защищены.</div>
+    </footer>
 </div>
 
 <div id="dashboard">
     <div class="sidebar">
         <h2>ЭТП ЭРА</h2>
         <div class="side-link active">Рабочий стол</div>
-        <div class="side-link">Реестр торгов</div>
         <div class="side-link">Мои заявки</div>
-        <div style="margin-top:auto; color:red; cursor:pointer" onclick="location.reload()">Выход</div>
+        <div class="side-link">Реестр торгов</div>
+        <div style="margin-top:auto; color:#ef4444; cursor:pointer; font-weight:bold;" onclick="location.reload()">ВЫХОД</div>
     </div>
     <div class="main-content">
-        <h1>Добро пожаловать, <span id="user-name">Артур</span>!</h1>
-        <p style="color:#94a3b8; margin-top:10px;">Статус аккредитации: <span style="color:#f59e0b">На проверке</span></p>
-        <div style="margin-top:40px; background:#0a1f3d; padding:30px; border-radius:8px;">
-            <h3>Активные процедуры</h3>
-            <p style="margin-top:15px; color:#64748b">У вас пока нет активных заявок.</p>
+        <h1>Здравствуйте, <span id="user-display">Артур</span>!</h1>
+        <div style="margin-top:20px; background:#0a1f3d; padding:25px; border-radius:8px; border:1px solid #1e293b;">
+            <h3 style="color:var(--primary)">Статус: На проверке</h3>
+            <p style="margin-top:10px; color:#94a3b8;">Ваши документы находятся на верификации. Это обычно занимает до 24 часов.</p>
         </div>
     </div>
 </div>
@@ -129,16 +153,16 @@
 <div id="modal-box" class="overlay">
     <div class="modal">
         <span class="close" onclick="closeM()">&times;</span>
-        <h2>ВХОД</h2>
-        <div class="input-group">
-            <label>ЛОГИН ИЛИ ИНН</label>
-            <input type="text" id="u-login" placeholder="Введите данные">
+        <h2>АВТОРИЗАЦИЯ</h2>
+        <div style="margin-bottom:15px">
+            <label style="font-size:11px; font-weight:900; color:#64748b; display:block; margin-bottom:5px;">ЛОГИН / ИНН</label>
+            <input type="text" id="u-login" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:4px;" placeholder="7701234567">
         </div>
-        <div class="input-group">
-            <label>ПАРОЛЬ</label>
-            <input type="password" placeholder="********">
+        <div>
+            <label style="font-size:11px; font-weight:900; color:#64748b; display:block; margin-bottom:5px;">ПАРОЛЬ</label>
+            <input type="password" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:4px;" placeholder="********">
         </div>
-        <button class="btn-login" onclick="doLogin()">Войти в кабинет</button>
+        <button class="btn-main" onclick="doLogin()">Войти в систему</button>
     </div>
 </div>
 
@@ -153,7 +177,7 @@
 
     function doLogin() {
         const val = document.getElementById('u-login').value || "Артур";
-        document.getElementById('user-name').innerText = val;
+        document.getElementById('user-display').innerText = val;
         document.getElementById('landing-page').style.display = 'none';
         document.getElementById('dashboard').style.display = 'grid';
         closeM();
