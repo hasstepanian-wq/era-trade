@@ -7,33 +7,39 @@
     <style>
         :root { --primary: #0099d5; --dark-bg: #01040a; --card-bg: #0a1f3d; --border: #1e293b; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body, html { min-height: 100vh; background: var(--dark-bg); color: #fff; overflow-x: hidden; }
+        body, html { min-height: 100vh; background: var(--dark-bg); color: #fff; overflow-x: hidden; display: flex; flex-direction: column; }
 
-        /* --- ШАПКА --- */
+        /* --- ХЕДЕР --- */
         header { background: #fff; padding: 12px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .header-left { display: flex; align-items: center; gap: 25px; }
+        .header-left { display: flex; align-items: center; gap: 35px; }
         .logo-img { height: 40px; cursor: pointer; }
-        nav { display: flex; gap: 20px; align-items: center; }
+        
+        nav { display: flex; gap: 25px; align-items: center; }
         nav a { color: #1a202c; text-decoration: none; font-weight: 800; font-size: 11px; text-transform: uppercase; cursor: pointer; }
         
-        .lang-switcher { display: flex; border: 1px solid #e2e8f0; border-radius: 20px; overflow: hidden; }
-        .lang-btn { padding: 5px 12px; font-size: 10px; font-weight: bold; cursor: pointer; background: #f8fafc; color: #64748b; border: none; }
+        .header-right { display: flex; align-items: center; gap: 15px; }
+
+        /* ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА */
+        .lang-switcher { display: flex; border: 1px solid #e2e8f0; border-radius: 20px; overflow: hidden; background: #f8fafc; }
+        .lang-btn { padding: 6px 14px; font-size: 10px; font-weight: bold; cursor: pointer; color: #64748b; border: none; background: transparent; }
         .lang-btn.active { background: var(--primary); color: #fff; }
-        .btn-login { background: var(--primary); color: #fff; padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 11px; }
+        
+        .btn-login { background: var(--primary); color: #fff; padding: 10px 22px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 11px; }
 
         /* --- ЛЕНДИНГ --- */
-        #landing-page { display: flex; flex-direction: column; min-height: 100vh; }
-        .hero { flex: 1; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('sky_banner.jpg') no-repeat center/cover; display: flex; align-items: center; justify-content: center; padding: 100px 20px; }
-        .grid-wrapper { display: grid; grid-template-columns: repeat(3, 300px); gap: 30px; }
-        .glass-card { background: rgba(10, 31, 61, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); padding: 40px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .glass-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        #landing-page { flex: 1; display: flex; flex-direction: column; }
+        .hero { flex: 1; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('sky_banner.jpg') no-repeat center/cover; display: flex; align-items: center; justify-content: center; padding: 80px 20px; }
+        .grid-wrapper { display: grid; grid-template-columns: repeat(3, 310px); gap: 25px; }
+        .glass-card { background: rgba(10, 31, 61, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); padding: 40px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .glass-card:hover { border-color: var(--primary); transform: translateY(-5px); background: rgba(10, 31, 61, 0.9); }
         
-        footer { background: #030a16; padding: 40px 5%; border-top: 1px solid var(--border); margin-top: auto; }
+        /* --- ФУТЕР --- */
+        footer { background: #030a16; padding: 40px 5%; border-top: 1px solid var(--border); }
         .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
-        .f-col h4 { color: var(--primary); margin-bottom: 15px; font-size: 13px; text-transform: uppercase; }
-        .f-col p, .f-col a { color: #94a3b8; font-size: 12px; text-decoration: none; line-height: 1.6; }
+        .f-col h4 { color: var(--primary); margin-bottom: 15px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .f-col p, .f-col a { color: #94a3b8; font-size: 12px; text-decoration: none; line-height: 1.8; }
 
-        /* --- КАБИНЕТ --- */
+        /* --- ЛИЧНЫЙ КАБИНЕТ --- */
         #dashboard { display: none; min-height: 100vh; grid-template-columns: 260px 1fr; }
         .sidebar { background: #06162c; border-right: 1px solid var(--border); padding: 25px; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
         .side-link { padding: 12px 15px; color: #cbd5e0; border-radius: 4px; margin-bottom: 5px; cursor: pointer; font-size: 14px; }
@@ -42,9 +48,9 @@
         .content-section { display: none; }
         .content-section.active { display: block; }
         
-        .fin-card { background: var(--card-bg); padding: 25px; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 20px; }
+        .fin-card { background: var(--card-bg); padding: 25px; border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 25px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { text-align: left; padding: 12px; color: #64748b; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        th { text-align: left; padding: 15px; color: #64748b; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
         td { padding: 15px; border-bottom: 1px solid #0f172a; font-size: 14px; }
     </style>
 </head>
@@ -56,28 +62,31 @@
             <img src="logo-forsage-modified.png" class="logo-img" onclick="location.reload()">
             <nav>
                 <a onclick="fastTrack('tenders')" data-i18n="nav_registry">Реестр торгов</a>
-                <div class="lang-switcher">
-                    <button class="lang-btn" id="btn-ru" onclick="changeLang('ru')">RU</button>
-                    <button class="lang-btn" id="btn-en" onclick="changeLang('en')">EN</button>
-                </div>
+                <a href="#" data-i18n="nav_comm">Комиссионная продажа</a>
             </nav>
         </div>
-        <button class="btn-login" onclick="doLogin()" data-i18n="btn_login">Вход</button>
+        <div class="header-right">
+            <div class="lang-switcher">
+                <button class="lang-btn" id="btn-ru" onclick="changeLang('ru')">RU</button>
+                <button class="lang-btn" id="btn-en" onclick="changeLang('en')">EN</button>
+            </div>
+            <button class="btn-login" onclick="doLogin()" data-i18n="btn_login">Вход</button>
+        </div>
     </header>
 
     <div class="hero">
         <div class="grid-wrapper">
             <div class="glass-card" onclick="doLogin()">
                 <h3 data-i18n="card1_t">Участник</h3>
-                <p data-i18n="card1_p">Поиск процедур и подача заявок.</p>
+                <p data-i18n="card1_p">Поиск процедур и подача заявок онлайн.</p>
             </div>
             <div class="glass-card" onclick="doLogin()" style="border-color: var(--primary);">
                 <h3 data-i18n="card2_t">Регистрация</h3>
-                <p data-i18n="card2_p">Аккредитация за 24 часа.</p>
+                <p data-i18n="card2_p">Аккредитация в системе за 24 часа.</p>
             </div>
             <div class="glass-card" onclick="doLogin()">
                 <h3 data-i18n="card3_t">Организатор</h3>
-                <p data-i18n="card3_p">Размещение лотов и торги.</p>
+                <p data-i18n="card3_p">Размещение лотов и проведение торгов.</p>
             </div>
         </div>
     </div>
@@ -90,12 +99,15 @@
             </div>
             <div class="f-col">
                 <h4 data-i18n="f_docs_t">Документы</h4>
-                <a href="#">Регламент ЭТП</a><br><a href="#">Тарифы</a>
+                <a href="#" data-i18n="f_regl">Регламент ЭТП</a><br><a href="#" data-i18n="f_tariffs">Тарифы платформы</a>
             </div>
             <div class="f-col">
                 <h4 data-i18n="f_supp_t">Поддержка</h4>
                 <p>8 (800) 555-35-35</p><p>help@era-trade.ru</p>
             </div>
+        </div>
+        <div style="text-align:center; margin-top:30px; border-top:1px solid #1e293b; padding-top:20px; font-size:11px; color:#475569;">
+            © 2026 ERA ETP. <span data-i18n="f_rights">Все права защищены.</span>
         </div>
     </footer>
 </div>
@@ -106,7 +118,7 @@
         <div class="side-link" id="l-home" onclick="showTab('home')" data-i18n="side_home">Рабочий стол</div>
         <div class="side-link active" id="l-tenders" onclick="showTab('tenders')" data-i18n="side_tenders">Реестр торгов</div>
         <div class="side-link" id="l-finance" onclick="showTab('finance')" data-i18n="side_finance">Финансы</div>
-        <div style="margin-top:auto; color:#ef4444; font-weight:bold; cursor:pointer;" onclick="location.reload()" data-i18n="side_exit">ВЫХОД</div>
+        <div style="margin-top:auto; color:#ef4444; font-weight:bold; cursor:pointer; padding:10px;" onclick="location.reload()" data-i18n="side_exit">ВЫХОД</div>
     </div>
     <div class="main-content">
         <div id="s-home" class="content-section">
@@ -120,6 +132,7 @@
                 </thead>
                 <tbody>
                     <tr><td>ERA-2026-001</td><td>Mercedes-Benz Actros 2021</td><td>8 500 000 ₽</td></tr>
+                    <tr><td>ERA-2026-005</td><td>Экскаватор JCB 4CX</td><td>6 200 000 ₽</td></tr>
                 </tbody>
             </table>
         </div>
@@ -136,30 +149,30 @@
 <script>
     const translations = {
         ru: {
-            nav_registry: "Реестр торгов", btn_login: "Вход",
-            card1_t: "Участник", card1_p: "Поиск процедур и подача заявок.",
-            card2_t: "Регистрация", card2_p: "Аккредитация за 24 часа.",
-            card3_t: "Организатор", card3_p: "Размещение лотов и торги.",
+            nav_registry: "Реестр торгов", nav_comm: "Комиссионная продажа", btn_login: "Вход",
+            card1_t: "Участник", card1_p: "Поиск процедур и подача заявок онлайн.",
+            card2_t: "Регистрация", card2_p: "Аккредитация в системе за 24 часа.",
+            card3_t: "Организатор", card3_p: "Размещение лотов и проведение торгов.",
             side_home: "Рабочий стол", side_tenders: "Реестр торгов", side_finance: "Финансы", side_exit: "ВЫХОД",
             h_welcome: "Добро пожаловать, Артур!", th_id: "№ Процедуры", th_name: "Наименование", th_price: "Цена",
             f_balance: "Доступный баланс", f_about_t: "О платформе", f_docs_t: "Документы", f_supp_t: "Поддержка",
-            f_about_p: "ЭТП ЭРА — современная экосистема для проведения торгов."
+            f_about_p: "ЭТП ЭРА — современная экосистема для проведения торгов.", f_regl: "Регламент ЭТП", f_tariffs: "Тарифы платформы", f_rights: "Все права защищены."
         },
         en: {
-            nav_registry: "Registry", btn_login: "Login",
-            card1_t: "Bidder", card1_p: "Search lots and submit bids.",
-            card2_t: "Registration", card2_p: "Accreditation in 24h.",
+            nav_registry: "Registry", nav_comm: "Commission Sales", btn_login: "Login",
+            card1_t: "Bidder", card1_p: "Search lots and submit bids online.",
+            card2_t: "Registration", card2_p: "Accreditation in 24 hours.",
             card3_t: "Organizer", card3_p: "Create lots and auctions.",
             side_home: "Dashboard", side_tenders: "Registry", side_finance: "Finance", side_exit: "LOGOUT",
-            h_welcome: "Welcome, Arthur!", th_id: "ID", th_name: "Lot Name", th_price: "Price",
-            f_balance: "Available Balance", f_about_t: "About Platform", f_docs_t: "Documents", f_supp_t: "Support",
-            f_about_p: "ERA ETP is a modern ecosystem for trading."
+            h_welcome: "Welcome back, Arthur!", th_id: "ID", th_name: "Lot Name", th_price: "Price",
+            f_balance: "Available Balance", f_about_t: "About Us", f_docs_t: "Documents", f_supp_t: "Support",
+            f_about_p: "ERA ETP is a modern trading ecosystem.", f_regl: "ETP Rules", f_tariffs: "Tariffs", f_rights: "All rights reserved."
         }
     };
 
-    // Исправленная логика определения языка
-    let userLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-    let currentLang = userLang.includes('ru') ? 'ru' : 'en';
+    // Улучшенная проверка на русский язык
+    let userLang = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage || 'en';
+    let currentLang = userLang.toLowerCase().includes('ru') ? 'ru' : 'en';
 
     function changeLang(lang) {
         currentLang = lang;
@@ -169,6 +182,7 @@
         });
         document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
         document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        document.documentElement.lang = lang;
     }
 
     function doLogin() {
