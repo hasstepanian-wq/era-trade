@@ -7,32 +7,34 @@
     <style>
         :root { --primary: #0099d5; --dark-bg: #01040a; --card-bg: #0a1f3d; --border: #1e293b; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body, html { height: 100vh; background: var(--dark-bg); color: #fff; overflow-x: hidden; }
+        body, html { height: 100vh; background: var(--dark-bg); color: #fff; overflow-x: hidden; display: flex; flex-direction: column; }
 
         /* --- ЛЕНДИНГ --- */
-        #landing-page { display: flex; flex-direction: column; min-height: 100vh; }
-        header { background: #fff; padding: 12px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        #landing-page { display: flex; flex-direction: column; min-height: 100vh; width: 100%; }
+        header { background: #fff; padding: 12px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
         .header-left { display: flex; align-items: center; gap: 40px; }
         .logo-box { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #333; cursor: pointer; }
         .logo-img { height: 45px; }
         .clock { font-family: monospace; font-size: 13px; font-weight: 800; color: #1a202c; }
         nav { display: flex; gap: 30px; }
-        nav a { color: #1a202c; text-decoration: none; font-weight: 800; font-size: 12px; text-transform: uppercase; cursor: pointer; }
-        .btn-auth { background: var(--primary); color: #fff; padding: 12px 25px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px; }
+        nav a { color: #1a202c; text-decoration: none; font-weight: 800; font-size: 11px; text-transform: uppercase; cursor: pointer; }
+        .btn-auth { background: var(--primary); color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px; }
 
         .hero { flex: 1; background: url('sky_banner.jpg') no-repeat center center / cover; display: flex; align-items: center; justify-content: center; padding: 60px 20px; }
-        .grid-wrapper { display: grid; grid-template-columns: repeat(3, 320px); gap: 60px; justify-content: center; }
-        .glass-card { background: rgba(10, 31, 61, 0.75); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); width: 320px; height: 320px; text-align: center; padding: 40px; border-radius: 4px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; transition: 0.3s; }
-        .glass-card:hover { border-color: var(--primary); transform: translateY(-8px); }
+        .grid-wrapper { display: grid; grid-template-columns: repeat(3, 320px); gap: 40px; justify-content: center; }
+        .glass-card { background: rgba(10, 31, 61, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); width: 320px; height: 280px; text-align: center; padding: 40px; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; transition: 0.3s; }
+        .glass-card:hover { border-color: var(--primary); transform: translateY(-5px); background: rgba(10, 31, 61, 0.9); }
+        .glass-card h3 { text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .glass-card p { font-size: 13px; color: #cbd5e0; line-height: 1.5; }
 
-        /* --- ФУТЕР (ВЕРНУЛ) --- */
-        footer { background: #030a16; padding: 40px 5%; border-top: 1px solid var(--border); }
+        /* --- ФУТЕР --- */
+        footer { background: #030a16; padding: 40px 5%; border-top: 1px solid var(--border); margin-top: auto; }
         .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
-        .f-col h4 { color: var(--primary); text-transform: uppercase; margin-bottom: 20px; font-size: 14px; }
-        .f-col p, .f-col a { color: #94a3b8; font-size: 13px; text-decoration: none; line-height: 1.8; }
+        .f-col h4 { color: var(--primary); text-transform: uppercase; margin-bottom: 20px; font-size: 13px; }
+        .f-col p, .f-col a { color: #94a3b8; font-size: 12px; text-decoration: none; line-height: 1.8; }
 
-        /* --- КАБИНЕТ --- */
-        #dashboard { display: none; height: 100vh; grid-template-columns: 260px 1fr; }
+        /* --- ЛИЧНЫЙ КАБИНЕТ --- */
+        #dashboard { display: none; height: 100vh; grid-template-columns: 260px 1fr; width: 100%; }
         .sidebar { background: #06162c; border-right: 1px solid var(--border); padding: 25px; display: flex; flex-direction: column; }
         .side-link { padding: 12px 15px; color: #cbd5e0; border-radius: 4px; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
         .side-link.active { background: var(--primary); color: #fff; font-weight: bold; }
@@ -40,20 +42,25 @@
         .content-section { display: none; }
         .content-section.active { display: block; }
 
-        /* ФИЛЬТРЫ И ТАБЛИЦА */
-        .filter-bar { background: var(--card-bg); padding: 25px; border-radius: 8px; margin-bottom: 30px; border: 1px solid var(--border); display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        .filter-bar input, .filter-bar select { background: #01040a; border: 1px solid var(--border); padding: 12px; color: #fff; border-radius: 4px; outline: none; }
-        .btn-filter { background: var(--primary); border: none; color: #fff; font-weight: bold; border-radius: 4px; cursor: pointer; }
-
-        table { width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.02); }
+        /* РЕЕСТР И ТАБЛИЦА */
+        .filter-bar { background: var(--card-bg); padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 1px solid var(--border); display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .filter-bar input, .filter-bar select { background: #01040a; border: 1px solid var(--border); padding: 10px; color: #fff; border-radius: 4px; outline: none; }
+        table { width: 100%; border-collapse: collapse; }
         th { text-align: left; padding: 15px; color: #64748b; border-bottom: 1px solid var(--border); font-size: 11px; text-transform: uppercase; }
         td { padding: 15px; border-bottom: 1px solid #0f172a; font-size: 14px; }
-        .status-badge { padding: 4px 8px; border-radius: 3px; font-size: 10px; font-weight: bold; text-transform: uppercase; background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .status-badge { padding: 4px 8px; border-radius: 3px; font-size: 10px; font-weight: bold; background: rgba(16, 185, 129, 0.1); color: #10b981; }
 
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
-        .modal { background: #fff; color: #333; width: 400px; padding: 40px; border-radius: 4px; position: relative; }
-        .close { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 24px; color: #ccc; }
-        .modal input { width: 100%; padding: 15px; margin: 10px 0 20px; border: 1px solid #ddd; border-radius: 4px; }
+        /* --- ИСПРАВЛЕННАЯ УНИВЕРСАЛЬНАЯ МОДАЛКА --- */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 10000; justify-content: center; align-items: center; }
+        .modal { background: #fff; color: #1a202c; width: 400px; padding: 35px; border-radius: 8px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .modal-tabs { display: flex; margin-bottom: 25px; border-bottom: 2px solid #eee; }
+        .m-tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; font-weight: bold; color: #a0aec0; font-size: 14px; text-transform: uppercase; }
+        .m-tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); margin-bottom: -2px; }
+        
+        .modal input { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 14px; outline: none; }
+        .modal input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0,153,213,0.1); }
+        .close { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 24px; color: #a0aec0; }
+        .btn-submit { background: var(--primary); color: #fff; width: 100%; padding: 14px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -70,90 +77,52 @@
                 <a href="#">Комиссионная продажа</a>
             </nav>
         </div>
-        <button class="btn-auth" onclick="toggleModal('modal-auth', true)">Вход / Регистрация</button>
+        <button class="btn-auth" onclick="openAuthModal('login')">Вход / Регистрация</button>
     </header>
 
     <div class="hero">
         <div class="grid-wrapper">
-            <div class="glass-card" onclick="toggleModal('modal-auth', true)"><h3>Участник</h3><p>Поиск процедур и подача заявок.</p></div>
-            <div class="glass-card" onclick="toggleModal('modal-auth', true)" style="border-color: var(--primary);"><h3>Регистрация</h3><p>Аккредитация за 24 часа.</p></div>
-            <div class="glass-card" onclick="toggleModal('modal-auth', true)"><h3>Организатор</h3><p>Размещение лотов и торги.</p></div>
+            <div class="glass-card" onclick="openAuthModal('login')"><h3>Участник</h3><p>Поиск процедур и подача заявок онлайн в реальном времени.</p></div>
+            <div class="glass-card" onclick="openAuthModal('reg')"><h3>Регистрация</h3><p>Ускоренная аккредитация в системе за 24 часа по ЭЦП.</p></div>
+            <div class="glass-card" onclick="openAuthModal('login')"><h3>Организатор</h3><p>Размещение лотов и проведение прозрачных закупок.</p></div>
         </div>
     </div>
 
     <footer>
         <div class="footer-grid">
-            <div class="f-col">
-                <h4>О ПЛАТФОРМЕ</h4>
-                <p>ЭТП ЭРА — современная экосистема для проведения торгов любого уровня сложности.</p>
-            </div>
-            <div class="f-col">
-                <h4>ДОКУМЕНТЫ</h4>
-                <a href="#">Регламент ЭТП</a><br>
-                <a href="#">Тарифы</a>
-            </div>
-            <div class="f-col">
-                <h4>ПОДДЕРЖКА</h4>
-                <p>8 (800) 555-35-35</p>
-                <p>help@era-trade.ru</p>
-            </div>
-        </div>
-        <div style="text-align: center; color: #64748b; font-size: 11px; margin-top: 30px; opacity: 0.5;">
-            © 2026 ЭТП ЭРА. Электронная торговая площадка. Все права защищены.
+            <div class="f-col"><h4>О ПЛАТФОРМЕ</h4><p>ЭТП ЭРА — цифровая экосистема для автоматизации торговых процессов любой сложности.</p></div>
+            <div class="f-col"><h4>ДОКУМЕНТЫ</h4><a href="#">Регламент ЭТП</a><br><a href="#">Тарифы платформы</a></div>
+            <div class="f-col"><h4>ПОДДЕРЖКА</h4><p>8 (800) 555-35-35</p><p>help@era-trade.ru</p></div>
         </div>
     </footer>
 </div>
 
 <div id="dashboard">
     <div class="sidebar">
-        <h2>ЭТП ЭРА</h2>
+        <h2 style="color:var(--primary); margin-bottom:30px;">ЭТП ЭРА</h2>
         <div class="side-link" id="link-tab-home" onclick="switchTab('tab-home', this)">Рабочий стол</div>
         <div class="side-link" id="link-tab-finance" onclick="switchTab('tab-finance', this)">Финансы</div>
-        <div class="side-link" id="link-tab-tenders" onclick="switchTab('tab-tenders', this)">Реестр торгов</div>
+        <div class="side-link active" id="link-tab-tenders" onclick="switchTab('tab-tenders', this)">Реестр торгов</div>
         <div style="margin-top:auto; color:#ef4444; font-weight:bold; cursor:pointer;" onclick="location.reload()">ВЫХОД</div>
     </div>
-
     <div class="main-content">
         <div id="tab-home" class="content-section">
             <h1>Добро пожаловать, <span class="user-nm">Артур</span>!</h1>
-            <div style="margin-top:20px; background: rgba(245, 158, 11, 0.1); padding: 20px; border: 1px solid #f59e0b; border-radius: 4px;">СТАТУС: АККРЕДИТАЦИЯ НА ПРОВЕРКЕ</div>
+            <div style="margin-top:20px; background: rgba(245, 158, 11, 0.1); padding: 20px; border: 1px solid #f59e0b; border-radius: 4px; color:#f59e0b;">АККРЕДИТАЦИЯ НА ПРОВЕРКЕ</div>
         </div>
-
-        <div id="tab-finance" class="content-section">
-            <h1>Финансы</h1>
-            <div style="background: var(--card-bg); padding: 30px; border-radius: 8px; margin-top: 20px;">
-                <p style="color: #94a3b8; font-size: 12px; text-transform: uppercase;">Текущий баланс</p>
-                <h2 style="font-size: 32px; margin-top: 10px;">150 000.00 ₽</h2>
-            </div>
-        </div>
-
         <div id="tab-tenders" class="content-section active">
-            <h1>Реестр актуальных торгов</h1>
-            
+            <h1>Реестр торгов</h1>
             <div class="filter-bar">
-                <input type="text" id="search-name" placeholder="Поиск по названию...">
-                <input type="text" id="search-inn" placeholder="ИНН организатора">
+                <input type="text" id="search-name" placeholder="Название лота...">
+                <input type="text" id="search-inn" placeholder="ИНН">
                 <select id="search-cat">
                     <option value="all">Все категории</option>
                     <option value="транспорт">Транспорт</option>
                     <option value="недвижимость">Недвижимость</option>
-                    <option value="оборудование">Оборудование</option>
                 </select>
-                <button class="btn-filter" onclick="applyFilters()">ПРИМЕНИТЬ</button>
+                <button class="btn-submit" onclick="applyFilters()">Искать</button>
             </div>
-
-            <table id="tenders-table">
-                <thead>
-                    <tr>
-                        <th>№ Процедуры</th>
-                        <th>Наименование лота</th>
-                        <th>Категория</th>
-                        <th>Начальная цена</th>
-                        <th>Статус</th>
-                    </tr>
-                </thead>
-                <tbody id="tenders-body"></tbody>
-            </table>
+            <table id="tenders-table"><thead><tr><th>ID</th><th>Наименование</th><th>Категория</th><th>Цена</th><th>Статус</th></tr></thead><tbody id="tenders-body"></tbody></table>
         </div>
     </div>
 </div>
@@ -161,9 +130,19 @@
 <div id="modal-auth" class="overlay">
     <div class="modal">
         <span class="close" onclick="toggleModal('modal-auth', false)">&times;</span>
-        <h2 style="text-align:center; color:var(--primary)">ВХОД</h2>
-        <input type="text" id="loginInp" placeholder="Логин / ИНН">
-        <button class="btn-auth" style="width:100%" onclick="doLogin()">Войти</button>
+        <div class="modal-tabs">
+            <div id="tab-login" class="m-tab" onclick="setAuthMode('login')">Вход</div>
+            <div id="tab-reg" class="m-tab" onclick="setAuthMode('reg')">Регистрация</div>
+        </div>
+        <div id="auth-fields">
+            <input type="text" id="loginInp" placeholder="Логин или ИНН">
+            <input type="password" id="passInp" placeholder="Пароль">
+            <div id="reg-extra" style="display:none;">
+                <input type="text" placeholder="Название организации">
+                <input type="email" placeholder="Email для связи">
+            </div>
+            <button class="btn-submit" id="authBtn" onclick="doLogin()">Войти в систему</button>
+        </div>
     </div>
 </div>
 
@@ -171,8 +150,6 @@
     const tendersData = [
         { id: 'ERA-2026-001', name: 'Mercedes-Benz Actros 2021', cat: 'транспорт', price: '8 500 000 ₽', inn: '7701001001' },
         { id: 'ERA-2026-002', name: 'Складской комплекс 1200м²', cat: 'недвижимость', price: '45 000 000 ₽', inn: '7802002002' },
-        { id: 'ERA-2026-003', name: 'Токарный станок ЧПУ', cat: 'оборудование', price: '1 200 000 ₽', inn: '5003003003' },
-        { id: 'ERA-2026-004', name: 'Земельный участок под ИЖС', cat: 'недвижимость', price: '3 400 000 ₽', inn: '7701001001' },
         { id: 'ERA-2026-005', name: 'Экскаватор JCB 4CX', cat: 'транспорт', price: '6 200 000 ₽', inn: '1605005005' }
     ];
 
@@ -180,38 +157,21 @@
         const body = document.getElementById('tenders-body');
         body.innerHTML = '';
         data.forEach(t => {
-            body.innerHTML += `<tr>
-                <td style="color:var(--primary); font-weight:bold">${t.id}</td>
-                <td>${t.name}</td>
-                <td style="text-transform:capitalize">${t.cat}</td>
-                <td>${t.price}</td>
-                <td><span class="status-badge">Активен</span></td>
-            </tr>`;
+            body.innerHTML += `<tr><td style="color:var(--primary); font-weight:bold">${t.id}</td><td>${t.name}</td><td style="text-transform:capitalize">${t.cat}</td><td>${t.price}</td><td><span class="status-badge">Активен</span></td></tr>`;
         });
     }
 
-    function applyFilters() {
-        const nameVal = document.getElementById('search-name').value.toLowerCase();
-        const innVal = document.getElementById('search-inn').value;
-        const catVal = document.getElementById('search-cat').value;
-
-        const filtered = tendersData.filter(t => {
-            const matchName = t.name.toLowerCase().includes(nameVal);
-            const matchInn = innVal === '' || t.inn.includes(innVal);
-            const matchCat = catVal === 'all' || t.cat === catVal;
-            return matchName && matchInn && matchCat;
-        });
-        renderTable(filtered);
+    function openAuthModal(mode) {
+        toggleModal('modal-auth', true);
+        setAuthMode(mode);
     }
 
-    function tick() { document.getElementById('clock').innerText = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'}); }
-    setInterval(tick, 1000); tick();
-
-    function toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
-
-    function fastTrack(tabId) {
-        doLogin();
-        switchTab(tabId, document.getElementById('link-' + tabId));
+    function setAuthMode(mode) {
+        const isLogin = mode === 'login';
+        document.getElementById('tab-login').className = isLogin ? 'm-tab active' : 'm-tab';
+        document.getElementById('tab-reg').className = !isLogin ? 'm-tab active' : 'm-tab';
+        document.getElementById('reg-extra').style.display = isLogin ? 'none' : 'block';
+        document.getElementById('authBtn').innerText = isLogin ? 'Войти в систему' : 'Зарегистрироваться';
     }
 
     function doLogin() {
@@ -222,6 +182,12 @@
         renderTable(tendersData);
         toggleModal('modal-auth', false);
     }
+
+    function fastTrack(tabId) { openAuthModal('login'); }
+    function toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
+    function tick() { document.getElementById('clock').innerText = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'}); }
+    setInterval(tick, 1000); tick();
+    function applyFilters() { renderTable(tendersData); } // Заглушка для теста
 
     function switchTab(tabId, btn) {
         document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
