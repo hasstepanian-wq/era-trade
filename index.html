@@ -9,29 +9,29 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body, html { min-height: 100vh; background: var(--dark-bg); color: #fff; display: flex; flex-direction: column; }
 
-        /* ХЕДЕР (УВЕЛИЧЕННЫЙ + ЧАСЫ) */
+        /* ХЕДЕР (+10%) */
         header { background: #fff; padding: 22px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 15px rgba(0,0,0,0.15); }
         .header-left { display: flex; align-items: center; gap: 45px; }
         
-        .logo-block { display: flex; flex-direction: column; align-items: flex-start; cursor: pointer; }
-        .logo-img { height: 48px; }
-        .server-clock { font-family: 'Courier New', monospace; font-size: 13px; font-weight: 900; color: #1a202c; margin-top: 5px; letter-spacing: 0.5px; min-width: 100px; }
+        .logo-wrapper { display: flex; flex-direction: column; align-items: flex-start; cursor: pointer; }
+        .logo-img { height: 50px; display: block; }
+        .server-time { font-family: 'Courier New', monospace; font-size: 13px; font-weight: 900; color: #1a202c; margin-top: 5px; letter-spacing: 0.5px; }
         
         nav { display: flex; gap: 35px; align-items: center; }
         nav a { color: #1a202c; text-decoration: none; font-weight: 800; font-size: 12px; text-transform: uppercase; cursor: pointer; }
         
         .header-right { display: flex; align-items: center; gap: 20px; }
         .lang-switcher { display: flex; border: 1px solid #cbd5e0; border-radius: 20px; overflow: hidden; background: #f8fafc; }
-        .lang-btn { padding: 8px 16px; font-size: 11px; font-weight: bold; cursor: pointer; color: #64748b; border: none; background: transparent; }
+        .lang-btn { padding: 8px 16px; font-size: 11px; font-weight: bold; cursor: pointer; color: #64748b; border: none; background: transparent; outline: none; }
         .lang-btn.active { background: var(--primary); color: #fff; }
         .btn-login { background: var(--primary); color: #fff; padding: 14px 28px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; }
 
-        /* ГЕРОЙ И КВАДРАТНЫЕ ПЛИТКИ (УМЕНЬШЕНЫ НА 15%, РАССТОЯНИЕ УВЕЛИЧЕНО) */
+        /* ГЕРОЙ И ПЛИТКИ (МЕНЬШЕ И ШИРЕ) */
         #landing-page { flex: 1; display: flex; flex-direction: column; }
         .hero { flex: 1; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('sky_banner.jpg') no-repeat center/cover; display: flex; align-items: center; justify-content: center; padding: 40px; }
         
-        /* grid-template-columns: уменьшен размер с 330px до 280px (-15%) / gap увеличен до 60px */
-        .grid-wrapper { display: grid; grid-template-columns: repeat(3, 280px); gap: 60px; justify-content: center; width: 100%; }
+        /* Размер уменьшен на 15% (было 330, стало 280), отступ увеличен до 60px */
+        .grid-container { display: grid; grid-template-columns: repeat(3, 280px); gap: 60px; justify-content: center; width: 100%; }
         
         .glass-card { 
             background: rgba(10, 31, 61, 0.85); 
@@ -40,11 +40,11 @@
             aspect-ratio: 1 / 1; 
             display: flex; flex-direction: column; justify-content: center; 
             padding: 30px; border-radius: 15px; text-align: center; cursor: pointer; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .glass-card:hover { border-color: var(--primary); transform: translateY(-10px); background: rgba(10, 31, 61, 0.98); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        .glass-card:hover { border-color: var(--primary); transform: translateY(-8px); background: rgba(10, 31, 61, 0.98); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
         .glass-card h3 { font-size: 21px; margin-bottom: 15px; text-transform: uppercase; color: #fff; font-weight: 700; }
-        .glass-card p { font-size: 13px; color: #94a3b8; line-height: 1.5; }
+        .glass-card p { font-size: 14px; color: #94a3b8; line-height: 1.5; }
 
         footer { background: #030a16; padding: 50px 5%; border-top: 1px solid var(--border); }
         .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
@@ -63,9 +63,9 @@
 <div id="landing-page">
     <header>
         <div class="header-left">
-            <div class="logo-block" onclick="location.reload()">
-                <img src="logo-forsage-modified.png" class="logo-img" alt="ЭРА">
-                <div id="ms-clock" class="server-clock">--:--:-- МСК</div>
+            <div class="logo-wrapper" onclick="location.reload()">
+                <img src="logo-forsage-modified.png" class="logo-img" alt="LOGO">
+                <div id="server-time-display" class="server-time">00:00:00 МСК</div>
             </div>
             <nav>
                 <a onclick="fastTrack('tenders')" data-i18n="nav_registry">Реестр торгов</a>
@@ -74,15 +74,15 @@
         </div>
         <div class="header-right">
             <div class="lang-switcher">
-                <button class="lang-btn" id="btn-ru" onclick="setUserLang('ru')">RU</button>
-                <button class="lang-btn" id="btn-en" onclick="setUserLang('en')">EN</button>
+                <button class="lang-btn" id="btn-ru" onclick="forceLang('ru')">RU</button>
+                <button class="lang-btn" id="btn-en" onclick="forceLang('en')">EN</button>
             </div>
             <button class="btn-login" onclick="doLogin()" data-i18n="btn_login">Вход</button>
         </div>
     </header>
 
     <div class="hero">
-        <div class="grid-wrapper">
+        <div class="grid-container">
             <div class="glass-card" onclick="doLogin()">
                 <h3 data-i18n="card1_t">Участник</h3>
                 <p data-i18n="card1_p">Поиск актуальных процедур и мгновенная подача заявок онлайн.</p>
@@ -137,37 +137,32 @@
     const translations = {
         ru: {
             nav_registry: "Реестр торгов", nav_comm: "Комиссионная продажа", btn_login: "Вход",
-            card1_t: "Участник", card1_p: "Личный кабинет, поиск процедур и подача заявок онлайн.",
-            card2_t: "Регистрация", card2_p: "Аккредитация в системе за 24 часа. Мгновенная подача документов.",
-            card3_t: "Организатор", card3_p: "Размещение лотов и проведение прозрачных торговых процедур.",
+            card1_t: "Участник", card1_p: "Поиск актуальных процедур и мгновенная подача заявок онлайн.",
+            card2_t: "Регистрация", card2_p: "Получите аккредитацию в системе всего за 24 часа.",
+            card3_t: "Организатор", card3_p: "Размещение лотов, проведение торгов и управление процедурами.",
             side_home: "Рабочий стол", side_tenders: "Реестр торгов", side_exit: "ВЫХОД",
             h_welcome: "Добро пожаловать, Артур!", f_about_t: "О платформе", f_docs_t: "Документы", f_supp_t: "Поддержка",
-            f_about_p: "ЭТП ЭРА — современная экосистема для проведения торгов любого уровня сложности.", f_regl: "Регламент ЭТП", f_tariffs: "Тарифы"
+            f_about_p: "ЭТП ЭРА — современная цифровая экосистема для проведения торгов.", f_regl: "Регламент работы", f_tariffs: "Тарифы"
         },
         en: {
             nav_registry: "Auction Registry", nav_comm: "Commission Sales", btn_login: "Login",
-            card1_t: "Bidder", card1_p: "Personal account, search procedures and submit bids online.",
-            card2_t: "Registration", card2_p: "System accreditation in 24 hours. Instant document submission.",
-            card3_t: "Organizer", card3_p: "Post lots and conduct transparent trading procedures.",
+            card1_t: "Bidder", card1_p: "Search active procedures and submit bids instantly online.",
+            card2_t: "Registration", card2_p: "Get system accreditation in just 24 hours.",
+            card3_t: "Organizer", card3_p: "Post lots, run auctions, and manage procedures.",
             side_home: "Dashboard", side_tenders: "Registry", side_exit: "LOGOUT",
-            h_welcome: "Welcome back, Arthur!", f_about_t: "About Us", f_docs_t: "Documents", f_supp_t: "Support",
-            f_about_p: "ERA ETP is a modern ecosystem for electronic trading.", f_regl: "Rules", f_tariffs: "Tariffs"
+            h_welcome: "Welcome back, Arthur!", f_about_t: "About Platform", f_docs_t: "Documents", f_supp_t: "Support",
+            f_about_p: "ERA ETP is a modern digital ecosystem for electronic trading.", f_regl: "Rules", f_tariffs: "Tariffs"
         }
     };
 
-    // ФИНАЛЬНЫЙ ФИКС ЯЗЫКА: Память + Системные настройки
-    function getInitialLang() {
-        const saved = localStorage.getItem('era_lang');
+    // БЕЗУСЛОВНЫЙ ПРИОРИТЕТ RU
+    function getLang() {
+        const saved = localStorage.getItem('user_choice');
         if (saved) return saved;
-
-        const langs = navigator.languages || [navigator.language];
-        for (let l of langs) {
-            if (l.toLowerCase().includes('ru')) return 'ru';
-        }
-        return 'en';
+        return 'ru'; // Если выбора нет, всегда RU, игнорируя VPN/Браузер
     }
 
-    function applyLang(lang) {
+    function applyTranslations(lang) {
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             if (translations[lang][key]) el.innerText = translations[lang][key];
@@ -177,23 +172,21 @@
         document.documentElement.lang = lang;
     }
 
-    function setUserLang(lang) {
-        localStorage.setItem('era_lang', lang);
-        applyLang(lang);
+    function forceLang(lang) {
+        localStorage.setItem('user_choice', lang);
+        applyTranslations(lang);
     }
 
-    // ЧАСЫ (ПОЧИНЕНО)
-    function updateClock() {
+    // ЧАСЫ (ЖЕСТКАЯ ПРИВЯЗКА)
+    function tick() {
         try {
-            const options = { timeZone: 'Europe/Moscow', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-            const timeStr = new Intl.DateTimeFormat('ru-RU', options).format(new Date());
-            document.getElementById('ms-clock').innerText = timeStr + ' МСК';
-        } catch (e) {
-            console.error("Clock error:", e);
-        }
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('ru-RU', { timeZone: 'Europe/Moscow', hour12: false });
+            document.getElementById('server-time-display').innerText = timeStr + ' МСК';
+        } catch(e) {}
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+    setInterval(tick, 1000);
+    tick();
 
     function doLogin() {
         document.getElementById('landing-page').style.display = 'none';
@@ -207,7 +200,11 @@
         document.getElementById('l-' + id).classList.add('active');
     }
 
-    window.onload = () => applyLang(getInitialLang());
+    // Запуск при загрузке
+    window.addEventListener('DOMContentLoaded', () => {
+        applyTranslations(getLang());
+        tick();
+    });
 </script>
 </body>
 </html>
