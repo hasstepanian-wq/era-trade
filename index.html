@@ -2,49 +2,130 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>ЭТП ЭРА</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЭТП ЭРА — Электронная торговая площадка</title>
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; background: #06162c; color: #fff; text-align: center; }
-        header { background: #fff; padding: 15px; color: #333; display: flex; justify-content: space-between; }
-        .main { padding: 50px; display: flex; justify-content: center; gap: 20px; }
-        .box { border: 1px solid #555; padding: 20px; width: 150px; border-radius: 8px; cursor: pointer; }
-        .m-window { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-                    background: #fff; color: #333; padding: 25px; border-radius: 10px; width: 280px; box-shadow: 0 0 20px #000; }
-        input { width: 100%; margin: 10px 0; padding: 10px; box-sizing: border-box; }
-        .btn { background: #0099d5; color: #fff; border: none; padding: 12px; width: 100%; cursor: pointer; border-radius: 4px; }
+        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; min-height: 100%; width: 100%; background: #06162c; color: #fff; }
+        
+        /* ФОНОВЫЙ ГРАДИЕНТ */
+        .page-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at top right, #1e3a8a, #06162c);
+            z-index: -1;
+        }
+
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 60px; background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5); color: #333;
+        }
+
+        .logo-text { font-size: 28px; font-weight: 900; color: #0099d5; letter-spacing: 1px; }
+        
+        .msk-time {
+            background: #06162c; color: #00ff00; padding: 5px 15px; border-radius: 4px;
+            font-family: monospace; font-size: 16px; border: 1px solid #0099d5;
+        }
+
+        nav a { text-decoration: none; color: #1e293b; font-weight: 700; margin-left: 30px; }
+        .btn-entry { background: #0099d5; color: #fff !important; padding: 10px 25px; border-radius: 6px; }
+
+        .main-grid { display: flex; justify-content: center; align-items: center; gap: 40px; padding: 100px 20px; flex-wrap: wrap; }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2); padding: 40px;
+            border-radius: 20px; width: 280px; text-align: center; transition: 0.3s; cursor: pointer;
+        }
+        .card:hover { transform: translateY(-10px); border-color: #0099d5; background: rgba(255, 255, 255, 0.15); }
+        .card h2 { color: #0099d5; text-transform: uppercase; margin-bottom: 15px; }
+
+        /* МОДАЛКА */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-card {
+            background: #fff; color: #333; padding: 35px; border-radius: 20px; width: 400px;
+            position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .tariff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .t-item {
+            border: 2px solid #eee; border-radius: 12px; padding: 15px; cursor: pointer; text-align: center;
+        }
+        .t-item.active { border-color: #0099d5; background: #f0f9ff; }
+        .t-item i { font-size: 24px; display: block; margin-bottom: 5px; }
+
+        .btn-submit {
+            background: #0099d5; color: #fff; border: none; width: 100%; padding: 15px;
+            border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px;
+        }
     </style>
 </head>
 <body>
 
+<div class="page-bg"></div>
+
 <header>
-    <b style="color:#0099d5">ЭРА</b>
-    <div id="t">00:00:00</div>
-    <button onclick="sh(1)" style="cursor:pointer">Вход</button>
+    <div class="logo-text">ЭТП ЭРА</div>
+    <div class="msk-time" id="clock">00:00:00</div>
+    <nav>
+        <a href="#">Торги</a>
+        <a href="#" class="btn-entry" onclick="toggleM(true)">Личный кабинет</a>
+    </nav>
 </header>
 
-<div class="main">
-    <div class="box" onclick="sh(1)">Заявка</div>
-    <div class="box" onclick="sh(1)">Торги</div>
-</div>
-
-<div id="win" class="m-window">
-    <h3 style="margin-top:0">Форма связи</h3>
-    <input type="text" placeholder="Ваш ИНН">
-    <div style="font-size: 11px; margin-bottom: 10px;">
-        <input type="checkbox" style="width:auto"> Согласен на обработку данных
+<main class="main-grid">
+    <div class="card" onclick="toggleM(true)">
+        <h2>Участник</h2>
+        <p>Аккредитация и поиск новых тендеров</p>
     </div>
-    <button class="btn" onclick="sh(0)">Отправить</button>
-    <div onclick="sh(0)" style="margin-top:10px; font-size:12px; cursor:pointer; color:#999">Закрыть</div>
+    <div class="card" onclick="toggleM(true)" style="border-color: #0099d5; background: rgba(0, 153, 213, 0.1);">
+        <h2>Регистрация</h2>
+        <p>Экспресс-доступ к системе ⚡</p>
+    </div>
+    <div class="card" onclick="toggleM(true)">
+        <h2>Организатор</h2>
+        <p>Размещение процедур и регламентов</p>
+    </div>
+</main>
+
+<div id="m" class="modal-overlay">
+    <div class="modal-card">
+        <h2 style="margin-top:0">Регистрация</h2>
+        <div style="margin-bottom:15px">
+            <label style="display:block; font-weight:bold; font-size:12px; margin-bottom:5px">ИНН</label>
+            <input type="text" placeholder="Введите ИНН организации" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box">
+        </div>
+
+        <label style="font-weight:bold; font-size:12px">Выберите тариф:</label>
+        <div class="tariff-grid">
+            <div class="t-item active" id="t1" onclick="setT(0)">
+                <i>⏱</i><b>Стандарт</b><br><small>Бесплатно</small>
+            </div>
+            <div class="t-item" id="t2" onclick="setT(1500)">
+                <i>⚡</i><b>Экспресс</b><br><small>1500 ₽</small>
+            </div>
+        </div>
+
+        <button class="btn-submit" id="sbtn" onclick="toggleM(false)">Зарегистрироваться</button>
+        <p onclick="toggleM(false)" style="text-align:center; color:#999; cursor:pointer; margin-top:15px; font-size:14px">Закрыть</p>
+    </div>
 </div>
 
 <script>
-    function clock() {
-        document.getElementById('t').innerHTML = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'});
+    function updateClock() {
+        document.getElementById('clock').innerHTML = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'});
     }
-    setInterval(clock, 1000); clock();
+    setInterval(updateClock, 1000); updateClock();
 
-    function sh(v) {
-        document.getElementById('win').style.display = v ? 'block' : 'none';
+    function toggleM(show) { document.getElementById('m').style.display = show ? 'flex' : 'none'; }
+
+    function setT(p) {
+        document.getElementById('t1').classList.toggle('active', p === 0);
+        document.getElementById('t2').classList.toggle('active', p > 0);
+        document.getElementById('sbtn').innerHTML = p > 0 ? 'Оплатить и войти' : 'Зарегистрироваться';
     }
 </script>
 
