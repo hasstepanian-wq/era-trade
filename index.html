@@ -7,148 +7,149 @@
     <style>
         :root { --primary: #0099d5; --dark-bg: #06162c; }
         
-        html, body { 
-            height: 100%; 
-            margin: 0; padding: 0; 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            background: var(--dark-bg); color: #fff; 
-        }
-
+        html, body { height: 100%; margin: 0; padding: 0; font-family: Arial, sans-serif; background: var(--dark-bg); color: #fff; }
         body { display: flex; flex-direction: column; }
 
-        /* ХЕДЕР БЕЗ ГОЛУБОЙ ПОЛОСЫ */
+        /* ХЕДЕР: ЛОГО И ВРЕМЯ СЛЕВА + МЕНЮ */
         header {
-            background: #ffffff; padding: 15px 5%;
+            background: #ffffff; padding: 10px 5%;
             display: flex; justify-content: space-between; align-items: center;
-            /* УБРАЛ border-bottom */
         }
         
-        .header-center { display: flex; flex-direction: column; align-items: center; margin: 0 auto; }
-        .logo-img { height: 75px; width: auto; display: block; }
-        .server-time { font-family: monospace; font-size: 16px; color: #1a202c; font-weight: 900; margin-top: 2px; }
-        
-        .btn-top { 
-            background: var(--primary); color: #fff; padding: 12px 25px; 
-            border-radius: 4px; border: none; cursor: pointer; 
-            font-weight: bold; text-transform: uppercase; 
-        }
+        .header-left { display: flex; align-items: center; gap: 30px; }
+        .logo-group { display: flex; flex-direction: column; }
+        .logo-img { height: 55px; width: auto; display: block; }
+        .server-time { font-family: monospace; font-size: 14px; color: #1a202c; font-weight: 900; }
+
+        .nav-menu { display: flex; gap: 25px; }
+        .nav-menu a { color: #1a202c; text-decoration: none; font-weight: bold; font-size: 14px; text-transform: uppercase; }
+        .nav-menu a:hover { color: var(--primary); }
+
+        .btn-top { background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; }
 
         /* БАННЕР */
-        .hero-banner {
-            width: 100%; height: 450px;
-            background: url('sky_banner.jpg') no-repeat center center;
-            background-size: cover;
-        }
+        .hero { width: 100%; height: 350px; background: url('sky_banner.jpg') no-repeat center center; background-size: cover; flex-shrink: 0; }
 
-        /* ОСНОВНОЙ КОНТЕНТ */
-        main { flex: 1 0 auto; }
-        
-        .container {
-            max-width: 1200px; margin: -60px auto 60px;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px; padding: 0 20px;
-        }
-        
+        /* ПЛИТКА */
+        main { flex: 1 0 auto; padding-bottom: 50px; }
+        .container { max-width: 1200px; margin: -40px auto 0; display: flex; justify-content: center; gap: 20px; padding: 0 20px; }
         .card {
-            background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 40px; border-radius: 8px; transition: 0.3s; cursor: pointer;
-            backdrop-filter: blur(10px); text-align: center;
+            background: #0a1f3d; border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px; border-radius: 4px; transition: 0.3s; cursor: pointer;
+            text-align: center; width: 33%; min-height: 180px; box-sizing: border-box;
         }
-        .card:hover { border-color: var(--primary); background: rgba(0, 153, 213, 0.15); transform: translateY(-5px); }
-        .card h3 { color: var(--primary); margin-top: 0; text-transform: uppercase; }
+        .card:hover { border-color: var(--primary); background: #0d284d; }
+        .card h3 { color: var(--primary); margin: 0 0 10px 0; text-transform: uppercase; }
 
-        /* ФУТЕР ВНИЗУ */
-        footer {
-            flex-shrink: 0;
-            background: #030a16; padding: 25px 5%;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            text-align: center; color: #94a3b8; font-size: 14px;
-        }
+        /* ФУТЕР */
+        footer { flex-shrink: 0; background: #030a16; padding: 25px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 13px; color: #94a3b8; }
 
         /* УНИВЕРСАЛЬНАЯ МОДАЛКА */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
-        .modal-box { background: #fff; color: #1a202c; padding: 40px; border-radius: 4px; width: 90%; max-width: 400px; position: relative; }
-        .modal-box h2 { margin: 0 0 25px 0; border-bottom: 3px solid var(--primary); padding-bottom: 10px; text-transform: uppercase; }
+        .modal-box { background: #fff; color: #1a202c; padding: 30px; border-radius: 4px; width: 90%; max-width: 450px; position: relative; }
         
-        .type-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
-        .t-btn { border: 1px solid #cbd5e0; padding: 12px; cursor: pointer; text-align: center; font-weight: bold; font-size: 12px; color: #4a5568; }
-        .t-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .modal-tabs { display: flex; border-bottom: 2px solid #eee; margin-bottom: 20px; }
+        .tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: bold; color: #999; }
+        .tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); margin-bottom: -2px; }
 
-        .input-item { margin-bottom: 20px; }
-        .input-item label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 8px; color: #4a5568; }
-        .input-item input { width: 100%; padding: 15px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box; }
-        
-        .btn-go { background: var(--primary); color: #fff; border: none; width: 100%; padding: 18px; font-weight: bold; cursor: pointer; font-size: 16px; text-transform: uppercase; }
-        .x-close { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 30px; color: #cbd5e0; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #4a5568; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box; }
+
+        .btn-main { background: var(--primary); color: #fff; border: none; width: 100%; padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+        .close-x { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px; color: #ccc; }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="width:150px"></div>
-    <div class="header-center">
-        <img src="logo-forsage-modified.png" alt="LOGO" class="logo-img">
-        <div class="server-time" id="clock">00:00:00</div>
+    <div class="header-left">
+        <div class="logo-group">
+            <img src="logo-forsage-modified.png" alt="ФОРСАЖ" class="logo-img">
+            <div class="server-time" id="clock">00:00:00</div>
+        </div>
+        <nav class="nav-menu">
+            <a href="#">Торги</a>
+            <a href="#">Комиссионная продажа</a>
+        </nav>
     </div>
-    <div style="width:150px; text-align:right;">
-        <button class="btn-top" onclick="showM(true)">ВХОД</button>
-    </div>
+    <button class="btn-top" onclick="openModal('login')">ВХОД / РЕГИСТРАЦИЯ</button>
 </header>
 
 <main>
-    <div class="hero-banner"></div>
+    <div class="hero"></div>
     <div class="container">
-        <div class="card" onclick="showM(true)">
-            <h3>Участник</h3>
-            <p>Вход в личный кабинет и поиск процедур</p>
-        </div>
-        <div class="card" onclick="showM(true)" style="border-color: var(--primary);">
+        <div class="card" onclick="openModal('reg')">
             <h3>Регистрация</h3>
-            <p>Аккредитация в системе за 24 часа</p>
+            <p>Стать участником системы за 24 часа</p>
         </div>
-        <div class="card" onclick="showM(true)">
+        <div class="card" onclick="openModal('login')">
+            <h3>Участник</h3>
+            <p>Вход в личный кабинет</p>
+        </div>
+        <div class="card" onclick="openModal('login')">
             <h3>Организатор</h3>
-            <p>Размещение лотов и проведение торгов</p>
+            <p>Управление торгами</p>
         </div>
     </div>
 </main>
 
 <footer>
-    <p>&copy; 2026 ЭТП ЭРА. Электронная торговая площадка. Все права защищены.</p>
+    &copy; 2026 ЭТП ЭРА. Электронная торговая площадка. Все права защищены.
 </footer>
 
-<div id="m-window" class="modal-overlay">
+<div id="modal" class="modal-overlay">
     <div class="modal-box">
-        <span class="x-close" onclick="showM(false)">&times;</span>
-        <h2>Авторизация</h2>
-        <div class="type-toggle">
-            <div id="m-org" class="t-btn active" onclick="setT('org')">ЮР. ЛИЦО</div>
-            <div id="m-fiz" class="t-btn" onclick="setT('fiz')">ФИЗ. ЛИЦО</div>
+        <span class="close-x" onclick="closeModal()">&times;</span>
+        <div class="modal-tabs">
+            <div id="tab-login" class="tab" onclick="setMode('login')">ВХОД</div>
+            <div id="tab-reg" class="tab" onclick="setMode('reg')">РЕГИСТРАЦИЯ</div>
         </div>
-        <div class="input-item">
-            <label id="l-id">ИНН ОРГАНИЗАЦИИ</label>
-            <input type="text" id="i-id" placeholder="10 или 12 цифр">
-        </div>
-        <div class="input-item">
-            <label>ПАРОЛЬ</label>
-            <input type="password" placeholder="********">
-        </div>
-        <button class="btn-go" onclick="showM(false)">ВОЙТИ</button>
+
+        <div id="form-content">
+            </div>
+        <button class="btn-main" id="submit-btn">ОТПРАВИТЬ</button>
     </div>
 </div>
 
 <script>
     function tick() { document.getElementById('clock').innerText = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'}); }
     setInterval(tick, 1000); tick();
-    function showM(s) { document.getElementById('m-window').style.display = s ? 'flex' : 'none'; }
-    function setT(t) {
-        const isOrg = t === 'org';
-        document.getElementById('m-org').className = 't-btn' + (isOrg ? ' active' : '');
-        document.getElementById('m-fiz').className = 't-btn' + (!isOrg ? ' active' : '');
-        document.getElementById('l-id').innerText = isOrg ? 'ИНН ОРГАНИЗАЦИИ' : 'СНИЛС / ИНН ФИЗЛИЦА';
-        document.getElementById('i-id').placeholder = isOrg ? '10 или 12 цифр' : 'ХХХ-ХХХ-ХХХ ХХ';
+
+    let currentMode = 'login';
+
+    function openModal(mode) {
+        document.getElementById('modal').style.display = 'flex';
+        setMode(mode);
     }
-    window.onclick = function(e) { if (e.target.className === 'modal-overlay') showM(false); }
+
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+    function setMode(mode) {
+        currentMode = mode;
+        document.getElementById('tab-login').className = 'tab' + (mode === 'login' ? ' active' : '');
+        document.getElementById('tab-reg').className = 'tab' + (mode === 'reg' ? ' active' : '');
+        
+        const content = document.getElementById('form-content');
+        const btn = document.getElementById('submit-btn');
+
+        if (mode === 'login') {
+            content.innerHTML = `
+                <div class="form-group"><label>ЛОГИН / ИНН</label><input type="text" placeholder="Введите данные"></div>
+                <div class="form-group"><label>ПАРОЛЬ</label><input type="password" placeholder="********"></div>
+            `;
+            btn.innerText = 'ВОЙТИ';
+        } else {
+            content.innerHTML = `
+                <div class="form-group"><label>ИНН ОРГАНИЗАЦИИ / ФИЗЛИЦА</label><input type="text" placeholder="10 или 12 цифр"></div>
+                <div class="form-group"><label>EMAIL</label><input type="email" placeholder="example@mail.ru"></div>
+                <div class="form-group"><label>ТЕЛЕФОН</label><input type="text" placeholder="+7 (___) ___+__-__"></div>
+            `;
+            btn.innerText = 'ЗАРЕГИСТРИРОВАТЬСЯ';
+        }
+    }
+
+    window.onclick = function(e) { if (e.target.className === 'modal-overlay') closeModal(); }
 </script>
 
 </body>
