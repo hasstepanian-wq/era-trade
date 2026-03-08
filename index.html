@@ -3,98 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЭТП ЭРА — Торговая платформа</title>
+    <title>ЭТП ЭРА</title>
     <style>
-        :root { --primary: #0099d5; --dark-bg: #01040a; --glass: rgba(10, 31, 61, 0.6); }
+        :root { --primary: #0099d5; --dark-blue: #0a1f3d; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body, html { 
-            height: 100vh; font-family: 'Segoe UI', Arial, sans-serif; 
-            background: var(--dark-bg); color: #fff; overflow-x: hidden; 
+            height: 100vh; font-family: 'Segoe UI', sans-serif; 
+            background: #01040a; color: #fff; overflow: hidden; 
         }
 
-        /* --- ЛЕНДИНГ --- */
-        #landing-page { display: flex; flex-direction: column; min-height: 100vh; }
+        /* ХЕДЕР */
+        header {
+            background: #fff; padding: 10px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            position: relative; z-index: 10;
+        }
+        .logo-box { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #333; }
+        .logo-img { height: 45px; width: auto; }
+        .clock { font-family: monospace; font-size: 14px; font-weight: 900; margin-top: 2px; }
         
-        header { 
-            background: #ffffff; padding: 10px 5%; 
-            display: flex; justify-content: space-between; align-items: center; 
-            z-index: 100;
-        }
-        .logo-link { text-decoration: none; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .logo-img { height: 45px; }
-        .clock { font-family: monospace; font-size: 14px; color: #1a202c; font-weight: 900; margin-top: 2px; }
-        
-        .btn-auth { 
-            background: var(--primary); color: #fff; padding: 10px 22px; 
-            border: none; border-radius: 4px; cursor: pointer; 
-            font-weight: bold; text-transform: uppercase; font-size: 12px;
-        }
+        nav a { color: #333; text-decoration: none; font-weight: 800; font-size: 12px; text-transform: uppercase; margin-left: 20px; }
+        .btn-auth { background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px; }
 
-        .hero { 
-            flex: 1; background: url('sky_banner.jpg') no-repeat center center / cover; 
-            display: flex; align-items: center; justify-content: center; padding: 20px;
+        /* ГЛАВНЫЙ ЭКРАН */
+        #landing-page { display: flex; flex-direction: column; height: 100vh; }
+        .hero {
+            flex: 1; background: url('sky_banner.jpg') no-repeat center center / cover;
+            display: flex; align-items: center; justify-content: center;
         }
-
-        .grid-wrapper { 
-            width: 100%; max-width: 1200px; 
-            display: flex; justify-content: space-between; gap: 30px; 
+        .grid-wrapper {
+            display: flex; justify-content: center; gap: 30px; width: 100%; padding: 0 5%;
         }
-
-        .glass-card { 
-            background: var(--glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.15); width: 280px; height: 280px; 
-            text-align: center; padding: 25px; border-radius: 6px; cursor: pointer; 
-            display: flex; flex-direction: column; justify-content: center; 
+        .glass-card {
+            background: rgba(10, 31, 61, 0.7); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 320px; height: 300px; border-radius: 4px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 30px; transition: 0.3s; cursor: pointer;
         }
-        .glass-card:hover { border-color: var(--primary); transform: translateY(-5px); background: rgba(13, 40, 77, 0.7); }
-        .glass-card h3 { color: #fff; text-transform: uppercase; font-size: 18px; margin-bottom: 15px; letter-spacing: 1px; }
+        .glass-card:hover { border-color: var(--primary); transform: translateY(-5px); background: rgba(13, 40, 77, 0.8); }
+        .glass-card h3 { text-transform: uppercase; font-size: 18px; margin-bottom: 15px; letter-spacing: 1px; }
         .glass-card p { font-size: 14px; color: #cbd5e0; line-height: 1.5; }
 
-        footer { background: #030a16; padding: 25px 5%; border-top: 1px solid #1e293b; text-align: center; font-size: 12px; color: #64748b; }
+        /* ЛИЧНЫЙ КАБИНЕТ (СКРЫТ) */
+        #dashboard { display: none; height: 100vh; grid-template-columns: 260px 1fr; background: #01040a; }
+        .sidebar { background: #06162c; padding: 30px; border-right: 1px solid #1e293b; display: flex; flex-direction: column; }
+        .sidebar h2 { color: var(--primary); margin-bottom: 40px; font-size: 20px; }
+        .side-link { padding: 12px; color: #cbd5e0; cursor: pointer; border-radius: 4px; margin-bottom: 5px; }
+        .side-link.active, .side-link:hover { background: var(--primary); color: #fff; }
+        .main-content { padding: 40px; overflow-y: auto; }
 
-        /* --- ЛИЧНЫЙ КАБИНЕТ (СКРЫТ) --- */
-        #dashboard { display: none; height: 100vh; grid-template-columns: 260px 1fr; }
-        
-        .sidebar { background: #06162c; border-right: 1px solid rgba(255,255,255,0.1); padding: 25px; display: flex; flex-direction: column; }
-        .sidebar h2 { font-size: 20px; color: var(--primary); margin-bottom: 40px; text-transform: uppercase; font-weight: 900; }
-        .side-link { padding: 12px 15px; color: #cbd5e0; text-decoration: none; border-radius: 4px; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
-        .side-link:hover, .side-link.active { background: var(--primary); color: #fff; font-weight: bold; }
-        .logout { margin-top: auto; color: #ef4444; border: 1px solid #ef4444; text-align: center; padding: 12px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: bold; }
-
-        .main-content { padding: 40px; overflow-y: auto; background: #01040a; }
-        .dash-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; border-bottom: 1px solid #1e293b; padding-bottom: 20px; }
-        .status-badge { background: #f59e0b; color: #000; padding: 6px 15px; border-radius: 4px; font-size: 11px; font-weight: 800; text-transform: uppercase; }
-
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px; }
-        .stat-card { background: #0a1f3d; padding: 25px; border-radius: 8px; border: 1px solid #1e293b; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .stat-card span { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-card div { font-size: 28px; font-weight: bold; margin-top: 12px; color: var(--primary); }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 25px; background: rgba(255,255,255,0.02); border-radius: 8px; }
-        th { text-align: left; padding: 18px; color: #64748b; border-bottom: 2px solid #1e293b; font-size: 12px; text-transform: uppercase; }
-        td { padding: 18px; border-bottom: 1px solid #1e293b; font-size: 14px; }
-        .btn-action { background: var(--primary); color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
-
-        /* --- МОДАЛКА --- */
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 9999; justify-content: center; align-items: center; }
-        .modal { background: #fff; color: #1a202c; width: 90%; max-width: 400px; padding: 40px; border-radius: 8px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        .close { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 30px; color: #cbd5e0; }
-        .modal h2 { margin-bottom: 25px; font-size: 20px; color: var(--primary); text-align: center; font-weight: 800; }
-        
+        /* МОДАЛКА */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
+        .modal { background: #fff; color: #333; width: 400px; padding: 40px; border-radius: 4px; position: relative; }
+        .close { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 24px; color: #ccc; }
+        .modal h2 { color: var(--primary); margin-bottom: 25px; text-align: center; }
         .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 11px; font-weight: 900; color: #4a5568; margin-bottom: 8px; text-transform: uppercase; }
-        .input-group input { width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 15px; outline: none; }
-        .input-group input:focus { border-color: var(--primary); }
-        
-        .btn-login { background: var(--primary); color: #fff; width: 100%; padding: 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 14px; margin-top: 10px; }
+        .input-group label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 5px; color: #666; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; outline: none; }
+        .btn-login { width: 100%; background: var(--primary); color: #fff; padding: 15px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
 
-        /* Мобильная адаптация */
+        footer { background: #030a16; padding: 15px; text-align: center; font-size: 11px; color: #475569; }
+
         @media (max-width: 900px) {
-            #dashboard { grid-template-columns: 1fr; }
-            .sidebar { display: none; }
             .grid-wrapper { flex-direction: column; align-items: center; }
-            .stats-grid { grid-template-columns: 1fr; }
+            .glass-card { width: 90%; height: auto; padding: 40px; }
+            body, html { overflow-y: auto; }
         }
     </style>
 </head>
@@ -102,136 +77,89 @@
 
 <div id="landing-page">
     <header>
-        <div class="header-left">
-            <div class="logo-link" onclick="location.reload()">
-                <img src="logo-forsage-modified.png" class="logo-img" alt="ЭРА">
-                <div class="clock" id="clock">00:00:00</div>
-            </div>
+        <div class="logo-box">
+            <img src="logo-forsage-modified.png" class="logo-img">
+            <div class="clock" id="clock">00:00:00</div>
         </div>
-        <button class="btn-auth" onclick="toggleModal(true)">Вход / Регистрация</button>
+        <nav>
+            <a href="#">Торги</a>
+            <a href="#">Комиссионная продажа</a>
+            <button class="btn-auth" style="margin-left:20px" onclick="openM()">ВХОД / РЕГИСТРАЦИЯ</button>
+        </nav>
     </header>
 
     <div class="hero">
         <div class="grid-wrapper">
-            <div class="glass-card" onclick="toggleModal(true)">
+            <div class="glass-card" onclick="openM()">
                 <h3>Участник</h3>
-                <p>Личный кабинет, поиск актуальных процедур и подача заявок.</p>
+                <p>Вход в личный кабинет, поиск процедур и подача заявок.</p>
             </div>
-            <div class="glass-card" onclick="toggleModal(true)" style="border-color: var(--primary);">
+            <div class="glass-card" onclick="openM()" style="border-color: var(--primary);">
                 <h3>Экспресс-регистрация</h3>
                 <p>Аккредитация в системе за 24 часа. Мгновенная подача документов.</p>
             </div>
-            <div class="glass-card" onclick="toggleModal(true)">
+            <div class="glass-card" onclick="openM()">
                 <h3>Организатор</h3>
-                <p>Размещение лотов и проведение прозрачных торговых процедур.</p>
+                <p>Размещение лотов, проведение аукционов и выбор победителя.</p>
             </div>
         </div>
     </div>
 
-    <footer>
-        © 2026 ЭТП ЭРА. Электронная торговая площадка. Все права защищены.
-    </footer>
+    <footer>© 2026 ЭТП ЭРА. Электронная торговая площадка. Все права защищены.</footer>
 </div>
 
 <div id="dashboard">
     <div class="sidebar">
         <h2>ЭТП ЭРА</h2>
         <div class="side-link active">Рабочий стол</div>
-        <div class="side-link">Реестр процедур</div>
+        <div class="side-link">Реестр торгов</div>
         <div class="side-link">Мои заявки</div>
-        <div class="side-link">Лицевой счет</div>
-        <div class="side-link">Документы</div>
-        <div class="side-link">Настройки</div>
-        <a href="#" class="logout" onclick="location.reload()">Выйти из системы</a>
+        <div style="margin-top:auto; color:red; cursor:pointer" onclick="location.reload()">Выход</div>
     </div>
-    
     <div class="main-content">
-        <div class="dash-header">
-            <div>
-                <h1 style="margin:0; font-size:24px;">Здравствуйте, <span id="user-display">Артур</span>!</h1>
-                <div style="font-size:13px; color:#94a3b8; margin-top:8px;">ИНН участника: <strong id="inn-display">7701234567</strong> | ООО "ЭРА-ТРЕЙД"</div>
-            </div>
-            <div class="status-badge">Аккредитация: На проверке</div>
+        <h1>Добро пожаловать, <span id="user-name">Артур</span>!</h1>
+        <p style="color:#94a3b8; margin-top:10px;">Статус аккредитации: <span style="color:#f59e0b">На проверке</span></p>
+        <div style="margin-top:40px; background:#0a1f3d; padding:30px; border-radius:8px;">
+            <h3>Активные процедуры</h3>
+            <p style="margin-top:15px; color:#64748b">У вас пока нет активных заявок.</p>
         </div>
-
-        <div class="stats-grid">
-            <div class="stat-card"><span>Торги сегодня</span><div>24</div></div>
-            <div class="stat-card"><span>Активные заявки</span><div>5</div></div>
-            <div class="stat-card"><span>Свободный остаток</span><div>120 500 ₽</div></div>
-        </div>
-
-        <h3 style="margin: 30px 0 20px 0; font-size: 18px; text-transform: uppercase; color: #94a3b8;">Рекомендуемые торги</h3>
-        <table>
-            <thead>
-                <tr><th>№ Лота</th><th>Наименование</th><th>Начальная цена</th><th>Окончание</th><th>Действие</th></tr>
-            </thead>
-            <tbody>
-                <tr><td>#ERA-9912</td><td>Закупка офисной мебели</td><td>540 000.00 ₽</td><td>15.03.2026</td><td><button class="btn-action">Просмотр</button></td></tr>
-                <tr><td>#ERA-9945</td><td>Услуги логистики (Юг)</td><td>1 890 000.00 ₽</td><td>22.03.2026</td><td><button class="btn-action">Просмотр</button></td></tr>
-                <tr><td>#ERA-9980</td><td>Поставка ГСМ (АИ-95)</td><td>4 100 000.00 ₽</td><td>10.03.2026</td><td><button class="btn-action">Просмотр</button></td></tr>
-            </tbody>
-        </table>
     </div>
 </div>
 
 <div id="modal-box" class="overlay">
     <div class="modal">
-        <span class="close" onclick="toggleModal(false)">&times;</span>
-        <h2>АВТОРИЗАЦИЯ</h2>
-        
+        <span class="close" onclick="closeM()">&times;</span>
+        <h2>ВХОД</h2>
         <div class="input-group">
-            <label>Ваш ИНН или Логин</label>
-            <input type="text" id="userInput" placeholder="7701234567" autocomplete="off">
+            <label>ЛОГИН ИЛИ ИНН</label>
+            <input type="text" id="u-login" placeholder="Введите данные">
         </div>
-        
         <div class="input-group">
-            <label>Пароль</label>
-            <input type="password" id="passInput" placeholder="********">
+            <label>ПАРОЛЬ</label>
+            <input type="password" placeholder="********">
         </div>
-        
-        <button class="btn-login" onclick="handleLogin()">Войти в систему</button>
-        <p style="text-align:center; font-size:12px; color:#999; margin-top:15px; cursor:pointer;" onclick="alert('Переход к регистрации...')">Нет аккаунта? Зарегистрироваться</p>
+        <button class="btn-login" onclick="doLogin()">Войти в кабинет</button>
     </div>
 </div>
 
 <script>
-    // 1. Часы в реальном времени
-    function updateClock() {
-        const now = new Date();
-        const options = { timeZone: 'Europe/Moscow', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-        document.getElementById('clock').innerText = now.toLocaleTimeString('ru-RU', options);
+    function tick() {
+        document.getElementById('clock').innerText = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'});
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+    setInterval(tick, 1000); tick();
 
-    // 2. Управление модалкой
-    function toggleModal(isVisible) {
-        document.getElementById('modal-box').style.display = isVisible ? 'flex' : 'none';
-    }
+    function openM() { document.getElementById('modal-box').style.display = 'flex'; }
+    function closeM() { document.getElementById('modal-box').style.display = 'none'; }
 
-    // 3. ФУНКЦИЯ ВХОДА (ТО САМОЕ МЕСТО)
-    function handleLogin() {
-        const val = document.getElementById('userInput').value || "Артур";
-        
-        // Визуальное переключение
+    function doLogin() {
+        const val = document.getElementById('u-login').value || "Артур";
+        document.getElementById('user-name').innerText = val;
         document.getElementById('landing-page').style.display = 'none';
         document.getElementById('dashboard').style.display = 'grid';
-        
-        // Подстановка данных в кабинет
-        document.getElementById('user-display').innerText = val;
-        document.getElementById('inn-display').innerText = (val.length > 5) ? val : "7701234567";
-        
-        // Закрываем модалку
-        toggleModal(false);
-        
-        console.log("Вход выполнен успешно для:", val);
+        closeM();
     }
 
-    // Закрытие по клику мимо окна
-    window.onclick = function(event) {
-        const modal = document.getElementById('modal-box');
-        if (event.target == modal) toggleModal(false);
-    }
+    window.onclick = function(e) { if(e.target.id === 'modal-box') closeM(); }
 </script>
 
 </body>
