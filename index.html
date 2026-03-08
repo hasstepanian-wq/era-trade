@@ -14,14 +14,14 @@
             overflow: hidden; display: flex; flex-direction: column;
         }
 
-        /* ХЕДЕР: ЛОГО КЛИКАБЕЛЬНОЕ, ЧАСЫ ПО ЦЕНТРУ ЛОГО */
+        /* ХЕДЕР */
         header {
             background: #ffffff; padding: 10px 5%;
             display: flex; justify-content: space-between; align-items: center;
             flex-shrink: 0; z-index: 100;
         }
         .header-left { display: flex; align-items: center; gap: 30px; }
-        .logo-link { text-decoration: none; display: flex; flex-direction: column; align-items: center; }
+        .logo-link { text-decoration: none; display: flex; flex-direction: column; align-items: center; color: inherit; }
         .logo-img { height: 50px; width: auto; display: block; }
         .clock { font-family: monospace; font-size: 15px; color: #1a202c; font-weight: 900; margin-top: 2px; }
         
@@ -37,28 +37,24 @@
         }
 
         .grid-wrapper {
-            width: 100%;
-            max-width: 100%; /* На всю ширину */
-            padding: 0 5%; /* Отступы от краев экрана */
-            display: flex;
-            justify-content: space-between; /* Равные расстояния между плитками и краями */
+            width: 100%; padding: 0 5%;
+            display: flex; justify-content: space-between;
         }
         
-        /* ПЛИТКИ: +20% К РАЗМЕРУ, БЕЛЫЕ ЗАГОЛОВКИ */
         .glass-card {
             background: rgba(10, 31, 61, 0.4); 
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            width: 280px; height: 280px; /* Увеличил на 20% */
+            width: 280px; height: 280px; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-align: center; padding: 25px; transition: 0.3s; cursor: pointer;
             border-radius: 4px;
         }
         .glass-card:hover { border-color: var(--primary); background: rgba(13, 40, 77, 0.5); transform: translateY(-5px); }
-        .glass-card h3 { color: #fff; /* ЗАГОЛОВОК БЕЛЫЙ */ text-transform: uppercase; margin: 0 0 15px 0; font-size: 18px; }
-        .glass-card p { font-size: 14px; /* УВЕЛИЧИЛ НА 2 ПУНКТА */ color: #cbd5e0; margin: 0; line-height: 1.5; }
+        .glass-card h3 { color: #fff; text-transform: uppercase; margin: 0 0 15px 0; font-size: 17px; white-space: nowrap; }
+        .glass-card p { font-size: 14px; color: #cbd5e0; margin: 0; line-height: 1.5; }
 
-        /* ФУТЕР ИЗ ЛУЧШЕЙ ВЕРСИИ */
+        /* ФУТЕР */
         footer { background: #030a16; padding: 25px 5% 15px; border-top: 1px solid #1e293b; flex-shrink: 0; }
         .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
         .f-col h4 { color: var(--primary); text-transform: uppercase; margin-bottom: 10px; font-size: 13px; }
@@ -66,13 +62,20 @@
         .copy { text-align: center; margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); color: #475569; font-size: 10px; }
 
         /* УНИВЕРСАЛЬНАЯ МОДАЛКА */
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; }
-        .modal { background: #fff; color: #333; width: 90%; max-width: 450px; padding: 30px; border-radius: 4px; position: relative; }
-        .m-tabs { display: flex; border-bottom: 2px solid #eee; margin-bottom: 20px; }
-        .tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: bold; color: #999; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; overflow-y: auto; }
+        .modal { background: #fff; color: #333; width: 95%; max-width: 550px; padding: 35px; border-radius: 4px; position: relative; margin: 20px 0; }
+        .m-tabs { display: flex; border-bottom: 2px solid #eee; margin-bottom: 25px; }
+        .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-weight: bold; color: #999; text-transform: uppercase; font-size: 14px; }
         .tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); margin-bottom: -2px; }
-        .close { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px; color: #ccc; }
-        .btn-main { background: var(--primary); color: #fff; border: none; width: 100%; padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 20px; }
+        .close { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 28px; color: #ccc; }
+        
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .f-item { display: flex; flex-direction: column; }
+        .f-item label { font-size: 11px; font-weight: 800; color: #64748b; margin-bottom: 5px; text-transform: uppercase; }
+        .f-item input { padding: 12px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 14px; }
+        
+        .file-zone { border: 2px dashed #cbd5e0; padding: 15px; text-align: center; cursor: pointer; font-size: 12px; color: #64748b; margin-top: 5px; }
+        .btn-main { background: var(--primary); color: #fff; border: none; width: 100%; padding: 18px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 20px; font-size: 15px; }
     </style>
 </head>
 <body>
@@ -93,24 +96,24 @@
 
 <div class="hero">
     <div class="grid-wrapper">
-        <div class="glass-card" onclick="openM('reg')">
-            <h3>Регистрация</h3>
+        <div class="glass-card" onclick="openM('login')">
+            <h3>Участник</h3>
+            <p>Личный кабинет, поиск актуальных процедур и подача заявок онлайн.</p>
+        </div>
+        <div class="glass-card" onclick="openM('reg')" style="border-color: var(--primary);">
+            <h3>Экспресс-регистрация</h3>
             <p>Аккредитация в системе за 24 часа. Мгновенная подача документов.</p>
         </div>
         <div class="glass-card" onclick="openM('login')">
-            <h3>Участник</h3>
-            <p>Личный кабинет, поиск процедур и подача заявок.</p>
-        </div>
-        <div class="glass-card" onclick="openM('login')">
             <h3>Организатор</h3>
-            <p>Размещение лотов и проведение торговых процедур.</p>
+            <p>Размещение лотов и проведение прозрачных торговых процедур.</p>
         </div>
     </div>
 </div>
 
 <footer>
     <div class="footer-grid">
-        <div class="f-col"><h4>О платформе</h4><p>ЭТП ЭРА — цифровая экосистема для проведения прозрачных торгов.</p></div>
+        <div class="f-col"><h4>О платформе</h4><p>ЭТП ЭРА — цифровая экосистема для проведения торгов.</p></div>
         <div class="f-col"><h4>Документы</h4><a href="#">Регламент</a><br><a href="#">Тарифы</a></div>
         <div class="f-col"><h4>Поддержка</h4><p>8 (800) 555-35-35<br>help@era-trade.ru</p></div>
     </div>
@@ -141,15 +144,29 @@
         document.getElementById('t-reg').className = 'tab' + (m === 'reg' ? ' active' : '');
         const body = document.getElementById('f-body');
         const btn = document.getElementById('btn-text');
+
         if(m === 'login') {
-            body.innerHTML = '<div style="margin-bottom:10px"><label style="font-size:11px;font-weight:bold">ЛОГИН</label><input type="text" style="width:100%;padding:10px;border:1px solid #ddd"></div><div><label style="font-size:11px;font-weight:bold">ПАРОЛЬ</label><input type="password" style="width:100%;padding:10px;border:1px solid #ddd"></div>';
-            btn.innerText = 'Войти';
+            body.innerHTML = `
+                <div class="f-item" style="margin-bottom:15px"><label>Логин / ИНН</label><input type="text" placeholder="Введите данные"></div>
+                <div class="f-item"><label>Пароль</label><input type="password" placeholder="********"></div>`;
+            btn.innerText = 'Войти в кабинет';
         } else {
-            body.innerHTML = '<div style="margin-bottom:10px"><label style="font-size:11px;font-weight:bold">ИНН</label><input type="text" style="width:100%;padding:10px;border:1px solid #ddd"></div><div><label style="font-size:11px;font-weight:bold">EMAIL</label><input type="email" style="width:100%;padding:10px;border:1px solid #ddd"></div>';
-            btn.innerText = 'Зарегистрироваться';
+            body.innerHTML = `
+                <div class="form-row">
+                    <div class="f-item"><label>Наименование организации</label><input type="text" placeholder="ООО 'Компания'"></div>
+                    <div class="f-item"><label>ИНН</label><input type="text" placeholder="10 или 12 цифр"></div>
+                </div>
+                <div class="form-row">
+                    <div class="f-item"><label>ФИО Контактного лица</label><input type="text" placeholder="Иванов И.И."></div>
+                    <div class="f-item"><label>Email</label><input type="email" placeholder="mail@example.ru"></div>
+                </div>
+                <div class="f-item"><label>Загрузка документов (Устав, ОГРН)</label>
+                    <div class="file-zone" onclick="alert('Выбор файлов...')">Нажмите для загрузки сканов (.pdf, .jpg)</div>
+                </div>`;
+            btn.innerText = 'Подать заявку';
         }
     }
-    window.onclick = function(e) { if (e.target.className === 'overlay') closeM(); }
+    window.onclick = function(e) { if (e.target.id === 'm-wrap') closeM(); }
 </script>
 </body>
 </html>
