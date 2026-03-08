@@ -131,4 +131,104 @@
             <h1>Реестр актуальных торгов</h1>
             
             <div class="filter-bar">
-                <input type="text" id="search-name" placeholder="По
+                <input type="text" id="search-name" placeholder="Поиск по названию...">
+                <input type="text" id="search-inn" placeholder="ИНН организатора">
+                <select id="search-cat">
+                    <option value="all">Все категории</option>
+                    <option value="транспорт">Транспорт</option>
+                    <option value="недвижимость">Недвижимость</option>
+                    <option value="оборудование">Оборудование</option>
+                </select>
+                <button class="btn-filter" onclick="applyFilters()">ПРИМЕНИТЬ</button>
+            </div>
+
+            <table id="tenders-table">
+                <thead>
+                    <tr>
+                        <th>№ Процедуры</th>
+                        <th>Наименование лота</th>
+                        <th>Категория</th>
+                        <th>Начальная цена</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody id="tenders-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="modal-auth" class="overlay">
+    <div class="modal">
+        <span class="close" onclick="toggleModal('modal-auth', false)">&times;</span>
+        <h2 style="text-align:center; color:var(--primary)">ВХОД</h2>
+        <input type="text" id="loginInp" placeholder="Логин / ИНН">
+        <button class="btn-auth" style="width:100%" onclick="doLogin()">Войти</button>
+    </div>
+</div>
+
+<script>
+    const tendersData = [
+        { id: 'ERA-2026-001', name: 'Mercedes-Benz Actros 2021', cat: 'транспорт', price: '8 500 000 ₽', inn: '7701001001' },
+        { id: 'ERA-2026-002', name: 'Складской комплекс 1200м²', cat: 'недвижимость', price: '45 000 000 ₽', inn: '7802002002' },
+        { id: 'ERA-2026-003', name: 'Токарный станок ЧПУ', cat: 'оборудование', price: '1 200 000 ₽', inn: '5003003003' },
+        { id: 'ERA-2026-004', name: 'Земельный участок под ИЖС', cat: 'недвижимость', price: '3 400 000 ₽', inn: '7701001001' },
+        { id: 'ERA-2026-005', name: 'Экскаватор JCB 4CX', cat: 'транспорт', price: '6 200 000 ₽', inn: '1605005005' }
+    ];
+
+    function renderTable(data) {
+        const body = document.getElementById('tenders-body');
+        body.innerHTML = '';
+        data.forEach(t => {
+            body.innerHTML += `<tr>
+                <td style="color:var(--primary); font-weight:bold">${t.id}</td>
+                <td>${t.name}</td>
+                <td style="text-transform:capitalize">${t.cat}</td>
+                <td>${t.price}</td>
+                <td><span class="status-badge">Активен</span></td>
+            </tr>`;
+        });
+    }
+
+    function applyFilters() {
+        const nameVal = document.getElementById('search-name').value.toLowerCase();
+        const innVal = document.getElementById('search-inn').value;
+        const catVal = document.getElementById('search-cat').value;
+
+        const filtered = tendersData.filter(t => {
+            const matchName = t.name.toLowerCase().includes(nameVal);
+            const matchInn = innVal === '' || t.inn.includes(innVal);
+            const matchCat = catVal === 'all' || t.cat === catVal;
+            return matchName && matchInn && matchCat;
+        });
+        renderTable(filtered);
+    }
+
+    function tick() { document.getElementById('clock').innerText = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'}); }
+    setInterval(tick, 1000); tick();
+
+    function toggleModal(id, show) { document.getElementById(id).style.display = show ? 'flex' : 'none'; }
+
+    function fastTrack(tabId) {
+        doLogin();
+        switchTab(tabId, document.getElementById('link-' + tabId));
+    }
+
+    function doLogin() {
+        const n = document.getElementById('loginInp').value || "Артур";
+        document.querySelectorAll('.user-nm').forEach(el => el.innerText = n);
+        document.getElementById('landing-page').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'grid';
+        renderTable(tendersData);
+        toggleModal('modal-auth', false);
+    }
+
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.side-link').forEach(l => l.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        if(btn) btn.classList.add('active');
+    }
+</script>
+</body>
+</html>
