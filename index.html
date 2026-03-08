@@ -6,115 +6,102 @@
     <title>ЭТП ЭРА</title>
     <style>
         :root { --primary: #0099d5; --dark-bg: #01040a; }
-        
         * { box-sizing: border-box; }
         html, body { 
             height: 100vh; margin: 0; padding: 0; 
             font-family: 'Segoe UI', Arial, sans-serif; 
             background: var(--dark-bg); color: #fff; 
-            overflow: hidden; 
-            display: flex; flex-direction: column;
+            overflow: hidden; display: flex; flex-direction: column;
         }
 
-        /* ХЕДЕР: ЧИСТЫЙ */
+        /* ХЕДЕР: ЛОГО КЛИКАБЕЛЬНОЕ, ЧАСЫ ПО ЦЕНТРУ ЛОГО */
         header {
             background: #ffffff; padding: 10px 5%;
             display: flex; justify-content: space-between; align-items: center;
             flex-shrink: 0; z-index: 100;
         }
+        .header-left { display: flex; align-items: center; gap: 30px; }
+        .logo-link { text-decoration: none; display: flex; flex-direction: column; align-items: center; }
+        .logo-img { height: 50px; width: auto; display: block; }
+        .clock { font-family: monospace; font-size: 15px; color: #1a202c; font-weight: 900; margin-top: 2px; }
         
-        .header-left { display: flex; align-items: center; gap: 25px; }
-        .logo-box { display: flex; flex-direction: column; align-items: flex-start; }
-        .logo-img { height: 45px; width: auto; display: block; }
-        .clock { font-family: monospace; font-size: 14px; color: #1a202c; font-weight: 900; }
-        
-        nav { display: flex; gap: 20px; margin-left: 20px; }
-        nav a { color: #1a202c; text-decoration: none; font-weight: 800; font-size: 12px; text-transform: uppercase; }
+        nav a { color: #1a202c; text-decoration: none; font-weight: 800; font-size: 13px; text-transform: uppercase; margin-left: 20px; }
+        .btn-auth { background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; }
 
-        .btn-auth { background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 12px; }
-
-        /* БАННЕР С ПЛИТКАМИ ПО ЦЕНТРУ */
+        /* СЛАЙДЕР И ПЛИТКИ */
         .hero {
-            flex: 1;
-            width: 100%;
+            flex: 1; width: 100%;
             background: url('sky_banner.jpg') no-repeat center center;
             background-size: cover;
-            position: relative;
-            display: flex;
-            align-items: center; /* ПЛИТКИ ТЕПЕРЬ СТРОГО ПО ЦЕНТРУ ВЫСОТЫ */
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
         }
 
         .grid-wrapper {
+            width: 100%;
+            max-width: 100%; /* На всю ширину */
+            padding: 0 5%; /* Отступы от краев экрана */
             display: flex;
-            justify-content: center;
-            gap: 45px; /* УВЕЛИЧИЛ РАССТОЯНИЕ */
-            padding: 0 20px;
+            justify-content: space-between; /* Равные расстояния между плитками и краями */
         }
         
-        /* КВАДРАТНЫЕ ПЛИТКИ (-15% ОТ ПРОШЛОГО РАЗМЕРА) */
+        /* ПЛИТКИ: +20% К РАЗМЕРУ, БЕЛЫЕ ЗАГОЛОВКИ */
         .glass-card {
             background: rgba(10, 31, 61, 0.4); 
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            width: 220px; height: 220px; /* СТРОГИЙ КВАДРАТ */
+            width: 280px; height: 280px; /* Увеличил на 20% */
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; padding: 20px; transition: 0.3s; cursor: pointer;
+            text-align: center; padding: 25px; transition: 0.3s; cursor: pointer;
             border-radius: 4px;
         }
         .glass-card:hover { border-color: var(--primary); background: rgba(13, 40, 77, 0.5); transform: translateY(-5px); }
-        .glass-card h3 { color: var(--primary); text-transform: uppercase; margin: 0 0 12px 0; font-size: 15px; }
-        .glass-card p { font-size: 11px; color: #cbd5e0; margin: 0; line-height: 1.4; }
+        .glass-card h3 { color: #fff; /* ЗАГОЛОВОК БЕЛЫЙ */ text-transform: uppercase; margin: 0 0 15px 0; font-size: 18px; }
+        .glass-card p { font-size: 14px; /* УВЕЛИЧИЛ НА 2 ПУНКТА */ color: #cbd5e0; margin: 0; line-height: 1.5; }
 
-        /* ПОЛНОЦЕННЫЙ ФУТЕР ИЗ ЛУЧШЕЙ ВЕРСИИ */
-        footer {
-            background: #030a16; padding: 30px 5% 15px; 
-            border-top: 1px solid #1e293b; flex-shrink: 0;
-        }
-        .footer-grid { 
-            max-width: 1200px; margin: 0 auto; 
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; 
-        }
-        .f-col h4 { color: var(--primary); text-transform: uppercase; margin-bottom: 12px; font-size: 13px; }
-        .f-col p, .f-col a { color: #94a3b8; text-decoration: none; font-size: 12px; line-height: 1.6; display: block; }
-        .f-col a:hover { color: #fff; }
-        .copy { text-align: center; margin-top: 20px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); color: #475569; font-size: 10px; }
+        /* ФУТЕР ИЗ ЛУЧШЕЙ ВЕРСИИ */
+        footer { background: #030a16; padding: 25px 5% 15px; border-top: 1px solid #1e293b; flex-shrink: 0; }
+        .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .f-col h4 { color: var(--primary); text-transform: uppercase; margin-bottom: 10px; font-size: 13px; }
+        .f-col a, .f-col p { color: #94a3b8; text-decoration: none; font-size: 12px; line-height: 1.6; }
+        .copy { text-align: center; margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); color: #475569; font-size: 10px; }
 
-        /* МОДАЛКА */
+        /* УНИВЕРСАЛЬНАЯ МОДАЛКА */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; }
-        .modal { background: #fff; color: #333; width: 90%; max-width: 500px; padding: 30px; border-radius: 4px; position: relative; }
+        .modal { background: #fff; color: #333; width: 90%; max-width: 450px; padding: 30px; border-radius: 4px; position: relative; }
+        .m-tabs { display: flex; border-bottom: 2px solid #eee; margin-bottom: 20px; }
+        .tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-weight: bold; color: #999; }
+        .tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); margin-bottom: -2px; }
         .close { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px; color: #ccc; }
-        .btn-go { background: var(--primary); color: #fff; border: none; width: 100%; padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 15px; }
+        .btn-main { background: var(--primary); color: #fff; border: none; width: 100%; padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 20px; }
     </style>
 </head>
 <body>
 
 <header>
     <div class="header-left">
-        <div class="logo-box">
+        <a href="/" class="logo-link">
             <img src="logo-forsage-modified.png" alt="ЭРА" class="logo-img">
             <div class="clock" id="clock">00:00:00</div>
-        </div>
+        </a>
         <nav>
             <a href="#">Торги</a>
             <a href="#">Комиссионная продажа</a>
         </nav>
     </div>
-    <button class="btn-auth" onclick="openM()">Вход / Регистрация</button>
+    <button class="btn-auth" onclick="openM('login')">ВХОД / РЕГИСТРАЦИЯ</button>
 </header>
 
 <div class="hero">
     <div class="grid-wrapper">
-        <div class="glass-card" onclick="openM()">
+        <div class="glass-card" onclick="openM('reg')">
             <h3>Регистрация</h3>
             <p>Аккредитация в системе за 24 часа. Мгновенная подача документов.</p>
         </div>
-        <div class="glass-card" onclick="openM()" style="border-color: var(--primary);">
+        <div class="glass-card" onclick="openM('login')">
             <h3>Участник</h3>
             <p>Личный кабинет, поиск процедур и подача заявок.</p>
         </div>
-        <div class="glass-card" onclick="openM()">
+        <div class="glass-card" onclick="openM('login')">
             <h3>Организатор</h3>
             <p>Размещение лотов и проведение торговых процедур.</p>
         </div>
@@ -123,48 +110,46 @@
 
 <footer>
     <div class="footer-grid">
-        <div class="f-col">
-            <h4>О платформе</h4>
-            <p>ЭТП ЭРА — цифровая экосистема для проведения прозрачных торгов и закупок.</p>
-        </div>
-        <div class="f-col">
-            <h4>Документы</h4>
-            <a href="#">Регламент площадки</a>
-            <a href="#">Тарифы на услуги</a>
-            <a href="#">Инструкции</a>
-        </div>
-        <div class="f-col">
-            <h4>Поддержка</h4>
-            <p>Тел: 8 (800) 555-35-35</p>
-            <p>Email: help@era-trade.ru</p>
-        </div>
+        <div class="f-col"><h4>О платформе</h4><p>ЭТП ЭРА — цифровая экосистема для проведения прозрачных торгов.</p></div>
+        <div class="f-col"><h4>Документы</h4><a href="#">Регламент</a><br><a href="#">Тарифы</a></div>
+        <div class="f-col"><h4>Поддержка</h4><p>8 (800) 555-35-35<br>help@era-trade.ru</p></div>
     </div>
-    <div class="copy">© 2026 ЭТП ЭРА. Электронная торговая площадка. Все права защищены.</div>
+    <div class="copy">© 2026 ЭТП ЭРА. Все права защищены.</div>
 </footer>
 
-<div id="modal-box" class="overlay">
+<div id="m-wrap" class="overlay">
     <div class="modal">
         <span class="close" onclick="closeM()">&times;</span>
-        <h2 style="margin-top:0; color:var(--primary); font-size:18px; text-transform:uppercase;">Авторизация</h2>
-        <div style="margin-bottom:15px">
-            <label style="display:block; font-size:11px; font-weight:bold; margin-bottom:5px;">ИНН / ЛОГИН</label>
-            <input type="text" style="width:100%; padding:12px; border:1px solid #ddd;" placeholder="Введите данные">
+        <div class="m-tabs">
+            <div id="t-login" class="tab" onclick="setMode('login')">ВХОД</div>
+            <div id="t-reg" class="tab" onclick="setMode('reg')">РЕГИСТРАЦИЯ</div>
         </div>
-        <div>
-            <label style="display:block; font-size:11px; font-weight:bold; margin-bottom:5px;">ПАРОЛЬ</label>
-            <input type="password" style="width:100%; padding:12px; border:1px solid #ddd;" placeholder="********">
-        </div>
-        <button class="btn-go" onclick="closeM()">Войти</button>
+        <div id="f-body"></div>
+        <button class="btn-main" id="btn-text">ВОЙТИ</button>
     </div>
 </div>
 
 <script>
     function tick() { document.getElementById('clock').innerText = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'}); }
     setInterval(tick, 1000); tick();
-    function openM() { document.getElementById('modal-box').style.display = 'flex'; }
-    function closeM() { document.getElementById('modal-box').style.display = 'none'; }
+
+    function openM(m) { document.getElementById('m-wrap').style.display = 'flex'; setMode(m); }
+    function closeM() { document.getElementById('m-wrap').style.display = 'none'; }
+
+    function setMode(m) {
+        document.getElementById('t-login').className = 'tab' + (m === 'login' ? ' active' : '');
+        document.getElementById('t-reg').className = 'tab' + (m === 'reg' ? ' active' : '');
+        const body = document.getElementById('f-body');
+        const btn = document.getElementById('btn-text');
+        if(m === 'login') {
+            body.innerHTML = '<div style="margin-bottom:10px"><label style="font-size:11px;font-weight:bold">ЛОГИН</label><input type="text" style="width:100%;padding:10px;border:1px solid #ddd"></div><div><label style="font-size:11px;font-weight:bold">ПАРОЛЬ</label><input type="password" style="width:100%;padding:10px;border:1px solid #ddd"></div>';
+            btn.innerText = 'Войти';
+        } else {
+            body.innerHTML = '<div style="margin-bottom:10px"><label style="font-size:11px;font-weight:bold">ИНН</label><input type="text" style="width:100%;padding:10px;border:1px solid #ddd"></div><div><label style="font-size:11px;font-weight:bold">EMAIL</label><input type="email" style="width:100%;padding:10px;border:1px solid #ddd"></div>';
+            btn.innerText = 'Зарегистрироваться';
+        }
+    }
     window.onclick = function(e) { if (e.target.className === 'overlay') closeM(); }
 </script>
-
 </body>
 </html>
