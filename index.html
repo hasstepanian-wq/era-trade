@@ -3,61 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЭТП ЭРА — Личный кабинет</title>
+    <title>ЭТП ЭРА — Торговая платформа</title>
     <style>
-        :root { --primary: #0099d5; --dark-bg: #01040a; --glass: rgba(10, 31, 61, 0.4); }
-        * { box-sizing: border-box; transition: 0.2s; }
-        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: var(--dark-bg); color: #fff; height: 100vh; overflow: hidden; }
+        :root { --primary: #0099d5; --dark-bg: #01040a; --glass: rgba(10, 31, 61, 0.6); }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body, html { 
+            height: 100vh; font-family: 'Segoe UI', Arial, sans-serif; 
+            background: var(--dark-bg); color: #fff; overflow-x: hidden; 
+        }
 
-        /* --- ЛЕНДИНГ (ГЛАВНАЯ) --- */
-        #landing-page { display: flex; flex-direction: column; height: 100vh; }
-        header { background: #fff; padding: 10px 5%; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
-        .logo-link { text-decoration: none; display: flex; flex-direction: column; align-items: center; color: #333; }
+        /* --- ЛЕНДИНГ --- */
+        #landing-page { display: flex; flex-direction: column; min-height: 100vh; }
+        
+        header { 
+            background: #ffffff; padding: 10px 5%; 
+            display: flex; justify-content: space-between; align-items: center; 
+            z-index: 100;
+        }
+        .logo-link { text-decoration: none; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .logo-img { height: 45px; }
-        .clock { font-family: monospace; font-size: 14px; font-weight: 900; }
-        .btn-auth { background: var(--primary); color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .clock { font-family: monospace; font-size: 14px; color: #1a202c; font-weight: 900; margin-top: 2px; }
+        
+        .btn-auth { 
+            background: var(--primary); color: #fff; padding: 10px 22px; 
+            border: none; border-radius: 4px; cursor: pointer; 
+            font-weight: bold; text-transform: uppercase; font-size: 12px;
+        }
 
-        .hero { flex: 1; background: url('sky_banner.jpg') no-repeat center center/cover; display: flex; align-items: center; justify-content: center; }
-        .grid-wrapper { width: 100%; padding: 0 5%; display: flex; justify-content: space-between; }
-        .glass-card { background: var(--glass); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); width: 280px; height: 280px; text-align: center; padding: 25px; border-radius: 4px; cursor: pointer; display: flex; flex-direction: column; justify-content: center; }
-        .glass-card:hover { border-color: var(--primary); transform: translateY(-5px); }
-        .glass-card h3 { color: #fff; text-transform: uppercase; font-size: 17px; margin-bottom: 15px; }
+        .hero { 
+            flex: 1; background: url('sky_banner.jpg') no-repeat center center / cover; 
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+
+        .grid-wrapper { 
+            width: 100%; max-width: 1200px; 
+            display: flex; justify-content: space-between; gap: 30px; 
+        }
+
+        .glass-card { 
+            background: var(--glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.15); width: 280px; height: 280px; 
+            text-align: center; padding: 25px; border-radius: 6px; cursor: pointer; 
+            display: flex; flex-direction: column; justify-content: center; 
+        }
+        .glass-card:hover { border-color: var(--primary); transform: translateY(-5px); background: rgba(13, 40, 77, 0.7); }
+        .glass-card h3 { color: #fff; text-transform: uppercase; font-size: 18px; margin-bottom: 15px; letter-spacing: 1px; }
         .glass-card p { font-size: 14px; color: #cbd5e0; line-height: 1.5; }
 
-        footer { background: #030a16; padding: 20px 5%; border-top: 1px solid #1e293b; text-align: center; font-size: 12px; color: #64748b; }
+        footer { background: #030a16; padding: 25px 5%; border-top: 1px solid #1e293b; text-align: center; font-size: 12px; color: #64748b; }
 
-        /* --- ЛИЧНЫЙ КАБИНЕТ (СКРЫТ ПО УМОЛЧАНИЮ) --- */
+        /* --- ЛИЧНЫЙ КАБИНЕТ (СКРЫТ) --- */
         #dashboard { display: none; height: 100vh; grid-template-columns: 260px 1fr; }
-        .sidebar { background: #06162c; border-right: 1px solid rgba(255,255,255,0.1); padding: 20px; display: flex; flex-direction: column; }
-        .sidebar h2 { font-size: 18px; color: var(--primary); margin-bottom: 30px; text-transform: uppercase; }
-        .side-link { padding: 12px; color: #cbd5e0; text-decoration: none; border-radius: 4px; margin-bottom: 5px; font-size: 14px; cursor: pointer; }
-        .side-link:hover, .side-link.active { background: var(--primary); color: #fff; }
-        .logout { margin-top: auto; color: #ef4444; border: 1px solid #ef4444; text-align: center; padding: 10px; border-radius: 4px; text-decoration: none; font-size: 13px; }
+        
+        .sidebar { background: #06162c; border-right: 1px solid rgba(255,255,255,0.1); padding: 25px; display: flex; flex-direction: column; }
+        .sidebar h2 { font-size: 20px; color: var(--primary); margin-bottom: 40px; text-transform: uppercase; font-weight: 900; }
+        .side-link { padding: 12px 15px; color: #cbd5e0; text-decoration: none; border-radius: 4px; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
+        .side-link:hover, .side-link.active { background: var(--primary); color: #fff; font-weight: bold; }
+        .logout { margin-top: auto; color: #ef4444; border: 1px solid #ef4444; text-align: center; padding: 12px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: bold; }
 
-        .main-content { padding: 30px; overflow-y: auto; background: #01040a; }
-        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #1e293b; padding-bottom: 15px; }
-        .status-badge { background: #f59e0b; color: #000; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .main-content { padding: 40px; overflow-y: auto; background: #01040a; }
+        .dash-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; border-bottom: 1px solid #1e293b; padding-bottom: 20px; }
+        .status-badge { background: #f59e0b; color: #000; padding: 6px 15px; border-radius: 4px; font-size: 11px; font-weight: 800; text-transform: uppercase; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: #0a1f3d; padding: 20px; border-radius: 8px; border: 1px solid #1e293b; }
-        .stat-card span { font-size: 12px; color: #64748b; text-transform: uppercase; }
-        .stat-card div { font-size: 24px; font-weight: bold; margin-top: 10px; color: var(--primary); }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px; }
+        .stat-card { background: #0a1f3d; padding: 25px; border-radius: 8px; border: 1px solid #1e293b; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .stat-card span { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card div { font-size: 28px; font-weight: bold; margin-top: 12px; color: var(--primary); }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
-        th { text-align: left; padding: 15px; color: #64748b; border-bottom: 1px solid #1e293b; }
-        td { padding: 15px; border-bottom: 1px solid #0f172a; }
-        .btn-action { background: var(--primary); color: #fff; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 25px; background: rgba(255,255,255,0.02); border-radius: 8px; }
+        th { text-align: left; padding: 18px; color: #64748b; border-bottom: 2px solid #1e293b; font-size: 12px; text-transform: uppercase; }
+        td { padding: 18px; border-bottom: 1px solid #1e293b; font-size: 14px; }
+        .btn-action { background: var(--primary); color: #fff; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
 
         /* --- МОДАЛКА --- */
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
-        .modal { background: #fff; color: #333; width: 90%; max-width: 450px; padding: 30px; border-radius: 4px; position: relative; }
-        .close { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 24px; color: #ccc; }
-        .btn-main { background: var(--primary); color: #fff; width: 100%; padding: 15px; border: none; margin-top: 20px; cursor: pointer; font-weight: bold; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 9999; justify-content: center; align-items: center; }
+        .modal { background: #fff; color: #1a202c; width: 90%; max-width: 400px; padding: 40px; border-radius: 8px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .close { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 30px; color: #cbd5e0; }
+        .modal h2 { margin-bottom: 25px; font-size: 20px; color: var(--primary); text-align: center; font-weight: 800; }
+        
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 11px; font-weight: 900; color: #4a5568; margin-bottom: 8px; text-transform: uppercase; }
+        .input-group input { width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 15px; outline: none; }
+        .input-group input:focus { border-color: var(--primary); }
+        
+        .btn-login { background: var(--primary); color: #fff; width: 100%; padding: 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 14px; margin-top: 10px; }
 
+        /* Мобильная адаптация */
         @media (max-width: 900px) {
             #dashboard { grid-template-columns: 1fr; }
             .sidebar { display: none; }
-            .grid-wrapper { flex-direction: column; align-items: center; gap: 20px; }
+            .grid-wrapper { flex-direction: column; align-items: center; }
+            .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -66,98 +103,135 @@
 <div id="landing-page">
     <header>
         <div class="header-left">
-            <a href="#" class="logo-link">
-                <img src="logo-forsage-modified.png" class="logo-img">
+            <div class="logo-link" onclick="location.reload()">
+                <img src="logo-forsage-modified.png" class="logo-img" alt="ЭРА">
                 <div class="clock" id="clock">00:00:00</div>
-            </a>
+            </div>
         </div>
-        <button class="btn-auth" onclick="toggleModal(true)">ВХОД / РЕГИСТРАЦИЯ</button>
+        <button class="btn-auth" onclick="toggleModal(true)">Вход / Регистрация</button>
     </header>
+
     <div class="hero">
         <div class="grid-wrapper">
-            <div class="glass-card" onclick="toggleModal(true)"><h3>Участник</h3><p>Поиск процедур и подача заявок.</p></div>
-            <div class="glass-card" onclick="toggleModal(true)" style="border-color: var(--primary);"><h3>Экспресс-регистрация</h3><p>Аккредитация за 24 часа.</p></div>
-            <div class="glass-card" onclick="toggleModal(true)"><h3>Организатор</h3><p>Размещение лотов и торги.</p></div>
+            <div class="glass-card" onclick="toggleModal(true)">
+                <h3>Участник</h3>
+                <p>Личный кабинет, поиск актуальных процедур и подача заявок.</p>
+            </div>
+            <div class="glass-card" onclick="toggleModal(true)" style="border-color: var(--primary);">
+                <h3>Экспресс-регистрация</h3>
+                <p>Аккредитация в системе за 24 часа. Мгновенная подача документов.</p>
+            </div>
+            <div class="glass-card" onclick="toggleModal(true)">
+                <h3>Организатор</h3>
+                <p>Размещение лотов и проведение прозрачных торговых процедур.</p>
+            </div>
         </div>
     </div>
-    <footer>© 2026 ЭТП ЭРА. Все права защищены.</footer>
+
+    <footer>
+        © 2026 ЭТП ЭРА. Электронная торговая площадка. Все права защищены.
+    </footer>
 </div>
 
 <div id="dashboard">
     <div class="sidebar">
         <h2>ЭТП ЭРА</h2>
         <div class="side-link active">Рабочий стол</div>
+        <div class="side-link">Реестр процедур</div>
         <div class="side-link">Мои заявки</div>
-        <div class="side-link">Реестр торгов</div>
-        <div class="side-link">Финансы</div>
-        <div class="side-link">Аккредитация</div>
+        <div class="side-link">Лицевой счет</div>
+        <div class="side-link">Документы</div>
+        <div class="side-link">Настройки</div>
         <a href="#" class="logout" onclick="location.reload()">Выйти из системы</a>
     </div>
+    
     <div class="main-content">
         <div class="dash-header">
             <div>
-                <h1 style="margin:0; font-size:22px;">Добро пожаловать, <span id="user-display">Артур</span>!</h1>
-                <div style="font-size:12px; color:#64748b; margin-top:5px;">ИНН: 770123456789 | ООО "ЭРА-ГРУПП"</div>
+                <h1 style="margin:0; font-size:24px;">Здравствуйте, <span id="user-display">Артур</span>!</h1>
+                <div style="font-size:13px; color:#94a3b8; margin-top:8px;">ИНН участника: <strong id="inn-display">7701234567</strong> | ООО "ЭРА-ТРЕЙД"</div>
             </div>
-            <div class="status-badge">АККРЕДИТАЦИЯ: НА ПРОВЕРКЕ</div>
+            <div class="status-badge">Аккредитация: На проверке</div>
         </div>
 
         <div class="stats-grid">
-            <div class="stat-card"><span>Активные торги</span><div>12</div></div>
-            <div class="stat-card"><span>Мои ставки</span><div>4</div></div>
-            <div class="stat-card"><span>Баланс (₽)</span><div>50 000.00</div></div>
+            <div class="stat-card"><span>Торги сегодня</span><div>24</div></div>
+            <div class="stat-card"><span>Активные заявки</span><div>5</div></div>
+            <div class="stat-card"><span>Свободный остаток</span><div>120 500 ₽</div></div>
         </div>
 
-        <h3 style="margin-top:40px;">Актуальные процедуры</h3>
+        <h3 style="margin: 30px 0 20px 0; font-size: 18px; text-transform: uppercase; color: #94a3b8;">Рекомендуемые торги</h3>
         <table>
             <thead>
-                <tr><th>ID</th><th>Наименование лота</th><th>Нач. цена</th><th>Статус</th><th>Действие</th></tr>
+                <tr><th>№ Лота</th><th>Наименование</th><th>Начальная цена</th><th>Окончание</th><th>Действие</th></tr>
             </thead>
             <tbody>
-                <tr><td>#2024-01</td><td>Поставка оборудования</td><td>1 200 000 ₽</td><td>Прием заявок</td><td><button class="btn-action">Участвовать</button></td></tr>
-                <tr><td>#2024-02</td><td>Аренда спецтехники</td><td>450 000 ₽</td><td>Прием заявок</td><td><button class="btn-action">Участвовать</button></td></tr>
+                <tr><td>#ERA-9912</td><td>Закупка офисной мебели</td><td>540 000.00 ₽</td><td>15.03.2026</td><td><button class="btn-action">Просмотр</button></td></tr>
+                <tr><td>#ERA-9945</td><td>Услуги логистики (Юг)</td><td>1 890 000.00 ₽</td><td>22.03.2026</td><td><button class="btn-action">Просмотр</button></td></tr>
+                <tr><td>#ERA-9980</td><td>Поставка ГСМ (АИ-95)</td><td>4 100 000.00 ₽</td><td>10.03.2026</td><td><button class="btn-action">Просмотр</button></td></tr>
             </tbody>
         </table>
     </div>
 </div>
 
-<div id="modal" class="overlay">
+<div id="modal-box" class="overlay">
     <div class="modal">
         <span class="close" onclick="toggleModal(false)">&times;</span>
-        <h2 style="margin:0 0 20px 0; color:var(--primary);">АВТОРИЗАЦИЯ</h2>
-        <div style="margin-bottom:15px">
-            <label style="font-size:11px; font-weight:bold;">ИНН ИЛИ ЛОГИН</label>
-            <input type="text" id="loginInput" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:4px;" placeholder="7701234567">
+        <h2>АВТОРИЗАЦИЯ</h2>
+        
+        <div class="input-group">
+            <label>Ваш ИНН или Логин</label>
+            <input type="text" id="userInput" placeholder="7701234567" autocomplete="off">
         </div>
-        <div style="margin-bottom:10px">
-            <label style="font-size:11px; font-weight:bold;">ПАРОЛЬ</label>
-            <input type="password" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:4px;" placeholder="********">
+        
+        <div class="input-group">
+            <label>Пароль</label>
+            <input type="password" id="passInput" placeholder="********">
         </div>
-        <button class="btn-main" onclick="login()">ВОЙТИ В КАБИНЕТ</button>
+        
+        <button class="btn-login" onclick="handleLogin()">Войти в систему</button>
+        <p style="text-align:center; font-size:12px; color:#999; margin-top:15px; cursor:pointer;" onclick="alert('Переход к регистрации...')">Нет аккаунта? Зарегистрироваться</p>
     </div>
 </div>
 
 <script>
-    // Часы
-    function tick() { document.getElementById('clock').innerText = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'}); }
-    setInterval(tick, 1000); tick();
+    // 1. Часы в реальном времени
+    function updateClock() {
+        const now = new Date();
+        const options = { timeZone: 'Europe/Moscow', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        document.getElementById('clock').innerText = now.toLocaleTimeString('ru-RU', options);
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
 
-    // Модалка
-    function toggleModal(show) { document.getElementById('modal').style.display = show ? 'flex' : 'none'; }
-
-    // ЛОГИКА ВХОДА (ИМИТАЦИЯ)
-    function login() {
-        const user = document.getElementById('loginInput').value || "Артур";
-        document.getElementById('user-display').innerText = user;
-        
-        // Магия переключения
-        document.getElementById('landing-page').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'grid';
-        toggleModal(false);
+    // 2. Управление модалкой
+    function toggleModal(isVisible) {
+        document.getElementById('modal-box').style.display = isVisible ? 'flex' : 'none';
     }
 
-    // Закрытие по фону
-    window.onclick = function(e) { if (e.target.id === 'modal') toggleModal(false); }
+    // 3. ФУНКЦИЯ ВХОДА (ТО САМОЕ МЕСТО)
+    function handleLogin() {
+        const val = document.getElementById('userInput').value || "Артур";
+        
+        // Визуальное переключение
+        document.getElementById('landing-page').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'grid';
+        
+        // Подстановка данных в кабинет
+        document.getElementById('user-display').innerText = val;
+        document.getElementById('inn-display').innerText = (val.length > 5) ? val : "7701234567";
+        
+        // Закрываем модалку
+        toggleModal(false);
+        
+        console.log("Вход выполнен успешно для:", val);
+    }
+
+    // Закрытие по клику мимо окна
+    window.onclick = function(event) {
+        const modal = document.getElementById('modal-box');
+        if (event.target == modal) toggleModal(false);
+    }
 </script>
 
 </body>
