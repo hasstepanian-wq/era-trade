@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>ЭТП ЭРА</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background: #06162c; color: #fff; text-align: center; }
+        header { background: #fff; padding: 15px; color: #333; display: flex; justify-content: space-between; }
+        .main { padding: 50px; display: flex; justify-content: center; gap: 20px; }
+        .box { border: 1px solid #555; padding: 20px; width: 150px; border-radius: 8px; cursor: pointer; }
+        .m-window { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                    background: #fff; color: #333; padding: 25px; border-radius: 10px; width: 280px; box-shadow: 0 0 20px #000; }
+        input { width: 100%; margin: 10px 0; padding: 10px; box-sizing: border-box; }
+        .btn { background: #0099d5; color: #fff; border: none; padding: 12px; width: 100%; cursor: pointer; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <b style="color:#0099d5">ЭРА</b>
+    <div id="t">00:00:00</div>
+    <button onclick="sh(1)" style="cursor:pointer">Вход</button>
+</header>
+
+<div class="main">
+    <div class="box" onclick="sh(1)">Заявка</div>
+    <div class="box" onclick="sh(1)">Торги</div>
+</div>
+
+<div id="win" class="m-window">
+    <h3 style="margin-top:0">Форма связи</h3>
+    <input type="text" placeholder="Ваш ИНН">
+    <div style="font-size: 11px; margin-bottom: 10px;">
+        <input type="checkbox" style="width:auto"> Согласен на обработку данных
+    </div>
+    <button class="btn" onclick="sh(0)">Отправить</button>
+    <div onclick="sh(0)" style="margin-top:10px; font-size:12px; cursor:pointer; color:#999">Закрыть</div>
+</div>
+
+<script>
+    function clock() {
+        document.getElementById('t').innerHTML = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'});
+    }
+    setInterval(clock, 1000); clock();
+
+    function sh(v) {
+        document.getElementById('win').style.display = v ? 'block' : 'none';
+    }
+</script>
+
+</body>
+</html>
