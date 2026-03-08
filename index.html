@@ -3,179 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЭТП ЭРА — Электронная торговая площадка</title>
+    <title>ЭТП ЭРА — Профессиональная торговая площадка</title>
     <style>
         :root {
             --primary: #0099d5;
-            --bg: #06162c;
-            --glass: rgba(255, 255, 255, 0.07);
-            --border: rgba(255, 255, 255, 0.15);
+            --bg-dark: #06162c;
         }
 
         body, html { 
-            margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; 
-            min-height: 100vh; width: 100%; background: var(--bg); color: #fff;
-            overflow-x: hidden;
+            margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; 
+            background: var(--bg-dark); color: #fff; overflow-x: hidden;
         }
 
-        /* КРУТОЙ ФОН */
-        .bg-glow {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 20% 30%, #1e3a8a 0%, transparent 40%),
-                        radial-gradient(circle at 80% 70%, #0099d533 0%, transparent 40%);
-            z-index: -1;
-        }
-
-        /* ШАПКА */
+        /* ШАПКА ПО ТВОЕМУ ТРЕБОВАНИЮ */
         header {
+            background: #fff; padding: 10px 5%;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 8%; background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
-            position: sticky; top: 0; z-index: 100;
+            border-bottom: 3px solid var(--primary);
         }
 
-        .logo { font-size: 26px; font-weight: 900; color: var(--primary); letter-spacing: 2px; text-decoration: none; }
-        
-        .clock-wrap {
-            display: flex; align-items: center; gap: 10px;
-            background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 20px;
-            border: 1px solid var(--primary); color: #00ff00; font-family: monospace;
+        /* ЛОГО И ВРЕМЯ ПО ОСИ СИММЕТРИИ */
+        .header-center-group {
+            display: flex; flex-direction: column; align-items: center;
+            margin: 0 auto; /* Центрируем всю группу */
+        }
+        .logo-img { height: 65px; width: auto; display: block; }
+        .server-time {
+            font-family: 'Courier New', monospace; font-size: 16px;
+            color: #1a202c; font-weight: 900; margin-top: 2px;
+            letter-spacing: 1px;
         }
 
-        .btn-top {
-            background: var(--primary); color: #fff; text-decoration: none;
-            padding: 10px 25px; border-radius: 8px; font-weight: bold;
-            transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 153, 213, 0.3);
+        .btn-top { 
+            background: var(--primary); color: #fff; padding: 12px 25px;
+            border-radius: 4px; text-decoration: none; font-weight: bold;
+            border: none; cursor: pointer; transition: 0.3s;
         }
-        .btn-top:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 153, 213, 0.5); }
+        .btn-top:hover { opacity: 0.8; }
 
-        /* СЕТКА */
-        .container { 
-            max-width: 1200px; margin: 0 auto; padding: 80px 20px;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;
+        /* БАННЕР / СЛАЙДЕР */
+        .hero-section {
+            width: 100%; height: 450px;
+            background: url('sky_banner.jpg') no-repeat center center;
+            background-size: cover;
+            display: flex; align-items: center; justify-content: center;
         }
-
-        .card {
-            background: var(--glass); backdrop-filter: blur(15px);
-            border: 1px solid var(--border); border-radius: 24px;
-            padding: 40px 30px; text-align: center; transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-            cursor: pointer; position: relative; overflow: hidden;
-        }
-        .card::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            transition: 0.5s;
-        }
-        .card:hover::before { left: 100%; }
-        .card:hover { 
-            transform: translateY(-15px); border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.12); box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        .hero-content {
+            background: rgba(0, 0, 0, 0.6); padding: 50px; text-align: center;
+            backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2);
         }
 
-        .icon { font-size: 50px; margin-bottom: 20px; display: block; }
-        .card h2 { color: var(--primary); margin: 0 0 15px 0; font-size: 22px; text-transform: uppercase; }
-        .card p { font-size: 15px; color: #cbd5e1; line-height: 1.6; }
+        /* КАРТОЧКИ УСЛУГ */
+        .container {
+            max-width: 1200px; margin: -60px auto 60px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px; padding: 0 20px;
+        }
+        .service-card {
+            background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 40px; border-radius: 8px; transition: 0.3s; cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+        .service-card:hover { border-color: var(--primary); background: rgba(0, 153, 213, 0.1); transform: translateY(-5px); }
+        .service-card h3 { color: var(--primary); margin-top: 0; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* МОДАЛКА */
-        .modal-bg {
+        /* МОДАЛЬНОЕ ОКНО (БЕЗ ЭМОДЗИ) */
+        .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 1000;
-            justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center;
         }
-        .modal {
-            background: #fff; color: #1e293b; padding: 40px; border-radius: 30px;
-            width: 100%; max-width: 420px; position: relative;
+        .modal-content {
+            background: #fff; color: #1a202c; padding: 40px; border-radius: 4px;
+            width: 90%; max-width: 450px; position: relative;
         }
+        .modal-content h2 { margin-top: 0; border-bottom: 3px solid var(--primary); padding-bottom: 15px; text-transform: uppercase; }
+        
+        .form-item { margin: 25px 0; }
+        .form-item label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #4a5568; }
+        .form-item input { width: 100%; padding: 15px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
 
-        .t-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0; }
-        .t-box {
-            border: 2px solid #e2e8f0; padding: 15px; border-radius: 15px; cursor: pointer;
-            transition: 0.3s; text-align: center;
-        }
-        .t-box.active { border-color: var(--primary); background: #f0f9ff; }
-        .t-box b { display: block; font-size: 16px; margin-bottom: 5px; }
-
-        .btn-go {
+        .btn-submit {
             background: var(--primary); color: #fff; border: none; width: 100%;
-            padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer;
-            font-size: 16px; letter-spacing: 1px;
+            padding: 20px; font-weight: bold; cursor: pointer; font-size: 18px; text-transform: uppercase;
         }
-
-        .close { position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 24px; color: #94a3b8; }
+        .close-x { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 30px; color: #a0aec0; }
     </style>
 </head>
 <body>
 
-<div class="bg-glow"></div>
-
 <header>
-    <a href="#" class="logo">ЭРА</a>
-    <div class="clock-wrap">
-        <span style="color:var(--primary); font-size:12px; font-weight:bold;">МСК</span>
-        <span id="clock">00:00:00</span>
+    <div style="width: 200px;"></div> <div class="header-center-group">
+        <img src="logo-forsage-modified.png" alt="ФОРСАЖ" class="logo-img">
+        <div class="server-time" id="clock-display">00:00:00</div>
     </div>
-    <a href="#" class="btn-top" onclick="modal(true)">ВОЙТИ</a>
+    <div style="width: 200px; text-align: right;">
+        <button class="btn-top" onclick="toggleM(true)">ВХОД</button>
+    </div>
 </header>
 
-<div class="container">
-    <div class="card" onclick="modal(true)">
-        <span class="icon">👤</span>
-        <h2>Участник</h2>
-        <p>Поиск государственных и коммерческих закупок, подача заявок</p>
-    </div>
-    <div class="card" onclick="modal(true)" style="border-color: var(--primary);">
-        <span class="icon">⚡</span>
-        <h2>Регистрация</h2>
-        <p>Получите доступ ко всем функциям площадки за 24 часа</p>
-    </div>
-    <div class="card" onclick="modal(true)">
-        <span class="icon">🏢</span>
-        <h2>Организатор</h2>
-        <p>Создание лотов, управление торгами и выбор победителей</p>
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 style="margin:0; font-size:42px; letter-spacing:2px;">ЭТП ЭРА</h1>
+        <p style="color:#cbd5e0; font-size:18px;">ЕДИНЫЙ РЕГЛАМЕНТ АККРЕДИТАЦИИ</p>
     </div>
 </div>
 
-<div id="modal" class="modal-bg">
-    <div class="modal">
-        <span class="close" onclick="modal(false)">&times;</span>
-        <h2 style="margin:0 0 10px 0;">Аккредитация</h2>
-        <p style="color:#64748b; font-size:14px; margin-bottom:25px;">Заполните данные для доступа к ЭТП</p>
-        
-        <div style="margin-bottom:20px;">
-            <label style="display:block; font-size:13px; font-weight:bold; margin-bottom:8px;">Ваш ИНН</label>
-            <input type="text" placeholder="10 или 12 цифр" style="width:100%; padding:14px; border:1px solid #e2e8f0; border-radius:10px; box-sizing:border-box;">
-        </div>
+<div class="container">
+    <div class="service-card" onclick="toggleM(true)">
+        <h3>Участник</h3>
+        <p>Доступ к торгам, подача заявок и управление котировками в реальном времени.</p>
+    </div>
+    <div class="service-card" onclick="toggleM(true)" style="border-color: var(--primary);">
+        <h3>Регистрация</h3>
+        <p>Мгновенная подача документов на аккредитацию. Срок рассмотрения — 24 часа.</p>
+    </div>
+    <div class="service-card" onclick="toggleM(true)">
+        <h3>Организатор</h3>
+        <p>Размещение лотов, проведение аукционов и автоматизированный выбор победителя.</p>
+    </div>
+</div>
 
-        <div class="t-grid">
-            <div class="t-box active" id="m1" onclick="setTariff(0)">
-                <b>⏱ Стандарт</b>
-                <span style="color:var(--primary); font-weight:bold;">Бесплатно</span>
-            </div>
-            <div class="t-box" id="m2" onclick="setTariff(1500)">
-                <b>⚡ Экспресс</b>
-                <span style="color:var(--primary); font-weight:bold;">1500 ₽</span>
-            </div>
+<div id="login-modal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-x" onclick="toggleM(false)">&times;</span>
+        <h2>Авторизация</h2>
+        <div class="form-item">
+            <label>ИНН / СНИЛС / ЛОГИН</label>
+            <input type="text" placeholder="Введите данные">
         </div>
-
-        <button class="btn-go" id="btn-text" onclick="modal(false)">Зарегистрироваться</button>
+        <div class="form-item">
+            <label>ПАРОЛЬ</label>
+            <input type="password" placeholder="Введите пароль">
+        </div>
+        <button class="btn-submit" onclick="toggleM(false)">ВОЙТИ В СИСТЕМУ</button>
     </div>
 </div>
 
 <script>
-    function updateClock() {
-        document.getElementById('clock').innerHTML = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'});
+    function startClock() {
+        const display = document.getElementById('clock-display');
+        setInterval(() => {
+            display.innerText = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'});
+        }, 1000);
     }
-    setInterval(updateClock, 1000); updateClock();
+    startClock();
 
-    function modal(s) { document.getElementById('modal').style.display = s ? 'flex' : 'none'; }
-
-    function setTariff(p) {
-        document.getElementById('m1').className = 't-box' + (p===0 ? ' active' : '');
-        document.getElementById('m2').className = 't-box' + (p>0 ? ' active' : '');
-        document.getElementById('btn-text').innerHTML = p > 0 ? 'Оплатить и войти' : 'Зарегистрироваться';
+    function toggleM(show) {
+        document.getElementById('login-modal').style.display = show ? 'flex' : 'none';
     }
 
-    window.onclick = function(e) { if (e.target.className === 'modal-bg') modal(false); }
+    window.onclick = function(e) {
+        if (e.target == document.getElementById('login-modal')) toggleM(false);
+    }
 </script>
 
 </body>
