@@ -6,7 +6,7 @@
     <title>ЭТП ЭРА — Торговая платформа</title>
     <style>
         :root { --primary: #0099d5; --dark-bg: #01040a; --card-bg: #0a1f3d; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; transition: 0.3s; }
         
         body, html { height: 100vh; background: var(--dark-bg); color: #fff; overflow-x: hidden; }
 
@@ -31,7 +31,7 @@
 
         .hero { 
             flex: 1; background: url('sky_banner.jpg') no-repeat center center / cover; 
-            display: flex; align-items: center; justify-content: center; padding: 50px 20px;
+            display: flex; align-items: center; justify-content: center; padding: 60px 20px;
         }
 
         .grid-wrapper { 
@@ -43,7 +43,7 @@
             background: rgba(10, 31, 61, 0.75); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255,255,255,0.1); width: 320px; height: 320px; 
             text-align: center; padding: 40px; border-radius: 4px; cursor: pointer; 
-            display: flex; flex-direction: column; justify-content: center; transition: 0.3s;
+            display: flex; flex-direction: column; justify-content: center;
         }
         .glass-card:hover { border-color: var(--primary); transform: translateY(-8px); background: rgba(13, 40, 77, 0.85); }
         .glass-card h3 { text-transform: uppercase; font-size: 18px; margin-bottom: 20px; letter-spacing: 1px; }
@@ -75,11 +75,11 @@
         th { text-align: left; padding: 15px; color: #64748b; border-bottom: 1px solid #1e293b; font-size: 12px; text-transform: uppercase; }
         td { padding: 15px; border-bottom: 1px solid #0f172a; font-size: 14px; }
 
-        /* МОДАЛКА */
+        /* МОДАЛКИ ОБЩИЕ */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
         .modal { background: #fff; color: #333; width: 400px; padding: 40px; border-radius: 4px; position: relative; }
         .close { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 24px; color: #ccc; }
-        .modal input { width: 100%; padding: 12px; margin: 10px 0 20px; border: 1px solid #ddd; }
+        .modal input { width: 100%; padding: 15px; margin: 10px 0 20px; border: 1px solid #ddd; border-radius: 4px; font-size: 16px; }
 
         /* ФУТЕР */
         footer { background: #030a16; padding: 40px 5%; border-top: 1px solid #1e293b; }
@@ -108,20 +108,20 @@
                 <a href="#">Комиссионная продажа</a>
             </nav>
         </div>
-        <button class="btn-auth" onclick="openM()">Вход / Регистрация</button>
+        <button class="btn-auth" onclick="toggleModal('modal-auth', true)">Вход / Регистрация</button>
     </header>
 
     <div class="hero">
         <div class="grid-wrapper">
-            <div class="glass-card" onclick="openM()">
+            <div class="glass-card" onclick="toggleModal('modal-auth', true)">
                 <h3>Участник</h3>
                 <p>Личный кабинет, поиск процедур и подача заявок онлайн.</p>
             </div>
-            <div class="glass-card" onclick="openM()" style="border-color: var(--primary);">
+            <div class="glass-card" onclick="toggleModal('modal-auth', true)" style="border-color: var(--primary);">
                 <h3>Регистрация</h3>
                 <p>Аккредитация в системе за 24 часа. Мгновенная подача документов.</p>
             </div>
-            <div class="glass-card" onclick="openM()">
+            <div class="glass-card" onclick="toggleModal('modal-auth', true)">
                 <h3>Организатор</h3>
                 <p>Размещение лотов и проведение прозрачных торговых процедур.</p>
             </div>
@@ -162,7 +162,7 @@
                 <div class="money-card" style="border-left-color: #f59e0b;"><span>Заблокировано</span><div>45 000.00 ₽</div></div>
                 <div class="money-card" style="border-left-color: #64748b;"><span>Всего</span><div>195 000.00 ₽</div></div>
             </div>
-            <button class="btn-topup" onclick="alert('Счет на оплату сформирован и отправлен на ваш Email')">➕ Пополнить баланс</button>
+            <button class="btn-topup" onclick="toggleModal('modal-topup', true)">➕ Пополнить баланс</button>
             
             <h3 style="margin-top:50px;">История операций</h3>
             <table>
@@ -186,9 +186,9 @@
     </div>
 </div>
 
-<div id="modal-box" class="overlay">
+<div id="modal-auth" class="overlay">
     <div class="modal">
-        <span class="close" onclick="closeM()">&times;</span>
+        <span class="close" onclick="toggleModal('modal-auth', false)">&times;</span>
         <h2 style="color:var(--primary); text-align:center;">ВХОД</h2>
         <input type="text" id="loginInp" placeholder="Логин / ИНН">
         <input type="password" placeholder="Пароль">
@@ -196,31 +196,63 @@
     </div>
 </div>
 
+<div id="modal-topup" class="overlay">
+    <div class="modal">
+        <span class="close" onclick="toggleModal('modal-topup', false)">&times;</span>
+        <h2 style="color:#10b981; text-align:center;">ПОПОЛНЕНИЕ</h2>
+        <p style="font-size: 13px; color: #666; margin: 15px 0; text-align: center;">
+            Мин. сумма <span style="font-weight:bold">1 000 ₽</span>, кратно <span style="font-weight:bold">500 ₽</span>.
+        </p>
+        <input type="number" id="topup-amount" placeholder="Введите сумму (напр. 5000)">
+        <div id="topup-error" style="color: #ef4444; font-size: 12px; margin-top: -15px; margin-bottom: 10px; display: none; text-align: center;"></div>
+        <button class="btn-topup" style="width:100%;" onclick="validateTopup()">Сформировать счет</button>
+    </div>
+</div>
+
 <script>
     function tick() { document.getElementById('clock').innerText = new Date().toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'}); }
     setInterval(tick, 1000); tick();
 
-    function openM() { document.getElementById('modal-box').style.display = 'flex'; }
-    function closeM() { document.getElementById('modal-box').style.display = 'none'; }
+    function toggleModal(id, show) {
+        document.getElementById(id).style.display = show ? 'flex' : 'none';
+        if(id === 'modal-topup') {
+            document.getElementById('topup-error').style.display = 'none';
+            document.getElementById('topup-amount').style.border = '1px solid #ddd';
+        }
+    }
 
     function doLogin() {
         const n = document.getElementById('loginInp').value || "Артур";
         document.querySelectorAll('.user-nm').forEach(el => el.innerText = n);
         document.getElementById('landing-page').style.display = 'none';
         document.getElementById('dashboard').style.display = 'grid';
-        closeM();
+        toggleModal('modal-auth', false);
     }
 
-    // ВОТ ЭТА ФУНКЦИЯ ОЖИВЛЯЕТ КНОПКИ МЕНЮ
     function switchTab(tabId, btn) {
-        // Скрываем все разделы
         document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-        // Снимаем подсветку со всех кнопок
         document.querySelectorAll('.side-link').forEach(l => l.classList.remove('active'));
-        
-        // Показываем нужный раздел и подсвечиваем кнопку
         document.getElementById(tabId).classList.add('active');
         btn.classList.add('active');
+    }
+
+    function validateTopup() {
+        const amt = parseInt(document.getElementById('topup-amount').value);
+        const err = document.getElementById('topup-error');
+        const inp = document.getElementById('topup-amount');
+
+        if (isNaN(amt) || amt < 1000) {
+            err.innerText = "Минимальная сумма — 1 000 ₽";
+            err.style.display = 'block';
+            inp.style.border = '2px solid #ef4444';
+        } else if (amt % 500 !== 0) {
+            err.innerText = "Сумма должна быть кратна 500 ₽";
+            err.style.display = 'block';
+            inp.style.border = '2px solid #ef4444';
+        } else {
+            alert(`Счет на ${amt.toLocaleString()} ₽ сформирован!`);
+            toggleModal('modal-topup', false);
+        }
     }
 </script>
 </body>
