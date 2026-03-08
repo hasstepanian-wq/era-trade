@@ -5,112 +5,159 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ЭТП ЭРА — Электронная торговая площадка</title>
     <style>
-        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; min-height: 100%; width: 100%; background: #06162c; color: #fff; }
-        
-        /* ФОНОВЫЙ ГРАДИЕНТ */
-        .page-bg {
+        :root {
+            --primary: #0099d5;
+            --bg: #06162c;
+            --glass: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.15);
+        }
+
+        body, html { 
+            margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; 
+            min-height: 100vh; width: 100%; background: var(--bg); color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* КРУТОЙ ФОН */
+        .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at top right, #1e3a8a, #06162c);
+            background: radial-gradient(circle at 20% 30%, #1e3a8a 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, #0099d533 0%, transparent 40%);
             z-index: -1;
         }
 
+        /* ШАПКА */
         header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 60px; background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5); color: #333;
+            padding: 15px 8%; background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .logo-text { font-size: 28px; font-weight: 900; color: #0099d5; letter-spacing: 1px; }
+        .logo { font-size: 26px; font-weight: 900; color: var(--primary); letter-spacing: 2px; text-decoration: none; }
         
-        .msk-time {
-            background: #06162c; color: #00ff00; padding: 5px 15px; border-radius: 4px;
-            font-family: monospace; font-size: 16px; border: 1px solid #0099d5;
+        .clock-wrap {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 20px;
+            border: 1px solid var(--primary); color: #00ff00; font-family: monospace;
         }
 
-        nav a { text-decoration: none; color: #1e293b; font-weight: 700; margin-left: 30px; }
-        .btn-entry { background: #0099d5; color: #fff !important; padding: 10px 25px; border-radius: 6px; }
+        .btn-top {
+            background: var(--primary); color: #fff; text-decoration: none;
+            padding: 10px 25px; border-radius: 8px; font-weight: bold;
+            transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 153, 213, 0.3);
+        }
+        .btn-top:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 153, 213, 0.5); }
 
-        .main-grid { display: flex; justify-content: center; align-items: center; gap: 40px; padding: 100px 20px; flex-wrap: wrap; }
-        
+        /* СЕТКА */
+        .container { 
+            max-width: 1200px; margin: 0 auto; padding: 80px 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;
+        }
+
         .card {
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2); padding: 40px;
-            border-radius: 20px; width: 280px; text-align: center; transition: 0.3s; cursor: pointer;
+            background: var(--glass); backdrop-filter: blur(15px);
+            border: 1px solid var(--border); border-radius: 24px;
+            padding: 40px 30px; text-align: center; transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            cursor: pointer; position: relative; overflow: hidden;
         }
-        .card:hover { transform: translateY(-10px); border-color: #0099d5; background: rgba(255, 255, 255, 0.15); }
-        .card h2 { color: #0099d5; text-transform: uppercase; margin-bottom: 15px; }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
+        }
+        .card:hover::before { left: 100%; }
+        .card:hover { 
+            transform: translateY(-15px); border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.12); box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .icon { font-size: 50px; margin-bottom: 20px; display: block; }
+        .card h2 { color: var(--primary); margin: 0 0 15px 0; font-size: 22px; text-transform: uppercase; }
+        .card p { font-size: 15px; color: #cbd5e1; line-height: 1.6; }
 
         /* МОДАЛКА */
-        .modal-overlay {
+        .modal-bg {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 1000;
+            justify-content: center; align-items: center;
         }
-        .modal-card {
-            background: #fff; color: #333; padding: 35px; border-radius: 20px; width: 400px;
-            position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        .modal {
+            background: #fff; color: #1e293b; padding: 40px; border-radius: 30px;
+            width: 100%; max-width: 420px; position: relative;
         }
 
-        .tariff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-        .t-item {
-            border: 2px solid #eee; border-radius: 12px; padding: 15px; cursor: pointer; text-align: center;
+        .t-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 25px 0; }
+        .t-box {
+            border: 2px solid #e2e8f0; padding: 15px; border-radius: 15px; cursor: pointer;
+            transition: 0.3s; text-align: center;
         }
-        .t-item.active { border-color: #0099d5; background: #f0f9ff; }
-        .t-item i { font-size: 24px; display: block; margin-bottom: 5px; }
+        .t-box.active { border-color: var(--primary); background: #f0f9ff; }
+        .t-box b { display: block; font-size: 16px; margin-bottom: 5px; }
 
-        .btn-submit {
-            background: #0099d5; color: #fff; border: none; width: 100%; padding: 15px;
-            border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px;
+        .btn-go {
+            background: var(--primary); color: #fff; border: none; width: 100%;
+            padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer;
+            font-size: 16px; letter-spacing: 1px;
         }
+
+        .close { position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 24px; color: #94a3b8; }
     </style>
 </head>
 <body>
 
-<div class="page-bg"></div>
+<div class="bg-glow"></div>
 
 <header>
-    <div class="logo-text">ЭТП ЭРА</div>
-    <div class="msk-time" id="clock">00:00:00</div>
-    <nav>
-        <a href="#">Торги</a>
-        <a href="#" class="btn-entry" onclick="toggleM(true)">Личный кабинет</a>
-    </nav>
+    <a href="#" class="logo">ЭРА</a>
+    <div class="clock-wrap">
+        <span style="color:var(--primary); font-size:12px; font-weight:bold;">МСК</span>
+        <span id="clock">00:00:00</span>
+    </div>
+    <a href="#" class="btn-top" onclick="modal(true)">ВОЙТИ</a>
 </header>
 
-<main class="main-grid">
-    <div class="card" onclick="toggleM(true)">
+<div class="container">
+    <div class="card" onclick="modal(true)">
+        <span class="icon">👤</span>
         <h2>Участник</h2>
-        <p>Аккредитация и поиск новых тендеров</p>
+        <p>Поиск государственных и коммерческих закупок, подача заявок</p>
     </div>
-    <div class="card" onclick="toggleM(true)" style="border-color: #0099d5; background: rgba(0, 153, 213, 0.1);">
+    <div class="card" onclick="modal(true)" style="border-color: var(--primary);">
+        <span class="icon">⚡</span>
         <h2>Регистрация</h2>
-        <p>Экспресс-доступ к системе ⚡</p>
+        <p>Получите доступ ко всем функциям площадки за 24 часа</p>
     </div>
-    <div class="card" onclick="toggleM(true)">
+    <div class="card" onclick="modal(true)">
+        <span class="icon">🏢</span>
         <h2>Организатор</h2>
-        <p>Размещение процедур и регламентов</p>
+        <p>Создание лотов, управление торгами и выбор победителей</p>
     </div>
-</main>
+</div>
 
-<div id="m" class="modal-overlay">
-    <div class="modal-card">
-        <h2 style="margin-top:0">Регистрация</h2>
-        <div style="margin-bottom:15px">
-            <label style="display:block; font-weight:bold; font-size:12px; margin-bottom:5px">ИНН</label>
-            <input type="text" placeholder="Введите ИНН организации" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box">
+<div id="modal" class="modal-bg">
+    <div class="modal">
+        <span class="close" onclick="modal(false)">&times;</span>
+        <h2 style="margin:0 0 10px 0;">Аккредитация</h2>
+        <p style="color:#64748b; font-size:14px; margin-bottom:25px;">Заполните данные для доступа к ЭТП</p>
+        
+        <div style="margin-bottom:20px;">
+            <label style="display:block; font-size:13px; font-weight:bold; margin-bottom:8px;">Ваш ИНН</label>
+            <input type="text" placeholder="10 или 12 цифр" style="width:100%; padding:14px; border:1px solid #e2e8f0; border-radius:10px; box-sizing:border-box;">
         </div>
 
-        <label style="font-weight:bold; font-size:12px">Выберите тариф:</label>
-        <div class="tariff-grid">
-            <div class="t-item active" id="t1" onclick="setT(0)">
-                <i>⏱</i><b>Стандарт</b><br><small>Бесплатно</small>
+        <div class="t-grid">
+            <div class="t-box active" id="m1" onclick="setTariff(0)">
+                <b>⏱ Стандарт</b>
+                <span style="color:var(--primary); font-weight:bold;">Бесплатно</span>
             </div>
-            <div class="t-item" id="t2" onclick="setT(1500)">
-                <i>⚡</i><b>Экспресс</b><br><small>1500 ₽</small>
+            <div class="t-box" id="m2" onclick="setTariff(1500)">
+                <b>⚡ Экспресс</b>
+                <span style="color:var(--primary); font-weight:bold;">1500 ₽</span>
             </div>
         </div>
 
-        <button class="btn-submit" id="sbtn" onclick="toggleM(false)">Зарегистрироваться</button>
-        <p onclick="toggleM(false)" style="text-align:center; color:#999; cursor:pointer; margin-top:15px; font-size:14px">Закрыть</p>
+        <button class="btn-go" id="btn-text" onclick="modal(false)">Зарегистрироваться</button>
     </div>
 </div>
 
@@ -120,13 +167,15 @@
     }
     setInterval(updateClock, 1000); updateClock();
 
-    function toggleM(show) { document.getElementById('m').style.display = show ? 'flex' : 'none'; }
+    function modal(s) { document.getElementById('modal').style.display = s ? 'flex' : 'none'; }
 
-    function setT(p) {
-        document.getElementById('t1').classList.toggle('active', p === 0);
-        document.getElementById('t2').classList.toggle('active', p > 0);
-        document.getElementById('sbtn').innerHTML = p > 0 ? 'Оплатить и войти' : 'Зарегистрироваться';
+    function setTariff(p) {
+        document.getElementById('m1').className = 't-box' + (p===0 ? ' active' : '');
+        document.getElementById('m2').className = 't-box' + (p>0 ? ' active' : '');
+        document.getElementById('btn-text').innerHTML = p > 0 ? 'Оплатить и войти' : 'Зарегистрироваться';
     }
+
+    window.onclick = function(e) { if (e.target.className === 'modal-bg') modal(false); }
 </script>
 
 </body>
