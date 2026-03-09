@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ЭТП ЭРА</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -10,9 +10,9 @@
 
 <div id="landing-page">
     <header>
-        <div class="header-left">
+        <div class="h-left">
             <div class="logo-group" onclick="location.reload()">
-                <img src="logo-forsage-modified.png" alt="ЭТП ЭРА" class="main-logo">
+                <img src="logo-forsage-modified.png" alt="ЭРА" class="main-logo">
                 <div id="clock" class="server-time">00:00:00 МСК</div>
             </div>
             <nav class="top-nav">
@@ -20,40 +20,45 @@
                 <a href="#" data-i18n="n_comm">КОМИССИОННАЯ ПРОДАЖА</a>
             </nav>
         </div>
+        
         <div class="h-right">
             <div class="lang-switcher">
                 <button class="lang-btn active" id="btn-ru" onclick="setUserLang('ru')">RU</button>
                 <button class="lang-btn" id="btn-en" onclick="setUserLang('en')">EN</button>
             </div>
-            <span class="phone">8 (800) 555-35-35</span>
-            <button class="btn-login" onclick="fastNavigate('home')" data-i18n="b_login">ВХОД</button>
+            <div class="contact-info">
+                <span class="phone">8 (800) 555-35-35</span>
+                <button class="btn-login" onclick="fastNavigate('home')" data-i18n="b_login">ВХОД</button>
+            </div>
         </div>
     </header>
 
-    <main class="hero-bg" style="background-image: url('sky_banner.jpg');">
-        <div class="grid-container">
-            <div class="glass-card" onclick="fastNavigate('home')">
-                <h3 data-i18n="c1_t">Участник</h3>
-                <p data-i18n="c1_p">Поиск актуальных процедур и подача заявок онлайн.</p>
-            </div>
-            <div class="glass-card highlight" onclick="fastNavigate('home')">
-                <h3 data-i18n="c2_t">Регистрация</h3>
-                <p data-i18n="c2_p">Получите аккредитацию в системе всего за 24 часа.</p>
-            </div>
-            <div class="glass-card" onclick="fastNavigate('home')">
-                <h3 data-i18n="c3_t">Организатор</h3>
-                <p data-i18n="c3_p">Размещение лотов и управление торгами.</p>
+    <main class="hero-section" style="background-image: url('sky_banner.jpg');">
+        <div class="hero-overlay">
+            <div class="grid-container">
+                <div class="glass-card" onclick="fastNavigate('home')">
+                    <h3 data-i18n="c1_t">Участник</h3>
+                    <p data-i18n="c1_p">Поиск актуальных процедур и подача заявок онлайн.</p>
+                </div>
+                <div class="glass-card highlight" onclick="fastNavigate('home')">
+                    <h3 data-i18n="c2_t">Регистрация</h3>
+                    <p data-i18n="c2_p">Получите аккредитацию в системе всего за 24 часа.</p>
+                </div>
+                <div class="glass-card" onclick="fastNavigate('home')">
+                    <h3 data-i18n="c3_t">Организатор</h3>
+                    <p data-i18n="c3_p">Размещение лотов и управление торгами.</p>
+                </div>
             </div>
         </div>
     </main>
 
     <footer>
-        <div class="f-content">
-            <div class="f-info" data-i18n="f_about_p">ЭТП ЭРА — цифровая экосистема для проведения торгов.</div>
+        <div class="f-inner">
+            <div class="f-text" data-i18n="f_about_p">ЭТП ЭРА — цифровая экосистема для проведения торгов.</div>
             <div class="f-links">
-                <a href="#">Регламент</a>
-                <a href="#">Тарифы</a>
-                <a href="#">Поддержка</a>
+                <a href="#">РЕГЛАМЕНТ</a>
+                <a href="#">ТАРИФЫ</a>
+                <a href="#">ПОДДЕРЖКА</a>
             </div>
             <div class="f-copy">© 2026 ETP ERA</div>
         </div>
@@ -63,26 +68,26 @@
 <div id="dashboard" style="display:none;">
     <aside class="sidebar">
         <div class="side-logo">ЭТП ЭРА</div>
-        <nav>
+        <nav class="side-nav">
             <div class="side-link active" id="l-home" onclick="switchSection('home')" data-i18n="s_home">Рабочий стол</div>
             <div class="side-link" id="l-fin" onclick="switchSection('fin')" data-i18n="s_fin">Финансы</div>
             <div class="side-link" id="l-tenders" onclick="switchSection('tenders')" data-i18n="s_reg">Реестр торгов</div>
         </nav>
-        <div class="logout" onclick="location.reload()">ВЫХОД</div>
+        <div class="logout-btn" onclick="location.reload()">ВЫХОД</div>
     </aside>
-    <section class="main-content">
+    <main class="dash-content">
         <div id="s-home" class="content-section active">
             <h1 data-i18n="welcome">Добро пожаловать, Артур!</h1>
-            <p>Ваш аккаунт подтвержден. Все функции системы доступны.</p>
+            <p>Ваш аккаунт подтвержден. Система готова к работе.</p>
         </div>
         <div id="s-fin" class="content-section">
-            <h1 data-i18n="s_fin">Финансы</h1>
-            <div class="balance-card">
-                <label>Текущий баланс:</label>
-                <div class="sum">450 000.00 ₽</div>
+            <h1 data-i18n="s_fin">Мои финансы</h1>
+            <div class="balance-box">
+                <span>Доступный остаток:</span>
+                <div class="amount">450 000.00 ₽</div>
             </div>
         </div>
-    </section>
+    </main>
 </div>
 
 <script src="script.js"></script>
