@@ -1,20 +1,18 @@
 const dict = {
     ru: {
-        n_reg: "Реестр торгов", n_comm: "Комиссионная продажа", b_login: "Вход",
+        n_reg: "РЕЕСТР ТОРГОВ", n_comm: "КОМИССИОННАЯ ПРОДАЖА", b_login: "ВХОД",
         c1_t: "Участник", c1_p: "Поиск актуальных процедур и подача заявок онлайн.",
-        c2_t: "Экспресс-регистрация", c2_p: "Получите аккредитацию в системе всего за 24 часа.",
+        c2_t: "Регистрация", c2_p: "Получите аккредитацию в системе всего за 24 часа.",
         c3_t: "Организатор", c3_p: "Размещение лотов и управление торгами.",
-        f_about: "О платформе", f_about_p: "ЭТП ЭРА — цифровая экосистема для проведения торгов.",
-        f_docs: "Документы", f_supp: "Поддержка",
+        f_about_p: "ЭТП ЭРА — цифровая экосистема для проведения торгов.",
         s_home: "Рабочий стол", s_reg: "Реестр торгов", s_fin: "Финансы", welcome: "Добро пожаловать, Артур!"
     },
     en: {
-        n_reg: "Auction Registry", n_comm: "Commission Sales", b_login: "Login",
+        n_reg: "REGISTRY", n_comm: "COMMISSION", b_login: "LOGIN",
         c1_t: "Bidder", c1_p: "Search lots and submit bids online instantly.",
-        c2_t: "Express Registration", c2_p: "Get system accreditation in just 24 hours.",
+        c2_t: "Registration", c2_p: "Get system accreditation in just 24 hours.",
         c3_t: "Organizer", c3_p: "Post lots and manage your auctions.",
-        f_about: "Platform", f_about_p: "ERA ETP is a digital ecosystem for electronic trading.",
-        f_docs: "Documents", f_supp: "Support",
+        f_about_p: "ERA ETP is a digital ecosystem for trading.",
         s_home: "Dashboard", s_reg: "Registry", s_fin: "Finance", welcome: "Welcome, Arthur!"
     }
 };
@@ -22,63 +20,38 @@ const dict = {
 function applyTranslations(lang) {
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (dict[lang][key]) {
-            el.innerText = dict[lang][key];
-        }
+        if (dict[lang][key]) el.innerText = dict[lang][key];
     });
     document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
     document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-    document.documentElement.lang = lang;
 }
 
 function setUserLang(lang) {
-    localStorage.setItem('user_lang_pref', lang);
+    localStorage.setItem('era_lang', lang);
     applyTranslations(lang);
-}
-
-function initLang() {
-    const saved = localStorage.getItem('user_lang_pref');
-    if (saved) {
-        applyTranslations(saved);
-    } else {
-        const systemLang = (navigator.language || navigator.userLanguage).toLowerCase();
-        const defaultLang = systemLang.includes('ru') ? 'ru' : 'en';
-        applyTranslations(defaultLang);
-    }
-}
-
-function toggleMobileMenu() {
-    document.getElementById('mob-dropdown').classList.toggle('show');
-}
-
-function updateTime() {
-    const clockEl = document.getElementById('clock');
-    if (clockEl) {
-        const str = new Date().toLocaleTimeString('ru-RU', { timeZone: 'Europe/Moscow', hour12: false });
-        clockEl.innerText = str + ' МСК';
-    }
 }
 
 function fastNavigate(id) {
     document.getElementById('landing-page').style.display = 'none';
     document.getElementById('dashboard').style.display = 'grid';
     switchSection(id);
-    window.scrollTo(0,0);
 }
 
 function switchSection(id) {
     document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.side-link').forEach(l => l.classList.remove('active'));
-    
-    const target = document.getElementById('s-' + id);
-    if(target) target.classList.add('active');
-    
-    const link = document.getElementById('l-' + id);
-    if(link) link.classList.add('active');
+    document.getElementById('s-' + id)?.classList.add('active');
+    document.getElementById('l-' + id)?.classList.add('active');
+}
+
+function updateClock() {
+    const clock = document.getElementById('clock');
+    if (clock) clock.innerText = new Date().toLocaleTimeString('ru-RU') + ' МСК';
 }
 
 window.onload = () => {
-    initLang();
-    updateTime();
-    setInterval(updateTime, 1000);
+    const saved = localStorage.getItem('era_lang') || 'ru';
+    applyTranslations(saved);
+    setInterval(updateClock, 1000);
+    updateClock();
 };
