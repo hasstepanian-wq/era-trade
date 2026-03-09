@@ -2,86 +2,32 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Счет на оплату № ЭРА-103</title>
+    <title>Счет на оплату</title>
     <style>
-        body { font-family: sans-serif; background: #f0f4f8; padding: 40px; display: flex; justify-content: center; }
-        .invoice-box { background: #fff; padding: 40px; width: 100%; max-width: 800px; border: 1px solid #e2e8f0; box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
-        h2 { color: #0099d5; margin-top: 0; border-bottom: 2px solid #0099d5; padding-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        td { padding: 12px; border: 1px solid #e2e8f0; }
-        .label { background: #f8fafc; font-weight: bold; width: 35%; }
-        .highlight { background: #fffbeb; font-weight: bold; color: #b45309; }
-        .qr-section { display: flex; align-items: center; gap: 20px; padding: 20px; border: 2px dashed #0099d5; border-radius: 12px; margin-top: 30px; }
-        .qr-text p { margin: 0; }
-        .print-btn { margin-top: 20px; padding: 10px 20px; background: #64748b; color: white; border: none; border-radius: 6px; cursor: pointer; }
-        @media print { .print-btn { display: none; } }
+        body { font-family: sans-serif; background: #f0f4f8; padding: 40px; }
+        .box { background: #fff; padding: 40px; max-width: 700px; margin: 0 auto; border: 1px solid #ddd; }
+        .qr { display: flex; align-items: center; gap: 20px; margin-top: 20px; border: 2px dashed #0099d5; padding: 20px; }
     </style>
 </head>
 <body>
-
-<div class="invoice-box">
-    <h2>СЧЕТ НА ОПЛАТУ № ЭРА-103</h2>
-    <p>Дата: 09 марта 2026 г.</p>
-    
-    <table>
-        <tr>
-            <td class="label">Получатель</td>
-            <td>ООО «ФОРСАЖ»</td>
-        </tr>
-        <tr>
-            <td class="label">ИНН / КПП</td>
-            <td>7728282160 / 772801001</td>
-        </tr>
-        <tr>
-            <td class="label">Банк получателя</td>
-            <td>ООО "Банк Точка"</td>
-        </tr>
-        <tr>
-            <td class="label">Р/с / БИК</td>
-            <td>40702810001500033019 / 044525104</td>
-        </tr>
-        <tr>
-            <td class="label">Назначение платежа</td>
-            <td class="highlight">Пополнение баланса лицевого счета на ЭТП ЭРА (ID: <span id="display-id">...</span>)</td>
-        </tr>
-        <tr>
-            <td class="label">Сумма к оплате</td>
-            <td style="font-size: 20px; font-weight: bold;"><span id="display-amount">0</span>.00 ₽</td>
-        </tr>
-    </table>
-
-    <div class="qr-section">
-        <img id="qr-code" src="" alt="QR для оплаты" style="width: 160px; height: 160px;">
-        <div class="qr-text">
-            <p style="font-weight: bold; color: #0099d5; font-size: 16px;">Оплата через мобильный банк</p>
-            <p style="font-size: 14px; color: #475569; margin-top: 5px;">Отсканируйте QR-код в приложении вашего банка. Все реквизиты, сумма и ваш ID подставятся автоматически.</p>
+    <div class="box">
+        <h2>СЧЕТ № ЭРА-103</h2>
+        <p>Назначение: <b>Пополнение счета ЭТП ЭРА (ID: <span id="id">...</span>)</b></p>
+        <p>Сумма: <b id="amt">0</b> ₽</p>
+        <div class="qr">
+            <img id="qrc" src="" width="150">
+            <p>Сканируйте в приложении банка для оплаты</p>
         </div>
     </div>
-
-    <button class="print-btn" onclick="window.print()">Распечатать счет</button>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Получаем данные из localStorage
-    const userId = localStorage.getItem('userId') || "777";
-    const amount = localStorage.getItem('paymentAmount') || "1000";
-
-    // Вставляем данные в текст
-    document.getElementById('display-id').textContent = userId;
-    document.getElementById('display-amount').textContent = Number(amount).toLocaleString('ru-RU');
-
-    // Настройка QR-кода (Стандарт ГОСТ)
-    const qrImg = document.getElementById('qr-code');
-    const purpose = `Пополнение баланса лицевого счета на ЭТП ЭРА (ID: ${userId})`;
-    const sumInKopeks = amount * 100;
-
-    const qrData = `ST00012|Name=ООО ФОРСАЖ|PersonalAcc=40702810001500033019|BankName=ООО БАНК ТОЧКА|BIC=044525104|CorrespAcc=30101810745374525104|PayeeINN=7728282160|Purpose=${purpose}|Sum=${sumInKopeks}`;
-    
-    // Генерируем ссылку на API QR-кодов
-    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(qrData)}`;
-});
-</script>
-
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const id = localStorage.getItem('userId') || '777';
+        const amt = localStorage.getItem('paymentAmount') || '1000';
+        document.getElementById('id').innerText = id;
+        document.getElementById('amt').innerText = amt;
+        const qrData = `ST00012|Name=ООО ФОРСАЖ|PersonalAcc=40702810001500033019|BankName=ООО БАНК ТОЧКА|BIC=044525104|Purpose=Пополнение счета ID${id}|Sum=${amt}00`;
+        document.getElementById('qrc').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}`;
+    });
+    </script>
 </body>
 </html>
