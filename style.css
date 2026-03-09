@@ -1,54 +1,44 @@
-/* НИКАКИХ ЗАКРУГЛЕНИЙ */
+/* ЖЕСТКИЙ КВАДРАТНЫЙ СТИЛЬ */
 * { box-sizing: border-box; border-radius: 0 !important; text-decoration: none; }
 
 body { margin: 0; background: #000; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
 
-/* ХЕДЕР (ФИКСИРУЕМ ВЫСОТУ И ВИД) */
 header { 
-    height: 85px; /* Сделал чуть выше, чтобы не жало */
-    background: #fff; 
-    color: #000; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 0 40px; 
-    border-bottom: 4px solid #007aff; 
+    height: 60px; background: #fff; color: #000; 
+    display: flex; justify-content: space-between; align-items: center; 
+    padding: 0 40px; border-bottom: 3px solid #007aff; 
 }
+.header-left { display: flex; align-items: center; gap: 30px; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 20px; color: #000; }
+.blue-sq { width: 25px; height: 25px; background: #007aff; }
+.sm { width: 20px; height: 20px; }
 
-.header-left { display: flex; align-items: center; gap: 50px; }
+.top-nav { display: flex; gap: 20px; }
+.top-nav a { color: #000; font-size: 11px; font-weight: bold; text-transform: uppercase; }
 
-/* ЛОГОТИП */
-.logo { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 24px; color: #000; }
-.blue-sq { width: 32px; height: 32px; background: #007aff; display: block; }
+.h-right { display: flex; gap: 20px; font-weight: bold; font-size: 14px; color: #000; }
 
-/* МЕНЮ В ШАПКЕ */
-.top-nav { display: flex; gap: 30px; }
-.top-nav a { color: #000; font-size: 13px; font-weight: 800; text-transform: uppercase; }
-.top-nav a:hover { color: #007aff; }
+.stats-row { display: flex; gap: 10px; padding: 20px 40px; }
+.card { background: #111; border: 1px solid #333; padding: 25px; flex: 1; color: #fff; }
+.card label { font-size: 10px; color: #555; font-weight: bold; }
+.card .val { font-size: 18px; font-weight: bold; margin-top: 5px; }
 
-.h-right { display: flex; gap: 25px; align-items: center; font-weight: 900; color: #000; }
-
-/* СЛАЙДЕР */
-.hero-link { display: block; margin: 40px; }
-.main-hero { 
-    height: 420px; 
-    background-size: cover; 
-    background-position: center; 
-    border: 1px solid #333; 
-    display: flex; 
-    align-items: center; 
-    padding: 60px; 
+.main-banner { 
+    display: block; margin: 0 40px 40px 40px; height: 320px; 
+    background-size: cover; background-position: center; 
+    border: 1px solid #333; display: flex; align-items: center; padding: 50px; 
+    color: #fff; 
 }
-.hero-text h1 { font-size: 52px; font-weight: 900; margin: 0; line-height: 1; color: #fff; }
-.hero-text p { font-size: 16px; margin-top: 15px; color: #007aff; letter-spacing: 2px; font-weight: bold; }
+.banner-text h1 { font-size: 40px; margin: 0; font-weight: 900; line-height: 1; }
+.banner-text p { font-size: 14px; margin-top: 15px; color: #007aff; font-weight: bold; }
 
-/* ПЛИТКИ */
-.site-nav-grid { display: flex; gap: 15px; padding: 0 40px 40px 40px; }
-.nav-tile { background: #0f0f0f; border: 1px solid #222; padding: 35px; flex: 1; color: #fff; transition: 0.2s; }
-.nav-tile:hover { border-color: #007aff; background: #151515; }
-.nav-tile label { font-size: 10px; color: #444; font-weight: bold; text-transform: uppercase; }
-.nav-tile .tile-name { font-size: 22px; font-weight: bold; margin-top: 10px; }
+/* ФУТЕР — НАПОЛНЕННЫЙ */
+footer { margin-top: auto; background: #0a0a0a; border-top: 1px solid #222; padding: 40px 40px 20px 40px; }
+.footer-grid { display: flex; justify-content: space-between; gap: 40px; margin-bottom: 40px; }
+.f-col { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.f-col h4 { font-size: 12px; color: #007aff; margin-bottom: 10px; letter-spacing: 1px; }
+.f-col a, .f-col span, .f-col p { font-size: 13px; color: #666; }
+.f-col a:hover { color: #fff; }
+.logo-f { display: flex; align-items: center; gap: 10px; color: #fff; font-weight: bold; margin-bottom: 10px; }
 
-footer { margin-top: auto; padding: 40px; border-top: 1px solid #111; color: #444; font-size: 12px; }
-.f-wrap { display: flex; justify-content: space-between; }
-.f-links a { color: #444; font-weight: bold; }
+.f-bottom { border-top: 1px solid #111; padding-top: 20px; color: #333; font-size: 11px; text-align: center; }
