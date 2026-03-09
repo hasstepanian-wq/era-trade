@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЭТП ЭРА | Кабинет управления</title>
+    <title>ЭТП ЭРА | Официальный сайт</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -11,179 +11,170 @@
             --border: rgba(255, 255, 255, 0.1); --text: #ffffff; --text-dim: #888888;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; min-height: 100vh; }
+        body { background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* УНИВЕРСАЛЬНОЕ МОДАЛЬНОЕ ОКНО */
+        /* HEADER */
+        header {
+            background: #fff; padding: 12px 5%; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .logo-box { display: flex; align-items: center; gap: 10px; cursor: pointer; color: #000; font-weight: 800; font-size: 20px; }
+        .logo-circle { width: 32px; height: 32px; background: var(--accent); border-radius: 50%; }
+        .header-right { display: flex; align-items: center; gap: 25px; color: #444; font-size: 14px; font-weight: 600; }
+        #live-clock { color: var(--accent); font-family: monospace; font-size: 16px; font-weight: 800; }
+
+        /* MODAL */
         #modal-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); 
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); 
             display: none; justify-content: center; align-items: center; z-index: 9999; 
         }
-        .modal { background: var(--surface); padding: 40px; border-radius: 24px; border: 1px solid var(--border); max-width: 420px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .btn-modal { background: var(--accent); color: #fff; border: none; padding: 12px 30px; border-radius: 10px; margin-top: 25px; cursor: pointer; font-weight: 600; width: 100%; }
+        .modal { background: var(--surface); padding: 40px; border-radius: 24px; border: 1px solid var(--border); max-width: 400px; text-align: center; }
+        .btn-modal { background: var(--accent); color: #fff; border: none; padding: 14px; border-radius: 12px; margin-top: 20px; cursor: pointer; width: 100%; font-weight: 700; }
 
-        /* DASHBOARD */
+        /* APP */
         #main-app { display: none; flex: 1; grid-template-columns: 260px 1fr; }
-        .sidebar { background: #000; border-right: 1px solid var(--border); padding: 40px 20px; display: flex; flex-direction: column; height: 100vh; position: sticky; top: 0; }
+        .sidebar { background: #000; border-right: 1px solid var(--border); padding: 30px 20px; display: flex; flex-direction: column; }
         .side-item { padding: 14px 18px; border-radius: 12px; color: var(--text-dim); cursor: pointer; font-weight: 600; margin-bottom: 5px; transition: 0.2s; }
-        .side-item:hover { color: #fff; background: var(--surface); }
         .side-item.active { background: var(--surface); color: var(--accent); }
-        .logout { margin-top: auto; color: #ff3b30; }
+        .logout-btn { margin-top: auto; color: #ff3b30; }
 
-        .content { padding: 50px 60px; }
-        .view { display: none; animation: fadeIn 0.3s ease; }
-        .view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .content { padding: 40px; }
+        .view { display: none; }
+        .view.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* ЭЛЕМЕНТЫ */
-        table { width: 100%; border-collapse: collapse; margin-top: 25px; }
-        th { text-align: left; color: var(--text-dim); font-size: 11px; text-transform: uppercase; padding: 18px; border-bottom: 1px solid var(--border); }
-        td { padding: 18px; border-bottom: 1px solid var(--border); font-size: 14px; }
-        .status-tag { padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; background: rgba(52, 199, 89, 0.1); color: #34c759; }
-
-        .fin-card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 35px; }
-        input, select { width: 100%; padding: 15px; background: #1a1a1a; border: 1px solid var(--border); border-radius: 12px; color: #fff; margin: 10px 0 20px; outline: none; font-size: 15px; }
-        .btn-main { background: var(--accent); color: #fff; border: none; padding: 18px; border-radius: 14px; font-weight: 700; width: 100%; cursor: pointer; transition: 0.2s; }
-        .btn-main:hover { filter: brightness(1.1); transform: translateY(-1px); }
-
-        footer { padding: 25px; text-align: center; color: var(--text-dim); font-size: 12px; border-top: 1px solid var(--border); background: #000; z-index: 10; }
+        /* FINANCES */
+        .fin-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin-top: 20px; }
+        input, select { width: 100%; padding: 14px; background: #1a1a1a; border: 1px solid var(--border); border-radius: 10px; color: #fff; margin: 10px 0 20px; font-size: 16px; outline: none; }
+        .btn-pay { background: var(--accent); color: #fff; border: none; padding: 16px; border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer; }
 
         /* LANDING */
-        #landing { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at center, #111 0%, #050505 100%); }
-        .hero { text-align: center; }
-        .btn-enter { background: var(--accent); color: #fff; padding: 18px 50px; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; margin-top: 35px; font-size: 16px; transition: 0.3s; }
-        .btn-enter:hover { box-shadow: 0 0 30px rgba(0, 122, 255, 0.4); }
+        #landing { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .btn-enter { background: var(--accent); color: #fff; padding: 18px 50px; border-radius: 15px; border: none; font-weight: 700; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .btn-enter:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,122,255,0.3); }
 
-        /* ПЕЧАТНАЯ ФОРМА СЧЕТА */
+        footer { padding: 20px; text-align: center; color: var(--text-dim); font-size: 12px; background: #000; border-top: 1px solid var(--border); }
+
+        /* PRINT FORM */
         @media print {
             body * { visibility: hidden; }
-            #invoice-print, #invoice-print * { visibility: visible; }
-            #invoice-print { position: absolute; left: 0; top: 0; width: 100%; color: #000 !important; background: #fff !important; padding: 40px; font-family: sans-serif; }
-            .no-print { display: none !important; }
+            #invoice-box, #invoice-box * { visibility: visible; }
+            #invoice-box { position: absolute; left: 0; top: 0; width: 100%; color: #000 !important; background: #fff !important; padding: 40px; font-family: serif; }
         }
-        #invoice-print { display: none; color: #000; background: #fff; }
+        #invoice-box { display: none; }
     </style>
 </head>
 <body>
 
+<header>
+    <div class="logo-box" onclick="location.reload()">
+        <div class="logo-circle"></div>
+        <span>ЭТП ЭРА</span>
+    </div>
+    <div class="header-right">
+        <span id="live-clock">00:00:00</span>
+        <div style="width: 1px; height: 20px; background: #ddd;"></div>
+        <span style="color: var(--accent)">8 (800) 555-35-35</span>
+    </div>
+</header>
+
 <div id="modal-overlay">
     <div class="modal">
-        <h2 id="modal-title"></h2>
-        <p id="modal-text" style="color: var(--text-dim); margin-top: 15px; line-height: 1.5;"></p>
-        <button class="btn-modal" onclick="closeModal()">Понятно</button>
+        <h2 id="modal-title">Безопасность</h2>
+        <p id="modal-text" style="color: var(--text-dim); margin-top: 15px;"></p>
+        <button class="btn-modal" onclick="closeModal()">Войти</button>
     </div>
 </div>
 
 <div id="landing">
-    <div class="hero">
-        <h1 style="font-size: 64px; letter-spacing: -3px; font-weight: 800;">ЭТП <span style="color: var(--accent);">ЭРА</span></h1>
-        <p style="color: var(--text-dim); font-size: 18px; margin-top: 10px;">Цифровая экосистема торговых процедур</p>
-        <button class="btn-enter" onclick="openApp()">Войти в кабинет</button>
-    </div>
+    <h1 style="font-size: clamp(40px, 8vw, 64px); font-weight: 800; letter-spacing: -2px;">ЭТП <span style="color: var(--accent);">ЭРА</span></h1>
+    <p style="color: var(--text-dim); margin-top: 15px; font-size: 20px;">Цифровая система торговых процедур</p>
+    <button class="btn-enter" onclick="openApp()">Личный кабинет</button>
 </div>
 
 <div id="main-app">
     <div class="sidebar">
-        <div class="logo" style="color: var(--accent); font-weight: 800; font-size: 24px; margin-bottom: 50px;">ERA</div>
         <div class="side-item active" id="m-home" onclick="showView('home')">Рабочий стол</div>
         <div class="side-item" id="m-fin" onclick="showView('fin')">Финансы</div>
         <div class="side-item" id="m-reg" onclick="showView('reg')">Реестр торгов</div>
-        <div class="side-item logout" onclick="logout()">ВЫЙТИ</div>
+        <div class="side-item logout-btn" onclick="logout()">ВЫЙТИ</div>
     </div>
-    
     <div class="content">
         <div id="v-home" class="view active">
-            <h1 style="margin-bottom: 30px;">Рабочий стол</h1>
-            <div class="fin-card" style="border-left: 5px solid var(--accent); background: linear-gradient(90deg, #161616 0%, #111 100%);">
-                <p style="color: var(--text-dim); font-size: 11px; letter-spacing: 1px; font-weight: 700;">ПРОФИЛЬ ПОДТВЕРЖДЕН</p>
+            <h1>Рабочий стол</h1>
+            <div class="fin-card" style="border-left: 5px solid var(--accent);">
+                <p style="color: var(--text-dim); font-size: 12px; font-weight: bold;">ПОЛЬЗОВАТЕЛЬ</p>
                 <h2 style="margin: 10px 0;">Артур Степанян</h2>
                 <p style="color: var(--accent); font-weight: 800; font-size: 18px;">ID: ERA-77412</p>
-            </div>
-            <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div class="fin-card" style="padding: 25px;">
-                    <p style="color: var(--text-dim); font-size: 13px;">Активных заявок</p>
-                    <h2 style="margin-top: 10px;">0</h2>
-                </div>
-                <div class="fin-card" style="padding: 25px;">
-                    <p style="color: var(--text-dim); font-size: 13px;">Уведомления</p>
-                    <h2 style="margin-top: 10px; color: var(--accent);">3 новых</h2>
-                </div>
             </div>
         </div>
 
         <div id="v-fin" class="view">
-            <h1>Финансы</h1>
-            <div style="display: grid; grid-template-columns: 1fr 420px; gap: 30px; margin-top: 30px;">
+            <h1>Управление счетом</h1>
+            <div style="display: grid; grid-template-columns: 1fr 400px; gap: 30px; margin-top: 20px;">
                 <div class="fin-card">
-                    <p style="color: var(--text-dim); font-size: 14px;">Текущий баланс</p>
-                    <h1 style="font-size: 54px; color: #fff; margin: 15px 0;">450 000.00 ₽</h1>
-                    <span class="status-tag">Средства доступны</span>
+                    <p style="color: var(--text-dim);">Доступный остаток</p>
+                    <h1 style="font-size: 52px; margin: 15px 0;">450 000.00 ₽</h1>
                 </div>
                 <div class="fin-card">
-                    <h3 style="margin-bottom: 20px;">Пополнение баланса</h3>
-                    <label style="font-size: 12px; color: var(--text-dim);">Сумма к зачислению (₽)</label>
+                    <h3>Пополнение</h3>
                     <input type="number" id="pay-amount" value="50000">
-                    <label style="font-size: 12px; color: var(--text-dim);">Способ оплаты</label>
                     <select id="pay-method">
-                        <option value="bank">Безналичный расчет (Счет для юр. лиц)</option>
-                        <option value="card">Карта / СБП / Эл. кошелек</option>
+                        <option value="bank">Безналичный расчет (Счет)</option>
+                        <option value="card">Карта / СБП</option>
                     </select>
-                    <button class="btn-main" onclick="processPayment()">Продолжить</button>
+                    <button class="btn-pay" onclick="doPay()">Сформировать счет</button>
                 </div>
             </div>
         </div>
 
         <div id="v-reg" class="view">
             <h1>Реестр торгов</h1>
-            <table>
-                <thead>
-                    <tr><th>№ Процедуры</th><th>Наименование объекта закупки</th><th>Начальная цена</th><th>Статус</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>03731000</td><td>Поставка серверного оборудования Enterprise</td><td>4 250 000 ₽</td><td><span class="status-tag">Идет прием</span></td></tr>
-                    <tr><td>03731005</td><td>Техническое обслуживание охранных систем</td><td>890 000 ₽</td><td><span class="status-tag">Идет прием</span></td></tr>
-                    <tr><td>03731009</td><td>Модернизация локальной сети (Этап 2)</td><td>1 100 000 ₽</td><td><span class="status-tag">Идет прием</span></td></tr>
-                </tbody>
-            </table>
+            <div class="fin-card">
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <tr style="color: var(--text-dim); font-size: 12px; border-bottom: 1px solid var(--border);">
+                        <th style="padding: 15px;">ID</th><th>Наименование</th><th>Цена</th>
+                    </tr>
+                    <tr><td style="padding: 15px;">#2026-01</td><td>Поставка оборудования</td><td>1 200 000 ₽</td></tr>
+                    <tr><td style="padding: 15px;">#2026-05</td><td>Оказание услуг связи</td><td>850 000 ₽</td></tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
 <footer id="footer">
-    © 2026 ООО "ЭТП ЭРА" | ИНН 7700112233 | КПП 770101001 | Служба поддержки: 8 (800) 555-35-35
+    © 2026 ООО "ЭТП ЭРА" | ИНН 7700112233 | Служба поддержки: 8 (800) 555-35-35
 </footer>
 
-<div id="invoice-print">
-    <h1 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">СЧЕТ НА ОПЛАТУ №<span id="inv-num"></span></h1>
-    <div style="margin: 20px 0;">
+<div id="invoice-box">
+    <h1 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">СЧЕТ НА ОПЛАТУ №<span id="inv-id"></span></h1>
+    <div style="margin: 30px 0;">
         <p><strong>Поставщик:</strong> ООО "ЭТП ЭРА", ИНН 7700112233, КПП 770101001</p>
-        <p><strong>Адрес:</strong> 123112, г. Москва, Пресненская наб., д. 12</p>
         <p><strong>Р/С:</strong> 40702810900001234567 в ПАО СБЕРБАНК, БИК 044525225</p>
+        <p style="margin-top: 20px;"><strong>Плательщик:</strong> Артур Степанян (Пользователь ID: ERA-77412)</p>
     </div>
-    <div style="margin: 20px 0; border: 1px solid #000; padding: 15px;">
-        <p><strong>Плательщик:</strong> Степанян Артур (ID Пользователя: ERA-77412)</p>
-    </div>
-    <table style="width: 100%; border: 1px solid #000; color: #000;">
+    <table style="width: 100%; border: 1px solid #000; margin: 20px 0;">
         <tr style="background: #eee;">
-            <th style="border: 1px solid #000; color: #000;">Услуга</th>
-            <th style="border: 1px solid #000; color: #000;">Сумма</th>
+            <th style="border: 1px solid #000; padding: 10px;">Назначение</th>
+            <th style="border: 1px solid #000; padding: 10px;">Сумма</th>
         </tr>
         <tr>
-            <td style="border: 1px solid #000;">Обеспечение участия в торгах (Пополнение Л/С ERA-77412)</td>
-            <td style="border: 1px solid #000;"><span id="inv-amount"></span>.00 руб.</td>
+            <td style="border: 1px solid #000; padding: 10px;">Пополнение лицевого счета ID ERA-77412 для участия в торгах</td>
+            <td style="border: 1px solid #000; padding: 10px;"><span id="inv-sum"></span>.00 руб.</td>
         </tr>
     </table>
-    <div style="margin-top: 20px;">
-        <p><strong>Назначение платежа:</strong> Пополнение лицевого счета пользователя ID ERA-77412 для участия в электронных торгах. Без НДС.</p>
-    </div>
-    <div style="margin-top: 50px; display: flex; justify-content: space-between;">
-        <p>Генеральный директор: ___________ /Иванов И.И./</p>
-        <p>М.П.</p>
-    </div>
+    <p><strong>Назначение платежа:</strong> Пополнение счета пользователя ID ERA-77412. Без НДС.</p>
 </div>
 
 <script>
     const uID = "ERA-77412";
+
+    // ЖИВЫЕ ЧАСЫ
+    setInterval(() => {
+        document.getElementById('live-clock').innerText = new Date().toLocaleTimeString();
+    }, 1000);
 
     function showView(id) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -193,43 +184,30 @@
     }
 
     function openApp() {
-        showModal("Авторизация", "Выполняется вход в защищенную зону ЭТП...");
-        setTimeout(() => {
-            closeModal();
-            document.getElementById('landing').style.display = 'none';
-            document.getElementById('main-app').style.display = 'grid';
-            document.getElementById('footer').style.display = 'block';
-        }, 1500);
-    }
-
-    function logout() {
-        document.getElementById('main-app').style.display = 'none';
-        document.getElementById('landing').style.display = 'flex';
-        showView('home');
-        // Очищаем состояние модалки для нового входа
-        document.getElementById('modal-overlay').style.display = 'none';
-    }
-
-    function showModal(title, text) {
-        document.getElementById('modal-title').innerText = title;
-        document.getElementById('modal-text').innerText = text;
+        document.getElementById('modal-text').innerText = "Выполняется вход в защищенный профиль " + uID + "...";
         document.getElementById('modal-overlay').style.display = 'flex';
     }
 
     function closeModal() {
         document.getElementById('modal-overlay').style.display = 'none';
+        document.getElementById('landing').style.display = 'none';
+        document.getElementById('main-app').style.display = 'grid';
     }
 
-    function processPayment() {
+    function logout() {
+        location.reload(); // Самый надежный способ очистить сессию
+    }
+
+    function doPay() {
         const amount = document.getElementById('pay-amount').value;
         const method = document.getElementById('pay-method').value;
 
         if (method === 'bank') {
-            document.getElementById('inv-num').innerText = Math.floor(Math.random() * 9000) + 1000;
-            document.getElementById('inv-amount').innerText = amount;
+            document.getElementById('inv-id').innerText = Math.floor(Math.random()*9000+1000);
+            document.getElementById('inv-sum').innerText = amount;
             window.print();
         } else {
-            showModal("Платежный шлюз", "Перенаправление на страницу оплаты картой. Пожалуйста, подождите...");
+            alert("Перенаправление на оплату картой...");
         }
     }
 </script>
