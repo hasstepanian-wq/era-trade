@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Личный кабинет - Финансы</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f4f8; padding: 20px; }
+        .card { background: #fff; padding: 25px; border-radius: 12px; max-width: 500px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .input-group { display: flex; gap: 10px; margin-top: 15px; }
+        input { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; width: 100%; font-size: 16px; }
+        button { background: #0099d5; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #007bb0; }
+        .hint { font-size: 12px; color: #64748b; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h3 style="margin: 0 0 10px 0;">Пополнение баланса лицевого счета</h3>
+    <p style="margin: 0; color: #475569;">Ваш ID: <strong>777</strong></p>
+    
+    <div class="input-group">
+        <input type="number" id="top-up-amount" value="1000" min="1000" step="500">
+        <button onclick="generateInvoice()">ПОПОЛНИТЬ</button>
+    </div>
+    
+    <div class="hint">
+        * Минимальная сумма 1 000 ₽. Сумма должна быть кратна 500 ₽.
+    </div>
+</div>
+
+<script>
+function generateInvoice() {
+    const amountInput = document.getElementById('top-up-amount');
+    const amount = parseInt(amountInput.value);
+    
+    // В реальной системе ID берется из профиля, тут фиксируем для теста
+    const userId = "777"; 
+
+    // Жёсткая валидация
+    if (isNaN(amount) || amount < 1000) {
+        alert("Ошибка: Минимальная сумма пополнения — 1000 рублей.");
+        return;
+    }
+    if (amount % 500 !== 0) {
+        alert("Ошибка: Сумма должна быть кратна 500 рублям (1000, 1500, 2000 и т.д.).");
+        return;
+    }
+
+    // Записываем данные в память браузера
+    localStorage.setItem('paymentAmount', amount);
+    localStorage.setItem('userId', userId);
+
+    // Переходим на страницу счета
+    window.location.href = 'requisites.html';
+}
+</script>
+
+</body>
+</html>
