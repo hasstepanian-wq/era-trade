@@ -2,25 +2,16 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>ЭТП ЭРА</title>
+    <title>ЭТП ЭРА — Главная</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="modal-overlay">
-    <div class="modal-card">
-        <h2>Вход в систему</h2>
-        <input type="text" id="u-login" placeholder="Логин / ID">
-        <input type="password" id="u-pass" placeholder="Пароль">
-        <button class="btn-blue" onclick="enterSite()">Войти</button>
-    </div>
-</div>
-
 <header>
-    <div class="logo">
+    <a href="index.html" class="logo">
         <div class="blue-sq"></div>
         <span>ЭТП ЭРА</span>
-    </div>
+    </a>
     <div class="h-right">
         <span id="live-clock">00:00:00</span>
         <span class="phone">8 (800) 555-35-35</span>
@@ -28,32 +19,36 @@
 </header>
 
 <main>
-    <div class="stats-container">
-        <div class="card">
-            <label>БЛОК 1</label>
-            <div class="val">Текст 1</div>
+    <a href="#tenders" class="main-hero" style="background-image: url('sky_banner.jpg');">
+        <div class="hero-text">
+            <h1>ЭЛЕКТРОННАЯ ТОРГОВАЯ ПЛОЩАДКА</h1>
+            <p>ОФИЦИАЛЬНЫЙ РЕЕСТР ПРОЦЕДУР И ТОРГОВ</p>
         </div>
-        <div class="card">
-            <label>БЛОК 2</label>
-            <div class="val">Текст 2</div>
-        </div>
-        <div class="card">
-            <label>БЛОК 3</label>
-            <div class="val">Текст 3</div>
-        </div>
-    </div>
+    </a>
 
-    <div class="hero-banner" style="background-image: url('sky_banner.jpg');">
-        <div class="hero-inner">
-            <h1>ТВОЙ ЗАГОЛОВОК</h1>
-            <p>Твое описание проекта</p>
-            <button class="btn-blue" onclick="alert('Счет сформирован!')">ДЕЙСТВИЕ</button>
-        </div>
+    <div class="site-nav-grid">
+        <a href="tenders.html" class="nav-tile">
+            <label>ТОРГИ</label>
+            <div class="tile-name">РЕЕСТР ЛОТОВ</div>
+        </a>
+        <a href="documents.html" class="nav-tile">
+            <label>ИНФОРМАЦИЯ</label>
+            <div class="tile-name">РЕГЛАМЕНТ ЭТП</div>
+        </a>
+        <a href="login.html" class="nav-tile highlight">
+            <label>ДОСТУП</label>
+            <div class="tile-name">ЛИЧНЫЙ КАБИНЕТ</div>
+        </a>
     </div>
 </main>
 
 <footer>
-    <p>© 2026 ЭТП ЭРА</p>
+    <div class="f-wrap">
+        <p>© 2026 ЭТП ЭРА — ВСЕ ПРАВА ЗАЩИЩЕНЫ</p>
+        <div class="f-links">
+            <span>КОНТАКТЫ</span> | <span>ПОДДЕРЖКА</span>
+        </div>
+    </div>
 </footer>
 
 <script src="script.js"></script>
