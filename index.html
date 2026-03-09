@@ -10,100 +10,79 @@
 
 <div id="landing-page">
     <header>
-        <div class="logo-section" onclick="location.reload()">
-            <img src="logo-forsage-modified.png" class="logo-img">
-            <div id="clock" class="server-time">00:00:00 МСК</div>
+        <div class="header-left">
+            <div class="logo-group" onclick="location.reload()">
+                <img src="logo-forsage-modified.png" alt="ЭТП ЭРА" class="main-logo">
+                <div id="clock" class="server-time">00:00:00 МСК</div>
+            </div>
+            <nav class="top-nav">
+                <a onclick="fastNavigate('tenders')" data-i18n="n_reg">РЕЕСТР ТОРГОВ</a>
+                <a href="#" data-i18n="n_comm">КОМИССИОННАЯ ПРОДАЖА</a>
+            </nav>
         </div>
-        
-        <div class="nav-links">
-            <a onclick="fastNavigate('tenders')" data-i18n="n_reg">Реестр торгов</a>
-            <a href="#" data-i18n="n_comm">Комиссионная продажа</a>
-        </div>
-
-        <div class="header-right">
+        <div class="h-right">
             <div class="lang-switcher">
-                <button class="lang-btn" id="btn-ru" onclick="setUserLang('ru')">RU</button>
+                <button class="lang-btn active" id="btn-ru" onclick="setUserLang('ru')">RU</button>
                 <button class="lang-btn" id="btn-en" onclick="setUserLang('en')">EN</button>
             </div>
-            <button class="btn-login" onclick="fastNavigate('home')" data-i18n="b_login">Вход</button>
-            <div class="burger" onclick="toggleMobileMenu()">
-                <div></div><div></div><div></div>
-            </div>
-        </div>
-
-        <div class="mobile-dropdown" id="mob-dropdown">
-            <a onclick="fastNavigate('tenders'); toggleMobileMenu()" data-i18n="n_reg">Реестр торгов</a>
-            <a onclick="toggleMobileMenu()" data-i18n="n_comm">Комиссионная продажа</a>
-            <a onclick="fastNavigate('home'); toggleMobileMenu()" data-i18n="b_login">Вход в кабинет</a>
+            <span class="phone">8 (800) 555-35-35</span>
+            <button class="btn-login" onclick="fastNavigate('home')" data-i18n="b_login">ВХОД</button>
         </div>
     </header>
 
-    <main>
-        <div class="hero">
-            <div class="grid-container">
-                <div class="glass-card" onclick="fastNavigate('home')">
-                    <h3 data-i18n="c1_t">Участник</h3>
-                    <p data-i18n="c1_p">Поиск актуальных процедур и подача заявок онлайн.</p>
-                </div>
-                <div class="glass-card" onclick="fastNavigate('home')" style="border-color: var(--primary); border-width: 2px;">
-                    <h3 data-i18n="c2_t">Экспресс-регистрация</h3>
-                    <p data-i18n="c2_p">Получите аккредитацию в системе всего за 24 часа.</p>
-                </div>
-                <div class="glass-card" onclick="fastNavigate('home')">
-                    <h3 data-i18n="c3_t">Организатор</h3>
-                    <p data-i18n="c3_p">Размещение лотов, проведение торгов и управление процедурами.</p>
-                </div>
+    <main class="hero-bg" style="background-image: url('sky_banner.jpg');">
+        <div class="grid-container">
+            <div class="glass-card" onclick="fastNavigate('home')">
+                <h3 data-i18n="c1_t">Участник</h3>
+                <p data-i18n="c1_p">Поиск актуальных процедур и подача заявок онлайн.</p>
+            </div>
+            <div class="glass-card highlight" onclick="fastNavigate('home')">
+                <h3 data-i18n="c2_t">Регистрация</h3>
+                <p data-i18n="c2_p">Получите аккредитацию в системе всего за 24 часа.</p>
+            </div>
+            <div class="glass-card" onclick="fastNavigate('home')">
+                <h3 data-i18n="c3_t">Организатор</h3>
+                <p data-i18n="c3_p">Размещение лотов и управление торгами.</p>
             </div>
         </div>
     </main>
 
     <footer>
-        <div class="footer-grid">
-            <div><h4 data-i18n="f_about">О платформе</h4><p data-i18n="f_about_p">ЭТП ЭРА — цифровая экосистема для проведения торгов любого уровня сложности.</p></div>
-            <div><h4 data-i18n="f_docs">Документы</h4><p>Регламент работы<br>Тарифы площадки</p></div>
-            <div><h4 data-i18n="f_supp">Поддержка</h4><p>8 (800) 555-35-35<br>help@era-trade.ru</p></div>
+        <div class="f-content">
+            <div class="f-info" data-i18n="f_about_p">ЭТП ЭРА — цифровая экосистема для проведения торгов.</div>
+            <div class="f-links">
+                <a href="#">Регламент</a>
+                <a href="#">Тарифы</a>
+                <a href="#">Поддержка</a>
+            </div>
+            <div class="f-copy">© 2026 ETP ERA</div>
         </div>
-        <div style="text-align:center; margin-top:30px; font-size:10px; opacity:0.5;">© 2026 ETP ERA. All rights reserved.</div>
     </footer>
 </div>
 
-<div id="dashboard">
-    <div class="sidebar">
-        <h2 style="color:var(--primary); margin-bottom:40px;">ЭТП ЭРА</h2>
-        <div class="side-link" id="l-home" onclick="switchSection('home')" data-i18n="s_home">Рабочий стол</div>
-        <div class="side-link" id="l-fin" onclick="switchSection('fin')" data-i18n="s_fin">Финансы</div>
-        <div class="side-link" id="l-tenders" onclick="switchSection('tenders')" data-i18n="s_reg">Реестр торгов</div>
-        <div style="margin-top:auto; color:#ef4444; font-weight:bold; cursor:pointer; padding:15px;" onclick="location.reload()">ВЫХОД</div>
-    </div>
-    <div class="main-content">
-        <div id="s-home" class="content-section">
+<div id="dashboard" style="display:none;">
+    <aside class="sidebar">
+        <div class="side-logo">ЭТП ЭРА</div>
+        <nav>
+            <div class="side-link active" id="l-home" onclick="switchSection('home')" data-i18n="s_home">Рабочий стол</div>
+            <div class="side-link" id="l-fin" onclick="switchSection('fin')" data-i18n="s_fin">Финансы</div>
+            <div class="side-link" id="l-tenders" onclick="switchSection('tenders')" data-i18n="s_reg">Реестр торгов</div>
+        </nav>
+        <div class="logout" onclick="location.reload()">ВЫХОД</div>
+    </aside>
+    <section class="main-content">
+        <div id="s-home" class="content-section active">
             <h1 data-i18n="welcome">Добро пожаловать, Артур!</h1>
-            <p style="color:#64748b; margin-top:15px;">Ваш аккаунт подтвержден. Все функции системы доступны.</p>
+            <p>Ваш аккаунт подтвержден. Все функции системы доступны.</p>
         </div>
-        
         <div id="s-fin" class="content-section">
-            <h1 data-i18n="s_fin">Мои финансы</h1>
-            <div style="background:#0a1f3d; padding:25px; border-radius:15px; border:1px solid #1e293b; margin-top:20px; max-width:400px;">
-                <p style="font-size:14px; opacity:0.7">Текущий баланс:</p>
-                <div style="font-size:36px; font-weight:bold; color:var(--primary); margin:10px 0;">450 000.00 ₽</div>
-                <button class="btn-login" style="width:100%; margin-top:10px;">Пополнить счет</button>
+            <h1 data-i18n="s_fin">Финансы</h1>
+            <div class="balance-card">
+                <label>Текущий баланс:</label>
+                <div class="sum">450 000.00 ₽</div>
             </div>
         </div>
-
-        <div id="s-tenders" class="content-section">
-            <h1 data-i18n="n_reg">Реестр торгов</h1>
-            <div style="margin-top:20px; background:#0a1f3d; border-radius:12px; overflow:hidden;">
-                <div style="padding:15px; border-bottom:1px solid #1e293b; display:flex; justify-content:space-between;">
-                    <span>ERA-2026-001 | Mercedes Actros</span>
-                    <span style="color:#10b981; font-weight:bold;">8 500 000 ₽</span>
-                </div>
-                <div style="padding:15px; display:flex; justify-content:space-between;">
-                    <span>ERA-2026-005 | Экскаватор JCB</span>
-                    <span style="color:#10b981; font-weight:bold;">6 200 000 ₽</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    </section>
 </div>
 
 <script src="script.js"></script>
