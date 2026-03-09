@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реквизиты для пополнения — ЭТП ЭРА</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            padding: 40px; 
+            line-height: 1.6; 
+            color: #1a202c; 
+            background: #f4f7f9;
+        }
+        .container { 
+            background: #fff;
+            border: 1px solid #e2e8f0; 
+            padding: 40px; 
+            max-width: 700px; 
+            margin: 0 auto; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        h2 { 
+            color: #0099d5; 
+            margin-top: 0;
+            border-bottom: 2px solid #0099d5;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            font-size: 20px;
+        }
+        .address-block {
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #4a5568;
+            background: #edf2f7;
+            padding: 15px;
+        }
+        .row { 
+            display: flex; 
+            justify-content: space-between; 
+            border-bottom: 1px solid #f0f4f8; 
+            padding: 12px 0; 
+        }
+        .label { 
+            font-weight: bold; 
+            color: #2d3748;
+            width: 150px;
+        }
+        .value {
+            flex: 1;
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+        .footer-note {
+            margin-top: 30px;
+            padding: 20px;
+            border-left: 4px solid #0099d5;
+            background: #f0f9ff;
+            font-size: 14px;
+        }
+        @media print {
+            .no-print { display: none; }
+            body { background: #fff; padding: 0; }
+            .container { border: none; box-shadow: none; }
+        }
+        .print-btn {
+            background: #0099d5;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <button class="print-btn no-print" onclick="window.print()">Распечатать счет</button>
+        
+        <h2>Реквизиты ООО «Форсаж»</h2>
+        
+        <div class="address-block">
+            <strong>Юридический/почтовый адрес:</strong><br>
+            121059, г. Москва, ул. Киевская, д. 14, оф. 2а
+        </div>
+
+        <div class="row"><span class="label">Получатель:</span> <span class="value">ООО «Форсаж»</span></div>
+        <div class="row"><span class="label">ИНН:</span> <span class="value">7728282160</span></div>
+        <div class="row"><span class="label">КПП:</span> <span class="value">773001001</span></div>
+        
+        <div class="row"><span class="label">Банк:</span> <span class="value">ООО «Банк Точка»</span></div>
+        <div class="row"><span class="label">БИК:</span> <span class="value">044525104</span></div>
+        <div class="row"><span class="label">Р/с:</span> <span class="value">40702810101500033019</span></div>
+        <div class="row"><span class="label">К/с:</span> <span class="value">30101810745374525104</span></div>
+        
+        <div class="footer-note">
+            <strong>Назначение платежа:</strong><br>
+            Пополнение лицевого счета (Артур) для участия в торгах на ЭТП ЭРА. Без НДС.
+        </div>
+    </div>
+
+</body>
+</html>
