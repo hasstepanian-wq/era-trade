@@ -2,86 +2,69 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ЭТП ЭРА — Электронная торговая площадка</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЭТП ЭРА — Торговая платформа</title>
     <style>
+        /* Весь CSS встроен сюда, чтобы страница не ломалась на GitHub */
         :root { 
             --primary: #0099d5; 
             --dark-bg: #01040a; 
             --sidebar-bg: #06162c;
             --card-bg: #0a1f3d;
-            --glass: rgba(255, 255, 255, 0.08); 
             --text-dim: #94a3b8;
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        
-        body, html { min-height: 100vh; background: var(--dark-bg); color: #fff; }
+        body, html { min-height: 100vh; background: var(--dark-bg); color: #fff; overflow-x: hidden; }
 
-        /* --- ХЕДЕР --- */
+        /* HEADER */
         header { 
             background: #fff; padding: 12px 5%; 
             display: flex; justify-content: space-between; align-items: center; 
-            z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            position: sticky; top: 0;
+            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
-        .logo-section { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .logo-img { height: 38px; }
-        .server-time { font-family: monospace; font-size: 11px; font-weight: 900; color: #1a202c; margin-top: 2px; }
+        .logo-img { height: 38px; cursor: pointer; }
         .btn-login-main { background: var(--primary); color: #fff; padding: 10px 25px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 11px; }
 
-        /* --- ГЛАВНАЯ СТРАНИЦА --- */
+        /* LANDING */
         #landing-page { display: flex; flex-direction: column; min-height: 100vh; }
         main { 
             flex: 1; display: flex; align-items: center; justify-content: center; 
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('sky_banner.jpg') no-repeat center/cover; 
-            padding: 40px 20px;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop'); 
+            background-size: cover; padding: 40px 20px;
         }
-        .grid-container { 
-            display: grid; grid-template-columns: repeat(3, 1fr); 
-            gap: 35px; width: 100%; max-width: 850px; /* Уменьшено на 15% */
-        }
+        .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; width: 100%; max-width: 900px; }
         .glass-card { 
-            background: var(--glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 22px;
-            display: flex; flex-direction: column; justify-content: center; 
-            padding: 25px; text-align: center; aspect-ratio: 1/1; transition: 0.3s; cursor: pointer;
+            background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px;
+            padding: 30px; text-align: center; aspect-ratio: 1/1; cursor: pointer; transition: 0.3s;
+            display: flex; flex-direction: column; justify-content: center;
         }
-        .glass-card:hover { border-color: var(--primary); transform: translateY(-8px); background: rgba(255,255,255,0.12); }
-        .glass-card h3 { font-size: 17px; margin-bottom: 10px; text-transform: uppercase; }
-        .glass-card p { font-size: 12px; color: #cbd5e0; line-height: 1.4; }
+        .glass-card:hover { border-color: var(--primary); transform: translateY(-5px); background: rgba(255, 255, 255, 0.12); }
 
-        /* --- ФУТЕР --- */
-        footer { background: #01040a; padding: 40px 5%; border-top: 1px solid #1e293b; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
-        .footer-col h4 { color: var(--primary); margin-bottom: 15px; font-size: 13px; text-transform: uppercase; }
-        .footer-col p { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
-
-        /* --- ЛИЧНЫЙ КАБИНЕТ --- */
-        #dashboard { display: none; min-height: 100vh; grid-template-columns: 260px 1fr; background: #01040a; }
+        /* DASHBOARD */
+        #dashboard { display: none; min-height: 100vh; grid-template-columns: 260px 1fr; }
         .sidebar { background: var(--sidebar-bg); border-right: 1px solid #1e293b; padding: 30px 20px; display: flex; flex-direction: column; }
-        .side-link { padding: 14px 18px; color: var(--text-dim); border-radius: 10px; margin-bottom: 8px; cursor: pointer; font-weight: 600; font-size: 14px; }
+        .side-link { padding: 14px 18px; color: var(--text-dim); border-radius: 10px; margin-bottom: 8px; cursor: pointer; font-weight: 600; }
         .side-link.active { background: var(--primary); color: #fff; }
-        .exit-btn { margin-top: auto; color: #ff4d4d; padding: 15px; cursor: pointer; font-weight: bold; border-radius: 8px; transition: 0.3s; }
-        .exit-btn:hover { background: rgba(255,77,77,0.1); }
+        .exit-btn { margin-top: auto; color: #ff4d4d; padding: 15px; cursor: pointer; font-weight: bold; }
 
-        .main-content { padding: 50px; overflow-y: auto; }
+        .main-content { padding: 50px; background: var(--dark-bg); }
         .tab-content { display: none; animation: fadeIn 0.3s ease; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ФИНАНСЫ КАРТОЧКИ */
+        /* FINANCES */
         .fin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .balance-card { background: var(--card-bg); padding: 30px; border-radius: 20px; border: 1px solid #1e293b; }
         .deposit-form { background: rgba(255,255,255,0.03); padding: 30px; border-radius: 20px; border: 1px solid #1e293b; }
-        .req-box { margin-top: 15px; padding: 15px; background: #000; border: 1px dashed var(--primary); border-radius: 10px; font-size: 12px; line-height: 1.6; }
-        input, select { width: 100%; padding: 12px; background: #01040a; border: 1px solid #1e293b; border-radius: 8px; color: #fff; margin-top: 5px; outline: none; }
-        .btn-action { background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        input, select { width: 100%; padding: 12px; background: #01040a; border: 1px solid #1e293b; border-radius: 8px; color: #fff; margin-top: 10px; }
+        .btn-action { background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 20px; }
 
         @media (max-width: 768px) {
             #dashboard { grid-template-columns: 1fr; }
             .sidebar { display: none; }
-            .grid-container { grid-template-columns: 1fr; max-width: 280px; }
+            .grid-container { grid-template-columns: 1fr; }
             .fin-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -90,136 +73,71 @@
 
 <div id="landing-page">
     <header>
-        <div class="logo-section" onclick="location.reload()">
-            <img src="logo-forsage-modified.png" class="logo-img">
-            <div id="clock" class="server-time">00:00:00 МСК</div>
-        </div>
+        <div onclick="location.reload()"><h2 style="color:var(--primary)">ЭТП ЭРА</h2></div>
         <button class="btn-login-main" onclick="enterApp()">Вход</button>
     </header>
-
     <main>
         <div class="grid-container">
-            <div class="glass-card" onclick="enterApp()">
-                <h3>Участник</h3>
-                <p>Поиск актуальных процедур и подача заявок онлайн.</p>
-            </div>
-            <div class="glass-card" onclick="enterApp()" style="border-color: var(--primary); border-width: 2px;">
-                <h3>Регистрация</h3>
-                <p>Аккредитация в системе за 24 часа.</p>
-            </div>
-            <div class="glass-card" onclick="enterApp()">
-                <h3>Организатор</h3>
-                <p>Размещение лотов и управление торгами.</p>
-            </div>
+            <div class="glass-card" onclick="enterApp()"><h3>Участник</h3><p>Торги и закупки</p></div>
+            <div class="glass-card" onclick="enterApp()" style="border-color: var(--primary)"><h3>Регистрация</h3><p>Доступ за 24 часа</p></div>
+            <div class="glass-card" onclick="enterApp()"><h3>Организатор</h3><p>Размещение лотов</p></div>
         </div>
     </main>
-
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h4>О платформе</h4>
-                <p>ЭТП ЭРА — современная цифровая экосистема для проведения торгов.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Поддержка</h4>
-                <p>8 (800) 555-35-35<br>help@era-trade.ru</p>
-            </div>
-        </div>
-    </footer>
 </div>
 
 <div id="dashboard">
     <div class="sidebar">
-        <div style="color:var(--primary); font-size:22px; font-weight:800; margin-bottom:40px; text-align:center;">ЭТП ЭРА</div>
+        <h2 style="color:var(--primary); margin-bottom:40px;">ЭТП ЭРА</h2>
         <div class="side-link active" id="l-home" onclick="switchTab('home')">Рабочий стол</div>
         <div class="side-link" id="l-fin" onclick="switchTab('fin')">Финансы</div>
         <div class="side-link" id="l-reg" onclick="switchTab('reg')">Реестр торгов</div>
-        <div class="exit-btn" onclick="logoutApp()">ВЫХОД</div>
+        <div class="exit-btn" onclick="logout()">ВЫХОД</div>
     </div>
-
     <div class="main-content">
         <div id="tab-home" class="tab-content active">
             <h1>Добро пожаловать, Артур!</h1>
-            <p style="color:var(--text-dim)">Ваш уникальный ID: <strong style="color:var(--primary)">ERA-77412</strong></p>
+            <p style="color:var(--text-dim); margin-top:10px;">ID: ERA-77412</p>
         </div>
-
         <div id="tab-fin" class="tab-content">
-            <h1>Управление финансами</h1>
+            <h1>Финансы</h1>
             <div class="fin-grid">
                 <div class="balance-card">
-                    <p style="font-size:12px; color:var(--text-dim); text-transform:uppercase;">Доступный баланс</p>
-                    <div style="font-size:42px; color:var(--primary); font-weight:800; margin:10px 0;">450 000.00 ₽</div>
-                    <p style="color:#10b981; font-size:13px;">● Статус: Средства активны</p>
+                    <p style="color:var(--text-dim)">Баланс</p>
+                    <h2 style="font-size:42px; color:var(--primary)">450 000.00 ₽</h2>
                 </div>
-
                 <div class="deposit-form">
-                    <h3 style="margin-bottom:15px;">Пополнение счета</h3>
-                    <label style="font-size:12px; color:var(--text-dim);">Сумма (₽)</label>
-                    <input type="number" id="dep-sum" value="50000">
-                    
-                    <label style="font-size:12px; color:var(--text-dim); margin-top:15px; display:block;">Способ оплаты</label>
-                    <select id="pay-method" onchange="togglePay()">
-                        <option value="card">Карта / СБП (Мгновенно)</option>
-                        <option value="bank">Безналичный расчет (Физ/Юр лица)</option>
+                    <h3>Пополнение</h3>
+                    <input type="number" id="sum" value="50000">
+                    <select id="method" onchange="document.getElementById('bank-req').style.display = this.value === 'bank' ? 'block' : 'none'">
+                        <option value="card">Карта / СБП</option>
+                        <option value="bank">Безналичный расчет</option>
                     </select>
-
-                    <div id="bank-req" style="display:none;" class="req-box">
-                        <strong>Реквизиты для перевода:</strong><br>
-                        ООО "ЭТП ЭРА"<br>
-                        ИНН 7700112233<br>
-                        Р/с 40702810900001234567 в Сбербанке<br><br>
-                        <strong>ВАЖНО (Назначение платежа):</strong><br>
-                        <span style="color:var(--primary)">Пополнение счета ID ERA-77412</span>
+                    <div id="bank-req" style="display:none; margin-top:15px; font-size:12px; border:1px dashed var(--primary); padding:10px;">
+                        Реквизиты: ООО "ЭТП ЭРА" ИНН 7700112233. <br>Назначение: ID ERA-77412
                     </div>
-
-                    <button class="btn-action" onclick="alert('Запрос отправлен!')">Подтвердить</button>
+                    <button class="btn-action" onclick="alert('Заявка создана')">Подтвердить</button>
                 </div>
             </div>
         </div>
-
-        <div id="tab-reg" class="tab-content">
-            <h1>Реестр торгов</h1>
-            <p style="color:var(--text-dim)">Актуальные лоты загружаются...</p>
-        </div>
+        <div id="tab-reg" class="tab-content"><h1>Реестр торгов</h1><p>Загрузка...</p></div>
     </div>
 </div>
 
 <script>
-    function updateTime() {
-        const now = new Date();
-        document.getElementById('clock').innerText = now.toLocaleTimeString('ru-RU', {timeZone: 'Europe/Moscow'}) + ' МСК';
-    }
-    setInterval(updateTime, 1000);
-
     function switchTab(id) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.side-link').forEach(l => l.classList.remove('active'));
         document.getElementById('tab-' + id).classList.add('active');
         document.getElementById('l-' + id).classList.add('active');
     }
-
-    function togglePay() {
-        const method = document.getElementById('pay-method').value;
-        document.getElementById('bank-req').style.display = method === 'bank' ? 'block' : 'none';
-    }
-
     function enterApp() {
         document.getElementById('landing-page').style.display = 'none';
         document.getElementById('dashboard').style.display = 'grid';
-        switchTab('home');
     }
-
-    function logoutApp() {
-        // Прячем кабинет
+    function logout() {
         document.getElementById('dashboard').style.display = 'none';
-        // Возвращаем главную
         document.getElementById('landing-page').style.display = 'flex';
-        // Сбрасываем скролл
-        window.scrollTo(0, 0);
     }
-
-    window.onload = updateTime;
 </script>
-
 </body>
 </html>
