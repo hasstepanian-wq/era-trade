@@ -8,13 +8,11 @@ function applyTranslations(lang) {
         const key = el.getAttribute('data-i18n');
         if (dict[lang][key]) el.innerText = dict[lang][key];
     });
-    document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
-    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
 }
 
 function setUserLang(lang) {
     localStorage.setItem('era_lang', lang);
-    applyTranslations(lang);
+    location.reload();
 }
 
 function fastNavigate(id) {
@@ -30,6 +28,16 @@ function switchSection(id) {
     document.getElementById('l-' + id)?.classList.add('active');
 }
 
+// УПРАВЛЕНИЕ МОДАЛКОЙ
+function openPayModal() { document.getElementById('pay-modal').style.display = 'block'; }
+function closePayModal() { document.getElementById('pay-modal').style.display = 'none'; }
+
+function goToRequisites() {
+    closePayModal();
+    // Открываем новую вкладку с реквизитами ООО "Форсаж"
+    window.open('requisites.html', '_blank');
+}
+
 function updateClock() {
     const clock = document.getElementById('clock');
     if (clock) {
@@ -43,3 +51,9 @@ window.onload = () => {
     setInterval(updateClock, 1000);
     updateClock();
 };
+
+// Закрытие модалки по клику вне окна
+window.onclick = function(event) {
+    let modal = document.getElementById('pay-modal');
+    if (event.target == modal) closePayModal();
+}
