@@ -1,68 +1,79 @@
-/* HEADER */
+:root { --blue: #0099d5; --dark: #01040a; }
+
+* { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0 !important; text-decoration: none; }
+
+body, html { 
+    height: 100vh; width: 100%; overflow: hidden; 
+    background: var(--dark); font-family: 'Segoe UI', sans-serif; 
+}
+
+/* HEADER — Высокий (120px) */
 header { 
-    height: 120px; 
-    background: #fff; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 0 50px; 
-    border: none; 
-    z-index: 100;
+    height: 120px; background: #fff; display: flex; 
+    justify-content: space-between; align-items: center; 
+    padding: 0 50px; border: none; z-index: 100;
 }
 
-.h-left {
-    display: flex;
-    align-items: center;
-    gap: 80px; /* Отступ между блоком логотипа и всем навигационным меню */
-}
+.h-left, .h-right { display: flex; align-items: center; }
 
-/* Центровка часов под логотипом */
-.logo-center-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    min-width: 160px;
+/* Центровка лого и времени */
+.logo-group { 
+    display: flex; flex-direction: column; align-items: center; 
+    cursor: pointer; min-width: 160px; margin-right: 100px;
 }
+.main-logo { height: 55px; width: auto; margin-bottom: 5px; }
+#clock { font-family: 'Courier New', monospace; font-size: 13px; font-weight: 900; color: var(--blue); letter-spacing: 1px; }
 
-.main-logo-img {
-    height: 52px; 
-    width: auto;
-    margin-bottom: 4px;
+/* Навигация с большим отступом */
+.top-nav { display: flex; align-items: center; }
+.top-nav a { color: #1a202c; font-size: 13px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+.top-nav a:hover { color: var(--blue); }
+.comm-link { margin-left: 80px; } /* Тот самый отступ */
+
+.lang-selector { display: flex; border: 1px solid #eee; margin-right: 30px; }
+.l-btn { background: none; border: none; padding: 8px 15px; font-size: 11px; font-weight: bold; cursor: pointer; color: #888; }
+.l-btn.active { background: var(--blue); color: #fff; }
+
+.login-btn { background: var(--blue); color: #fff; border: none; padding: 14px 40px; font-weight: bold; cursor: pointer; font-size: 13px; }
+
+/* HERO */
+.hero-section { 
+    height: calc(100vh - 260px); background-size: cover; background-position: center; 
+    display: flex; justify-content: center; align-items: center; 
 }
-
-#clock { 
-    font-family: 'Courier New', monospace; 
-    font-size: 13px; 
-    font-weight: 800; 
-    color: #0099d5; 
-    letter-spacing: 1px;
+.cards-container { display: flex; gap: 30px; }
+.glass-card { 
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.1); width: 290px; height: 290px;
+    display: flex; flex-direction: column; justify-content: center; 
+    padding: 40px; text-align: center; color: #fff; transition: 0.3s; cursor: pointer;
 }
+.glass-card:hover { border-color: var(--blue); transform: translateY(-5px); }
+.glass-card h3 { font-size: 21px; text-transform: uppercase; margin-bottom: 15px; font-weight: 800; }
+.glass-card p { font-size: 14px; color: #aaa; line-height: 1.6; }
+.glass-card.active { border: 2px solid var(--blue); }
 
-/* НАВИГАЦИЯ: Увеличенный отступ между пунктами */
-.nav-gap {
-    display: flex;
-    gap: 60px; /* Тот самый увеличенный отступ между Реестром и Продажей */
-}
-
-.top-nav a { 
-    color: #1a202c; 
-    font-size: 12px; 
-    font-weight: 800; 
-    cursor: pointer; 
-    white-space: nowrap; /* Чтобы текст не переносился */
-}
-
-.top-nav a:hover { 
-    color: #0099d5; 
-}
-
-/* FOOTER - Оставляем широким (140px) */
+/* FOOTER — Двойная ширина (140px) */
 footer { 
-    height: 140px; 
-    background: #01040a; 
-    border-top: 1px solid #1e293b; 
-    display: flex; 
-    align-items: center; 
-    padding: 0 50px; 
+    height: 140px; background: var(--dark); border-top: 1px solid #1e293b; 
+    display: flex; align-items: center; padding: 0 50px; 
 }
+.footer-content { width: 100%; display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 12px; }
+.f-left { display: flex; flex-direction: column; gap: 15px; }
+.footer-phone { color: #fff; font-weight: 900; font-size: 22px; transition: 0.2s; }
+.footer-phone:hover { color: var(--blue); }
+.footer-nav a { color: #64748b; margin-left: 30px; font-weight: bold; }
+.f-copy { margin-top: 10px; opacity: 0.5; font-size: 10px; }
+
+/* DASHBOARD */
+#dashboard { height: 100vh; display: grid; grid-template-columns: 260px 1fr; }
+.sidebar { background: #06162c; padding: 40px 25px; display: flex; flex-direction: column; border-right: 1px solid #1e293b; }
+.side-logo { color: var(--blue); font-size: 24px; font-weight: 900; margin-bottom: 50px; }
+.s-link { padding: 18px; color: #cbd5e0; cursor: pointer; font-weight: bold; }
+.s-link.active { background: var(--blue); color: #fff; }
+.exit-btn { margin-top: auto; color: #ef4444; font-weight: bold; cursor: pointer; padding: 15px; }
+.dash-content { padding: 60px; color: #fff; }
+.tab { display: none; }
+.tab.active { display: block; }
+.balance-widget { background: #0a1f3d; padding: 40px; border: 1px solid #1e293b; margin-top: 30px; display: inline-block; }
+.balance-widget .sum { font-size: 42px; font-weight: 900; color: var(--blue); }
