@@ -12,7 +12,7 @@
     <header>
         <div class="h-left">
             <div class="logo-wrap" onclick="location.reload()">
-                <img src="logo-forsage-modified.png" alt="ЭТП ЭРА" style="height: 35px; width: auto; display: block;">
+                <img src="logo-forsage-modified.png" alt="ЭТП ЭРА" class="header-logo">
                 <span id="clock">00:00:00 МСК</span>
             </div>
             <nav class="main-nav">
@@ -26,10 +26,7 @@
                 <button class="l-btn active" id="btn-ru" onclick="setUserLang('ru')">RU</button>
                 <button class="l-btn" id="btn-en" onclick="setUserLang('en')">EN</button>
             </div>
-            <div class="auth-group">
-                <span class="tel">8 (800) 555-35-35</span>
-                <button class="login-btn" onclick="fastNavigate('home')" data-i18n="b_login">ВХОД</button>
-            </div>
+            <button class="login-btn" onclick="fastNavigate('home')" data-i18n="b_login">ВХОД</button>
         </div>
     </header>
 
@@ -52,7 +49,10 @@
 
     <footer>
         <div class="f-content">
-            <p data-i18n="f_about_p">ЭТП ЭРА — цифровая экосистема для проведения торгов.</p>
+            <div class="f-info">
+                <p data-i18n="f_about_p">ЭТП ЭРА — цифровая экосистема для проведения торгов.</p>
+                <a href="tel:+79265894191" class="f-phone">+7 (926) 589-41-91</a>
+            </div>
             <div class="f-links">
                 <a href="#">РЕГЛАМЕНТ</a>
                 <a href="#">ТАРИФЫ</a>
