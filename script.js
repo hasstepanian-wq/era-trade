@@ -89,6 +89,7 @@ function generateInvoice(amt) {
             </table>
             <p style="text-align:right; font-size: 18px; font-weight:bold;">Итого: ${amt.toLocaleString()}.00 руб.</p>
             <p style="text-align:right;">В т.ч. НДС (22%): ${vat.toLocaleString()} руб.</p>
+            <p><strong>Назначение платежа:</strong> Пополнение баланса лицевого счета ЭТП-Эра, ID пользователя ${userState.id}. В т.ч. НДС (22%) — ${vat} руб.</p>
         </body>
         </html>
     `;
