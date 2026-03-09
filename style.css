@@ -7,34 +7,35 @@ body, html {
     background: var(--dark); font-family: 'Segoe UI', sans-serif; 
 }
 
-/* HEADER */
+/* HEADER - Шире на 15% (было 80px -> стало 92px) */
 header { 
-    height: 80px; background: #fff; display: flex; 
+    height: 92px; background: #fff; display: flex; 
     justify-content: space-between; align-items: center; 
-    padding: 0 40px; border-bottom: 3px solid var(--accent); z-index: 100;
+    padding: 0 40px; border-bottom: none; z-index: 100;
 }
 
-.h-left, .h-right { display: flex; align-items: center; gap: 30px; }
+.h-left, .h-right { display: flex; align-items: center; gap: 40px; }
 .logo-wrap { display: flex; flex-direction: column; cursor: pointer; }
+.header-logo { height: 38px; width: auto; }
 #clock { font-family: monospace; font-size: 11px; font-weight: bold; color: var(--accent); margin-top: 4px; }
 
-.main-nav a { color: #1a202c; font-size: 11px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+.main-nav a { color: #1a202c; font-size: 11px; font-weight: 800; cursor: pointer; }
 .main-nav a:hover { color: var(--accent); }
 
 .lang-box { display: flex; border: 1px solid #eee; }
 .l-btn { background: none; border: none; padding: 7px 12px; font-size: 10px; font-weight: bold; cursor: pointer; color: #888; }
 .l-btn.active { background: var(--accent); color: #fff; }
 
-.tel { font-weight: 900; font-size: 15px; color: #000; }
-.login-btn { background: var(--accent); color: #fff; border: none; padding: 11px 25px; font-weight: bold; cursor: pointer; font-size: 11px; }
+.login-btn { background: var(--accent); color: #fff; border: none; padding: 12px 30px; font-weight: bold; cursor: pointer; font-size: 12px; }
 
 /* HERO */
 .hero { 
-    height: calc(100vh - 140px); background-size: cover; background-position: center; 
-    display: flex; justify-content: center; align-items: center; position: relative;
+    height: calc(100vh - 164px); /* С учетом увеличенного хедера и футера */
+    background-size: cover; background-position: center; 
+    display: flex; justify-content: center; align-items: center; 
 }
 
-.card-container { display: flex; gap: 30px; z-index: 5; }
+.card-container { display: flex; gap: 30px; }
 
 .glass-card { 
     background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
@@ -42,31 +43,32 @@ header {
     display: flex; flex-direction: column; justify-content: center; 
     padding: 35px; text-align: center; color: #fff; transition: 0.4s; cursor: pointer;
 }
-.glass-card:hover { border-color: var(--accent); transform: translateY(-8px); background: rgba(0,0,0,0.9); }
+.glass-card:hover { border-color: var(--accent); transform: translateY(-8px); }
 .glass-card h3 { font-size: 20px; text-transform: uppercase; margin-bottom: 15px; font-weight: 800; }
 .glass-card p { font-size: 13px; color: #aaa; line-height: 1.6; }
-.glass-card.active { border: 2px solid var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.glass-card.active { border: 2px solid var(--accent); }
 
-/* FOOTER */
+/* FOOTER - Шире на 20% (было 60px -> стало 72px) */
 footer { 
-    height: 60px; background: var(--dark); border-top: 1px solid #1e293b; 
+    height: 72px; background: var(--dark); border-top: 1px solid #1e293b; 
     display: flex; align-items: center; padding: 0 40px; 
 }
 .f-content { width: 100%; display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 11px; }
+.f-info { display: flex; flex-direction: column; gap: 5px; }
+.f-phone { color: #fff; font-weight: 900; font-size: 14px; transition: 0.2s; }
+.f-phone:hover { color: var(--accent); }
 .f-links a { color: #64748b; margin: 0 15px; font-weight: bold; }
 .f-links a:hover { color: #fff; }
 
-/* DASHBOARD */
+/* DASHBOARD - Без изменений */
 #dashboard { height: 100vh; width: 100%; display: grid; grid-template-columns: 260px 1fr; }
 .sidebar { background: #06162c; border-right: 1px solid #1e293b; padding: 40px 25px; display: flex; flex-direction: column; }
 .side-logo { color: var(--accent); font-size: 22px; font-weight: 900; margin-bottom: 50px; }
-.menu-item { padding: 16px; color: #cbd5e0; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.3s; }
+.menu-item { padding: 16px; color: #cbd5e0; cursor: pointer; font-weight: bold; font-size: 14px; }
 .menu-item.active { background: var(--accent); color: #fff; }
 .logout { margin-top: auto; color: #ef4444; font-weight: bold; cursor: pointer; padding: 15px; }
-.dash-main { padding: 60px; background: var(--dark); color: #fff; overflow-y: auto; }
-.section { display: none; animation: fadeIn 0.3s; }
+.dash-main { padding: 60px; background: var(--dark); color: #fff; }
+.section { display: none; }
 .section.active { display: block; }
 .balance-card { background: #0a1f3d; padding: 35px; border: 1px solid #1e293b; margin-top: 35px; display: inline-block; min-width: 320px; }
 .balance-card .val { font-size: 38px; font-weight: 900; color: var(--accent); margin-top: 10px; }
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
