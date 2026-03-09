@@ -2,90 +2,28 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Счет на оплату № ЭРА-103 — ЭТП ЭРА</title>
+    <title>Счет на оплату № ЭРА-103</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            padding: 30px; 
-            line-height: 1.5; 
-            color: #1a202c; 
-            background: #f0f4f8;
-        }
-        .container { 
-            background: #fff;
-            border: 1px solid #e2e8f0; 
-            padding: 40px; 
-            max-width: 800px; 
-            margin: 0 auto; 
-            box-shadow: 0 10px 15px rgba(0,0,0,0.05);
-        }
-        .invoice-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #0099d5;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        .logo-text { font-size: 24px; font-weight: 900; color: #000; }
-        .invoice-title h1 { color: #0099d5; margin: 0; font-size: 22px; }
-        
-        .requisites-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-        .requisites-table td {
-            border: 1px solid #e2e8f0;
-            padding: 12px;
-            font-size: 14px;
-        }
-        .label { background: #f8fafc; font-weight: bold; width: 30%; }
-
-        .payment-purpose {
-            background: #fffbeb;
-            border: 1px dashed #f59e0b;
-            padding: 20px;
-            margin-top: 20px;
-        }
-        .payment-purpose strong { color: #b45309; display: block; margin-bottom: 5px; }
-        #user-id-display { font-weight: bold; color: #0099d5; }
-
-        .qr-section {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-top: 30px;
-            padding: 20px;
-            border: 1px solid #edf2f7;
-        }
-        .qr-placeholder { width: 120px; height: 120px; background: #eee; display: flex; align-items: center; text-align: center; font-size: 10px; }
-
-        .print-btn {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #0099d5;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
+        body { font-family: sans-serif; background: #f0f4f8; padding: 40px; display: flex; justify-content: center; }
+        .invoice-box { background: #fff; padding: 40px; width: 100%; max-width: 800px; border: 1px solid #e2e8f0; box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
+        h2 { color: #0099d5; margin-top: 0; border-bottom: 2px solid #0099d5; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        td { padding: 12px; border: 1px solid #e2e8f0; }
+        .label { background: #f8fafc; font-weight: bold; width: 35%; }
+        .highlight { background: #fffbeb; font-weight: bold; color: #b45309; }
+        .qr-section { display: flex; align-items: center; gap: 20px; padding: 20px; border: 2px dashed #0099d5; border-radius: 12px; margin-top: 30px; }
+        .qr-text p { margin: 0; }
+        .print-btn { margin-top: 20px; padding: 10px 20px; background: #64748b; color: white; border: none; border-radius: 6px; cursor: pointer; }
         @media print { .print-btn { display: none; } }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="invoice-header">
-        <div class="logo-text">ЭТП ЭРА</div>
-        <div class="invoice-title">
-            <h1>СЧЕТ № ЭРА-103</h1>
-            <p>от 09 марта 2026 г.</p>
-        </div>
-    </div>
-
-    <table class="requisites-table">
+<div class="invoice-box">
+    <h2>СЧЕТ НА ОПЛАТУ № ЭРА-103</h2>
+    <p>Дата: 09 марта 2026 г.</p>
+    
+    <table>
         <tr>
             <td class="label">Получатель</td>
             <td>ООО «ФОРСАЖ»</td>
@@ -99,29 +37,24 @@
             <td>ООО "Банк Точка"</td>
         </tr>
         <tr>
-            <td class="label">БИК</td>
-            <td>044525104</td>
+            <td class="label">Р/с / БИК</td>
+            <td>40702810001500033019 / 044525104</td>
         </tr>
         <tr>
-            <td class="label">К/с</td>
-            <td>30101810745374525104</td>
+            <td class="label">Назначение платежа</td>
+            <td class="highlight">Пополнение баланса лицевого счета на ЭТП ЭРА (ID: <span id="display-id">...</span>)</td>
         </tr>
         <tr>
-            <td class="label">Р/с</td>
-            <td>40702810001500033019</td>
+            <td class="label">Сумма к оплате</td>
+            <td style="font-size: 20px; font-weight: bold;"><span id="display-amount">0</span>.00 ₽</td>
         </tr>
     </table>
 
-    <div class="payment-purpose">
-        <strong>Назначение платежа:</strong>
-        Пополнение баланса лицевого счета на ЭТП ЭРА (ID: <span id="user-id-display">загрузка...</span>)
-    </div>
-
     <div class="qr-section">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ST00012|Name=ООО ФОРСАЖ|PersonalAcc=40702810001500033019|BankName=ООО БАНК ТОЧКА|BIC=044525104|CorrespAcc=30101810745374525104|PayeeINN=7728282160|Purpose=Пополнение счета ЭТП ЭРА" alt="QR Код">
-        <div>
-            <p style="margin:0; font-weight: bold;">Оплата по QR-коду</p>
-            <p style="margin:5px 0 0; font-size: 12px; color: #64748b;">Отсканируйте код в приложении любого банка для моментального заполнения реквизитов.</p>
+        <img id="qr-code" src="" alt="QR для оплаты" style="width: 160px; height: 160px;">
+        <div class="qr-text">
+            <p style="font-weight: bold; color: #0099d5; font-size: 16px;">Оплата через мобильный банк</p>
+            <p style="font-size: 14px; color: #475569; margin-top: 5px;">Отсканируйте QR-код в приложении вашего банка. Все реквизиты, сумма и ваш ID подставятся автоматически.</p>
         </div>
     </div>
 
@@ -129,17 +62,25 @@
 </div>
 
 <script>
-    // Скрипт для подтягивания ID пользователя
-    document.addEventListener('DOMContentLoaded', function() {
-        // Проверяем ID в localStorage (ключ 'userId' или 'user_id' — смотря как сохраняешь)
-        const userId = localStorage.getItem('userId') || 'НЕ УКАЗАН';
-        document.getElementById('user-id-display').textContent = userId;
-        
-        // Опционально: Обновляем QR-код, добавляя туда ID
-        const qrImg = document.querySelector('.qr-section img');
-        const currentSrc = qrImg.src;
-        qrImg.src = currentSrc + ' ID ' + userId;
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    // Получаем данные из localStorage
+    const userId = localStorage.getItem('userId') || "777";
+    const amount = localStorage.getItem('paymentAmount') || "1000";
+
+    // Вставляем данные в текст
+    document.getElementById('display-id').textContent = userId;
+    document.getElementById('display-amount').textContent = Number(amount).toLocaleString('ru-RU');
+
+    // Настройка QR-кода (Стандарт ГОСТ)
+    const qrImg = document.getElementById('qr-code');
+    const purpose = `Пополнение баланса лицевого счета на ЭТП ЭРА (ID: ${userId})`;
+    const sumInKopeks = amount * 100;
+
+    const qrData = `ST00012|Name=ООО ФОРСАЖ|PersonalAcc=40702810001500033019|BankName=ООО БАНК ТОЧКА|BIC=044525104|CorrespAcc=30101810745374525104|PayeeINN=7728282160|Purpose=${purpose}|Sum=${sumInKopeks}`;
+    
+    // Генерируем ссылку на API QR-кодов
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(qrData)}`;
+});
 </script>
 
 </body>
