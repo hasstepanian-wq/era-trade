@@ -1,47 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Мой Проект</title>
+    <title>ЭТП ЭРА</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header style="background:#fff; color:#000; display:flex; justify-content:space-between; padding:20px 40px; align-items:center;">
-    <div style="font-weight:bold; font-size:20px; display:flex; align-items:center; gap:10px;">
-        <div style="width:30px; height:30px; background:#007aff; border-radius:5px;"></div>
-        ЭТП ЭРА
+<div id="modal-overlay">
+    <div class="modal-card">
+        <h2>Вход в систему</h2>
+        <input type="text" id="u-login" placeholder="Логин / ID">
+        <input type="password" id="u-pass" placeholder="Пароль">
+        <button class="btn-blue" onclick="enterSite()">Войти</button>
     </div>
-    <div id="live-clock">00:00:00</div>
+</div>
+
+<header>
+    <div class="logo">
+        <div class="blue-sq"></div>
+        <span>ЭТП ЭРА</span>
+    </div>
+    <div class="h-right">
+        <span id="live-clock">00:00:00</span>
+        <span class="phone">8 (800) 555-35-35</span>
+    </div>
 </header>
 
-<main style="padding:40px;">
-    <div style="display:flex; gap:20px; margin-bottom:40px;">
-        <div style="flex:1; background:#111; border:1px solid #333; padding:20px; border-radius:15px;">
-            <label style="color:#555; font-size:12px;">БЛОК 1</label>
-            <div style="font-size:22px; font-weight:bold; margin-top:10px;">Текст 1</div>
+<main>
+    <div class="stats-container">
+        <div class="card">
+            <label>БЛОК 1</label>
+            <div class="val">Текст 1</div>
         </div>
-        <div style="flex:1; background:#111; border:1px solid #333; padding:20px; border-radius:15px;">
-            <label style="color:#555; font-size:12px;">БЛОК 2</label>
-            <div style="font-size:22px; font-weight:bold; margin-top:10px;">Текст 2</div>
+        <div class="card">
+            <label>БЛОК 2</label>
+            <div class="val">Текст 2</div>
         </div>
-        <div style="flex:1; background:#111; border:1px solid #333; padding:20px; border-radius:15px;">
-            <label style="color:#555; font-size:12px;">БЛОК 3</label>
-            <div style="font-size:22px; font-weight:bold; margin-top:10px;">Текст 3</div>
+        <div class="card">
+            <label>БЛОК 3</label>
+            <div class="val">Текст 3</div>
         </div>
     </div>
 
-    <div style="background:url('sky_banner.jpg') center/cover; height:350px; border-radius:20px; display:flex; align-items:center; padding:40px; border:1px solid #333;">
-        <div>
-            <h1 style="font-size:40px; margin:0;">ТВОЙ ЗАГОЛОВОК</h1>
-            <p style="margin:20px 0; color:#ccc;">Твое описание проекта</p>
-            <button onclick="alert('Кнопка работает!')" style="background:#007aff; color:#fff; border:none; padding:15px 30px; border-radius:10px; cursor:pointer; font-weight:bold;">ДЕЙСТВИЕ</button>
+    <div class="hero-banner" style="background-image: url('sky_banner.jpg');">
+        <div class="hero-inner">
+            <h1>ТВОЙ ЗАГОЛОВОК</h1>
+            <p>Твое описание проекта</p>
+            <button class="btn-blue" onclick="alert('Счет сформирован!')">ДЕЙСТВИЕ</button>
         </div>
     </div>
 </main>
 
-<footer style="padding:30px 40px; border-top:1px solid #222; color:#444; font-size:12px;">
-    © 2026 ЭТП ЭРА
+<footer>
+    <p>© 2026 ЭТП ЭРА</p>
 </footer>
 
 <script src="script.js"></script>
