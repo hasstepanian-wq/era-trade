@@ -1,74 +1,76 @@
-:root { --accent: #0099d5; --dark: #01040a; }
+:root { --main-blue: #0099d5; --dark-bg: #01040a; }
 
 * { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0 !important; text-decoration: none; }
 
 body, html { 
     height: 100vh; width: 100%; overflow: hidden; 
-    background: var(--dark); font-family: 'Segoe UI', sans-serif; 
+    background: var(--dark-bg); font-family: 'Segoe UI', sans-serif; 
 }
 
-/* HEADER - Шире на 15% (было 80px -> стало 92px) */
+/* HEADER - Увеличен для крупного логотипа */
 header { 
-    height: 92px; background: #fff; display: flex; 
+    height: 110px; background: #fff; display: flex; 
     justify-content: space-between; align-items: center; 
-    padding: 0 40px; border-bottom: none; z-index: 100;
+    padding: 0 50px; border-bottom: none; z-index: 100;
 }
 
-.h-left, .h-right { display: flex; align-items: center; gap: 40px; }
-.logo-wrap { display: flex; flex-direction: column; cursor: pointer; }
-.header-logo { height: 38px; width: auto; }
-#clock { font-family: monospace; font-size: 11px; font-weight: bold; color: var(--accent); margin-top: 4px; }
+.h-left, .h-right { display: flex; align-items: center; gap: 50px; }
 
-.main-nav a { color: #1a202c; font-size: 11px; font-weight: 800; cursor: pointer; }
-.main-nav a:hover { color: var(--accent); }
+/* Блок логотипа с часами снизу */
+.logo-block { 
+    display: flex; flex-direction: column; align-items: center; cursor: pointer;
+}
+.header-logo { height: 48px; width: auto; margin-bottom: 5px; } /* Логотип стал крупнее */
+#clock { font-family: monospace; font-size: 12px; font-weight: bold; color: var(--main-blue); }
 
-.lang-box { display: flex; border: 1px solid #eee; }
-.l-btn { background: none; border: none; padding: 7px 12px; font-size: 10px; font-weight: bold; cursor: pointer; color: #888; }
-.l-btn.active { background: var(--accent); color: #fff; }
+.top-menu a { color: #1a202c; font-size: 12px; font-weight: 800; cursor: pointer; }
+.top-menu a:hover { color: var(--main-blue); }
 
-.login-btn { background: var(--accent); color: #fff; border: none; padding: 12px 30px; font-weight: bold; cursor: pointer; font-size: 12px; }
+.lang-selector { display: flex; border: 1px solid #eee; }
+.l-btn { background: none; border: none; padding: 8px 15px; font-size: 11px; font-weight: bold; cursor: pointer; color: #888; }
+.l-btn.active { background: var(--main-blue); color: #fff; }
 
-/* HERO */
-.hero { 
-    height: calc(100vh - 164px); /* С учетом увеличенного хедера и футера */
+.login-btn { background: var(--main-blue); color: #fff; border: none; padding: 14px 40px; font-weight: bold; cursor: pointer; font-size: 13px; }
+
+/* HERO SECTION */
+.hero-screen { 
+    height: calc(100vh - 230px); /* Вычитаем высоту хедера и двойного футера */
     background-size: cover; background-position: center; 
     display: flex; justify-content: center; align-items: center; 
 }
-
-.card-container { display: flex; gap: 30px; }
-
+.cards-grid { display: flex; gap: 30px; }
 .glass-card { 
-    background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.1); width: 280px; height: 280px;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.1); width: 290px; height: 290px;
     display: flex; flex-direction: column; justify-content: center; 
-    padding: 35px; text-align: center; color: #fff; transition: 0.4s; cursor: pointer;
+    padding: 40px; text-align: center; color: #fff; transition: 0.3s; cursor: pointer;
 }
-.glass-card:hover { border-color: var(--accent); transform: translateY(-8px); }
-.glass-card h3 { font-size: 20px; text-transform: uppercase; margin-bottom: 15px; font-weight: 800; }
-.glass-card p { font-size: 13px; color: #aaa; line-height: 1.6; }
-.glass-card.active { border: 2px solid var(--accent); }
+.glass-card:hover { border-color: var(--main-blue); transform: translateY(-5px); }
+.glass-card h3 { font-size: 21px; text-transform: uppercase; margin-bottom: 15px; font-weight: 800; }
+.glass-card p { font-size: 14px; color: #aaa; line-height: 1.6; }
+.glass-card.active { border: 2px solid var(--main-blue); }
 
-/* FOOTER - Шире на 20% (было 60px -> стало 72px) */
+/* FOOTER - Шире в 2 раза (было ~60px, теперь 120px) */
 footer { 
-    height: 72px; background: var(--dark); border-top: 1px solid #1e293b; 
-    display: flex; align-items: center; padding: 0 40px; 
+    height: 120px; background: var(--dark-bg); border-top: 1px solid #1e293b; 
+    display: flex; align-items: center; padding: 0 50px; 
 }
-.f-content { width: 100%; display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 11px; }
-.f-info { display: flex; flex-direction: column; gap: 5px; }
-.f-phone { color: #fff; font-weight: 900; font-size: 14px; transition: 0.2s; }
-.f-phone:hover { color: var(--accent); }
-.f-links a { color: #64748b; margin: 0 15px; font-weight: bold; }
-.f-links a:hover { color: #fff; }
+.footer-wrap { width: 100%; display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 12px; }
+.f-left { display: flex; flex-direction: column; gap: 10px; }
+.f-tel { color: #fff; font-weight: 900; font-size: 18px; }
+.f-tel:hover { color: var(--main-blue); }
+.f-nav a { color: #64748b; margin-left: 25px; font-weight: bold; }
+.f-copy { margin-top: 10px; opacity: 0.5; font-size: 10px; letter-spacing: 1px; }
 
 /* DASHBOARD - Без изменений */
-#dashboard { height: 100vh; width: 100%; display: grid; grid-template-columns: 260px 1fr; }
-.sidebar { background: #06162c; border-right: 1px solid #1e293b; padding: 40px 25px; display: flex; flex-direction: column; }
-.side-logo { color: var(--accent); font-size: 22px; font-weight: 900; margin-bottom: 50px; }
-.menu-item { padding: 16px; color: #cbd5e0; cursor: pointer; font-weight: bold; font-size: 14px; }
-.menu-item.active { background: var(--accent); color: #fff; }
-.logout { margin-top: auto; color: #ef4444; font-weight: bold; cursor: pointer; padding: 15px; }
-.dash-main { padding: 60px; background: var(--dark); color: #fff; }
-.section { display: none; }
-.section.active { display: block; }
-.balance-card { background: #0a1f3d; padding: 35px; border: 1px solid #1e293b; margin-top: 35px; display: inline-block; min-width: 320px; }
-.balance-card .val { font-size: 38px; font-weight: 900; color: var(--accent); margin-top: 10px; }
+#dashboard { height: 100vh; display: grid; grid-template-columns: 260px 1fr; }
+.sidebar { background: #06162c; padding: 40px 25px; display: flex; flex-direction: column; border-right: 1px solid #1e293b; }
+.side-logo { color: var(--main-blue); font-size: 24px; font-weight: 900; margin-bottom: 50px; }
+.s-item { padding: 18px; color: #cbd5e0; cursor: pointer; font-weight: bold; }
+.s-item.active { background: var(--main-blue); color: #fff; }
+.side-exit { margin-top: auto; color: #ef4444; font-weight: bold; cursor: pointer; padding: 15px; }
+.dash-view { padding: 60px; color: #fff; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.card-balance { background: #0a1f3d; padding: 40px; border: 1px solid #1e293b; margin-top: 30px; display: inline-block; }
+.card-balance .amount { font-size: 42px; font-weight: 900; color: var(--main-blue); }
