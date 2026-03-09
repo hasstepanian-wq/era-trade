@@ -10,28 +10,28 @@
 
 <div id="landing-page">
     <header>
-    <div class="h-left">
-        <div class="logo-center-group" onclick="location.reload()">
-            <img src="logo-forsage-modified.png" alt="ЭТП ЭРА" class="main-logo-img">
-            <div id="clock">00:00:00 МСК</div>
+        <div class="h-left">
+            <div class="logo-group" onclick="location.reload()">
+                <img src="logo-forsage-modified.png" alt="ЭТП ЭРА" class="main-logo">
+                <div id="clock">00:00:00 МСК</div>
+            </div>
+            <nav class="top-nav">
+                <a onclick="fastNavigate('tenders')" data-i18n="n_reg">РЕЕСТР ТОРГОВ</a>
+                <a href="#" class="comm-link" data-i18n="n_comm">КОМИССИОННАЯ ПРОДАЖА</a>
+            </nav>
         </div>
-        <nav class="top-nav nav-gap">
-            <a onclick="fastNavigate('tenders')" data-i18n="n_reg">РЕЕСТР ТОРГОВ</a>
-            <a href="#" data-i18n="n_comm">КОМИССИОННАЯ ПРОДАЖА</a>
-        </nav>
-    </div>
-    
-    <div class="h-right">
-        <div class="lang-box">
-            <button class="l-btn active" id="btn-ru" onclick="setUserLang('ru')">RU</button>
-            <button class="l-btn" id="btn-en" onclick="setUserLang('en')">EN</button>
+        
+        <div class="h-right">
+            <div class="lang-selector">
+                <button class="l-btn active" id="btn-ru" onclick="setUserLang('ru')">RU</button>
+                <button class="l-btn" id="btn-en" onclick="setUserLang('en')">EN</button>
+            </div>
+            <button class="login-btn" onclick="fastNavigate('home')" data-i18n="b_login">ВХОД</button>
         </div>
-        <button class="login-btn" onclick="fastNavigate('home')" data-i18n="b_login">ВХОД</button>
-    </div>
-</header>
+    </header>
 
-    <main class="hero-screen" style="background-image: url('sky_banner.jpg');">
-        <div class="cards-grid">
+    <main class="hero-section" style="background-image: url('sky_banner.jpg');">
+        <div class="cards-container">
             <div class="glass-card" onclick="fastNavigate('home')">
                 <h3 data-i18n="c1_t">Участник</h3>
                 <p data-i18n="c1_p">Поиск актуальных процедур и подача заявок онлайн.</p>
@@ -48,18 +48,18 @@
     </main>
 
     <footer>
-        <div class="footer-wrap">
+        <div class="footer-content">
             <div class="f-left">
                 <p data-i18n="f_about_p">ЭТП ЭРА — цифровая экосистема для проведения торгов.</p>
-                <a href="tel:+79265894191" class="f-tel">+7 (926) 589-41-91</a>
+                <a href="tel:+79265894191" class="footer-phone">+7 (926) 589-41-91</a>
             </div>
             <div class="f-right">
-                <div class="f-nav">
+                <div class="footer-nav">
                     <a href="#">РЕГЛАМЕНТ</a>
                     <a href="#">ТАРИФЫ</a>
                     <a href="#">ПОДДЕРЖКА</a>
                 </div>
-                <div class="f-copy">© 2026 ETP ERA — ВСЕ ПРАВА ЗАЩИЩЕНЫ</div>
+                <div class="f-copy">© 2026 ETP ERA</div>
             </div>
         </div>
     </footer>
@@ -68,23 +68,23 @@
 <div id="dashboard" style="display:none;">
     <aside class="sidebar">
         <div class="side-logo">ЭТП ЭРА</div>
-        <nav class="side-links">
-            <div class="s-item active" id="l-home" onclick="switchSection('home')" data-i18n="s_home">Рабочий стол</div>
-            <div class="s-item" id="l-fin" onclick="switchSection('fin')" data-i18n="s_fin">Финансы</div>
-            <div class="s-item" id="l-tenders" onclick="switchSection('tenders')" data-i18n="s_reg">Реестр торгов</div>
+        <nav class="side-menu">
+            <div class="s-link active" id="l-home" onclick="switchSection('home')" data-i18n="s_home">Рабочий стол</div>
+            <div class="s-link" id="l-fin" onclick="switchSection('fin')" data-i18n="s_fin">Финансы</div>
+            <div class="s-link" id="l-tenders" onclick="switchSection('tenders')" data-i18n="s_reg">Реестр торгов</div>
         </nav>
-        <div class="side-exit" onclick="location.reload()">ВЫХОД</div>
+        <div class="exit-btn" onclick="location.reload()">ВЫХОД</div>
     </aside>
-    <main class="dash-view">
-        <div id="s-home" class="tab-content active">
+    <main class="dash-content">
+        <div id="s-home" class="tab active">
             <h1 data-i18n="welcome">Добро пожаловать, Артур!</h1>
-            <p>Система готова к работе.</p>
+            <p>Аккаунт подтвержден. Система работает исправно.</p>
         </div>
-        <div id="s-fin" class="tab-content">
+        <div id="s-fin" class="tab">
             <h1 data-i18n="s_fin">Финансы</h1>
-            <div class="card-balance">
-                <small>Доступно:</small>
-                <div class="amount">450 000.00 ₽</div>
+            <div class="balance-widget">
+                <small>Ваш баланс:</small>
+                <div class="sum">450 000.00 ₽</div>
             </div>
         </div>
     </main>
