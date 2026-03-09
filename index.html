@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЭТП ЭРА | Официальный сайт</title>
+    <title>ЭТП ЭРА | Личный кабинет</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -11,7 +11,7 @@
             --border: rgba(255, 255, 255, 0.1); --text: #ffffff; --text-dim: #888888;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; min-height: 100vh; }
+        body { background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
         
         /* HEADER */
         header {
@@ -32,30 +32,30 @@
         .modal { background: var(--surface); padding: 40px; border-radius: 24px; border: 1px solid var(--border); max-width: 400px; text-align: center; }
         .btn-modal { background: var(--accent); color: #fff; border: none; padding: 14px; border-radius: 12px; margin-top: 20px; cursor: pointer; width: 100%; font-weight: 700; }
 
-        /* HERO & BANNER */
-        #landing { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        /* LANDING & BANNER */
+        #landing { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
         .hero-banner { 
             width: 90%; max-width: 1200px; height: 350px; 
             background: url('sky_banner.jpg') center/cover no-repeat; 
-            border-radius: 30px; margin-bottom: 40px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border-radius: 30px; margin-bottom: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
         .btn-enter { background: var(--accent); color: #fff; padding: 18px 50px; border-radius: 15px; border: none; font-weight: 700; cursor: pointer; font-size: 18px; transition: 0.3s; }
 
         /* APP LAYOUT */
         #main-app { display: none; flex: 1; grid-template-columns: 260px 1fr; }
         .sidebar { background: #000; border-right: 1px solid var(--border); padding: 30px 20px; display: flex; flex-direction: column; }
-        .side-item { padding: 14px 18px; border-radius: 12px; color: var(--text-dim); cursor: pointer; font-weight: 600; margin-bottom: 5px; }
+        .side-item { padding: 14px 18px; border-radius: 12px; color: var(--text-dim); cursor: pointer; font-weight: 600; margin-bottom: 5px; transition: 0.2s; }
         .side-item:hover, .side-item.active { background: var(--surface); color: var(--accent); }
         .logout-btn { margin-top: auto; color: #ff3b30; }
 
         .content { padding: 40px; }
         .view { display: none; }
-        .view.active { display: block; }
+        .view.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* CARDS */
         .fin-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin-top: 20px; }
-        input, select { width: 100%; padding: 14px; background: #1a1a1a; border: 1px solid var(--border); border-radius: 10px; color: #fff; margin: 10px 0 20px; font-size: 16px; }
+        input, select { width: 100%; padding: 14px; background: #1a1a1a; border: 1px solid var(--border); border-radius: 10px; color: #fff; margin: 10px 0 20px; font-size: 16px; outline: none; }
         
         footer { padding: 30px 5%; text-align: center; color: var(--text-dim); font-size: 13px; background: #000; border-top: 1px solid var(--border); margin-top: auto; }
     </style>
@@ -76,7 +76,7 @@
 
 <div id="modal-overlay">
     <div class="modal">
-        <h2 id="modal-title">Безопасность</h2>
+        <h2 id="modal-title">Система</h2>
         <p id="modal-text" style="color: var(--text-dim); margin-top: 15px;"></p>
         <button class="btn-modal" onclick="closeModal()">Продолжить</button>
     </div>
@@ -84,9 +84,9 @@
 
 <div id="landing">
     <div class="hero-banner"></div>
-    <h1 style="font-size: 52px; font-weight: 800;">Торговая платформа <span style="color: var(--accent);">ЭРА</span></h1>
+    <h1 style="font-size: 52px; font-weight: 800; letter-spacing: -2px;">ЭТП <span style="color: var(--accent);">ЭРА</span></h1>
     <p style="color: var(--text-dim); margin-top: 10px; font-size: 18px;">Единая среда цифровых торгов</p>
-    <button class="btn-enter" onclick="openApp()">Личный кабинет</button>
+    <button class="btn-enter" onclick="openApp()">Войти в кабинет</button>
 </div>
 
 <div id="main-app">
@@ -101,29 +101,29 @@
             <h1>Рабочий стол</h1>
             <div class="fin-card" style="border-left: 5px solid var(--accent);">
                 <p style="color: var(--text-dim); font-size: 11px; font-weight: bold;">ВАШ ПРОФИЛЬ</p>
-                <h2 id="user-display-name" style="margin: 10px 0;">Загрузка...</h2>
-                <p style="color: var(--accent); font-weight: 800;" id="user-display-id"></p>
+                <h2 id="display-user-name" style="margin: 10px 0;">Загрузка...</h2>
+                <p id="display-user-id" style="color: var(--accent); font-weight: 800;"></p>
             </div>
         </div>
 
         <div id="v-fin" class="view">
-            <h1>Управление счетом</h1>
+            <h1>Управление финансами</h1>
             <div class="fin-card">
                 <h3>Пополнение баланса</h3>
-                <input type="number" id="pay-amount" value="50000">
+                <input type="number" id="pay-amount" value="100000">
                 <select id="pay-method">
                     <option value="bank">Безналичный расчет (Счет ООО «Форсаж»)</option>
                     <option value="card">Оплата банковской картой</option>
                     <option value="sbp">Система быстрых платежей (СБП)</option>
                 </select>
-                <button class="btn-enter" style="width: 100%;" onclick="handlePayment()">Сформировать</button>
+                <button class="btn-enter" style="width: 100%;" onclick="processPayment()">Сформировать</button>
             </div>
         </div>
 
         <div id="v-reg" class="view">
             <h1>Реестр торгов</h1>
             <div class="fin-card">
-                <p style="color: var(--text-dim);">Доступных тендеров не найдено.</p>
+                <p style="color: var(--text-dim);">Доступных тендеров в данный момент не обнаружено.</p>
             </div>
         </div>
     </div>
@@ -135,12 +135,13 @@
 </footer>
 
 <script>
-    // ТВОИ ДАННЫЕ (МЕНЯЙ ТУТ)
-    const userData = {
-        name: "Пользователь системы", // Сюда впиши свое имя
+    // КОНФИГУРАЦИЯ ПОЛЬЗОВАТЕЛЯ
+    const config = {
+        name: "Владелец кабинета",
         id: "ERA-77412"
     };
 
+    // ЧАСЫ
     setInterval(() => {
         document.getElementById('live-clock').innerText = new Date().toLocaleTimeString();
     }, 1000);
@@ -153,18 +154,18 @@
     }
 
     function openApp() {
-        document.getElementById('user-display-name').innerText = userData.name;
-        document.getElementById('user-display-id').innerText = "ID: " + userData.id;
+        document.getElementById('display-user-name').innerText = config.name;
+        document.getElementById('display-user-id').innerText = "ID: " + config.id;
         
-        showUniversalModal("Авторизация", "Проверка цифровой подписи пользователя " + userData.id + "...");
+        showModal("Авторизация", "Выполняется вход в защищенный профиль " + config.id + "...");
         setTimeout(() => {
             closeModal();
             document.getElementById('landing').style.display = 'none';
             document.getElementById('main-app').style.display = 'grid';
-        }, 1200);
+        }, 1000);
     }
 
-    function showUniversalModal(title, text) {
+    function showModal(title, text) {
         document.getElementById('modal-title').innerText = title;
         document.getElementById('modal-text').innerText = text;
         document.getElementById('modal-overlay').style.display = 'flex';
@@ -173,20 +174,22 @@
     function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
     function logout() { location.reload(); }
 
-    function handlePayment() {
+    function processPayment() {
         const amount = document.getElementById('pay-amount').value;
         const method = document.getElementById('pay-method').value;
 
         if (method === 'bank') {
             generateInvoice(amount);
         } else {
-            showUniversalModal("Платежная система", "Запуск безопасного соединения со шлюзом...");
+            showModal("Оплата", "Перенаправление на защищенный шлюз платежной системы...");
         }
     }
 
     function generateInvoice(amount) {
+        const val = parseFloat(amount);
+        // МАТЕМАТИЧЕСКИ ВЕРНЫЙ НДС 22% ИЗНУТРИ СУММЫ
+        const vat = (val * 22 / 122).toFixed(2);
         const invNum = Math.floor(Math.random() * 9000 + 1000);
-        const vat = (amount * 0.22).toFixed(2); // НДС 22%
         const date = new Date().toLocaleDateString('ru-RU');
 
         const invoiceHtml = `
@@ -195,30 +198,31 @@
                 <meta charset="UTF-8">
                 <title>Счет №${invNum}</title>
                 <style>
-                    body { font-family: sans-serif; padding: 40px; color: #000; }
-                    .header { border-bottom: 2px solid #000; padding-bottom: 10px; text-align: center; }
-                    .details { margin: 25px 0; line-height: 1.6; }
-                    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                    body { font-family: Arial, sans-serif; padding: 40px; line-height: 1.5; color: #000; }
+                    .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 30px; }
+                    .details { margin-bottom: 30px; }
+                    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
                     th, td { border: 1px solid #000; padding: 12px; text-align: left; }
+                    th { background: #f2f2f2; }
                 </style>
             </head>
             <body>
                 <div class="header"><h1>СЧЕТ НА ОПЛАТУ №${invNum} от ${date} г.</h1></div>
                 <div class="details">
                     <p><strong>Поставщик:</strong> ООО «Форсаж», ИНН 7728282160, КПП 773001001</p>
-                    <p><strong>Банк:</strong> ООО «Банк Точка», БИК 044525104, Р/С 40702810101500033019</p>
-                    <p><strong>Плательщик:</strong> ${userData.name} (ID: ${userData.id})</p>
+                    <p><strong>Юр. адрес:</strong> 121059, г.Москва, ул.Киевская, д.14, оф.2а</p>
+                    <p><strong>Банк:</strong> ООО «Банк Точка», БИК 044525104, Р/С 40702810101500033019, К/С 30101810745374525104</p>
+                    <p><strong>Плательщик:</strong> ${config.name} (ID: ${config.id})</p>
                 </div>
                 <table>
-                    <tr><th>Назначение платежа</th><th>Сумма</th></tr>
+                    <tr><th>Наименование</th><th>Сумма</th></tr>
                     <tr>
-                        <td>Пополнение лицевого счета ЭТП-Эра, ID пользователя ${userData.id}</td>
-                        <td>${amount}.00 руб.</td>
+                        <td>Пополнение баланса лицевого счета ЭТП-Эра, ID пользователя ${config.id}</td>
+                        <td>${val.toLocaleString('ru-RU')}.00 руб.</td>
                     </tr>
                 </table>
-                <p style="margin-top:25px; font-size: 18px;"><strong>Итого к оплате: ${amount}.00 руб.</strong></p>
-                <p><strong>В том числе НДС (22%):</strong> ${vat} руб.</p>
-                <p style="margin-top:40px; font-size: 12px; color: #555;">Счет действителен в течение 3-х банковских дней.</p>
+                <p style="font-size: 18px; margin-top: 20px;"><strong>Итого к оплате: ${val.toLocaleString('ru-RU')}.00 руб.</strong></p>
+                <p><strong>Назначение платежа:</strong> Пополнение баланса лицевого счета ЭТП-Эра, ID пользователя ${config.id}. В т.ч. НДС (22%) — ${vat} руб.</p>
             </body>
             </html>
         `;
