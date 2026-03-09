@@ -3,233 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЭТП ЭРА | Личный кабинет</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #050505; --surface: #111111; --accent: #007aff;
-            --border: rgba(255, 255, 255, 0.1); --text: #ffffff; --text-dim: #888888;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
-        
-        /* HEADER */
-        header {
-            background: #fff; padding: 12px 5%; display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .logo-box { display: flex; align-items: center; gap: 10px; cursor: pointer; color: #000; font-weight: 800; font-size: 20px; }
-        .logo-circle { width: 32px; height: 32px; background: var(--accent); border-radius: 50%; }
-        .header-right { display: flex; align-items: center; gap: 25px; color: #444; font-size: 14px; font-weight: 600; }
-        #live-clock { color: var(--accent); font-family: monospace; font-size: 16px; font-weight: 800; }
-
-        /* MODAL */
-        #modal-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); 
-            display: none; justify-content: center; align-items: center; z-index: 9999; 
-        }
-        .modal { background: var(--surface); padding: 40px; border-radius: 24px; border: 1px solid var(--border); max-width: 400px; text-align: center; }
-        .btn-modal { background: var(--accent); color: #fff; border: none; padding: 14px; border-radius: 12px; margin-top: 20px; cursor: pointer; width: 100%; font-weight: 700; }
-
-        /* LANDING & BANNER */
-        #landing { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
-        .hero-banner { 
-            width: 90%; max-width: 1200px; height: 350px; 
-            background: url('sky_banner.jpg') center/cover no-repeat; 
-            border-radius: 30px; margin-bottom: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-        .btn-enter { background: var(--accent); color: #fff; padding: 18px 50px; border-radius: 15px; border: none; font-weight: 700; cursor: pointer; font-size: 18px; transition: 0.3s; }
-
-        /* APP LAYOUT */
-        #main-app { display: none; flex: 1; grid-template-columns: 260px 1fr; }
-        .sidebar { background: #000; border-right: 1px solid var(--border); padding: 30px 20px; display: flex; flex-direction: column; }
-        .side-item { padding: 14px 18px; border-radius: 12px; color: var(--text-dim); cursor: pointer; font-weight: 600; margin-bottom: 5px; transition: 0.2s; }
-        .side-item:hover, .side-item.active { background: var(--surface); color: var(--accent); }
-        .logout-btn { margin-top: auto; color: #ff3b30; }
-
-        .content { padding: 40px; }
-        .view { display: none; }
-        .view.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* CARDS */
-        .fin-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin-top: 20px; }
-        input, select { width: 100%; padding: 14px; background: #1a1a1a; border: 1px solid var(--border); border-radius: 10px; color: #fff; margin: 10px 0 20px; font-size: 16px; outline: none; }
-        
-        footer { padding: 30px 5%; text-align: center; color: var(--text-dim); font-size: 13px; background: #000; border-top: 1px solid var(--border); margin-top: auto; }
-    </style>
+    <title>ЭТП ЭРА — Универсальная торговая платформа</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-    <div class="logo-box" onclick="location.reload()">
-        <div class="logo-circle"></div>
-        <span>ЭТП ЭРА</span>
-    </div>
-    <div class="header-right">
-        <span id="live-clock">00:00:00</span>
-        <div style="width: 1px; height: 20px; background: #ddd;"></div>
-        <span style="color: var(--accent)">8 (800) 555-35-35</span>
-    </div>
-</header>
-
-<div id="modal-overlay">
-    <div class="modal">
-        <h2 id="modal-title">Система</h2>
-        <p id="modal-text" style="color: var(--text-dim); margin-top: 15px;"></p>
-        <button class="btn-modal" onclick="closeModal()">Продолжить</button>
-    </div>
-</div>
-
-<div id="landing">
-    <div class="hero-banner"></div>
-    <h1 style="font-size: 52px; font-weight: 800; letter-spacing: -2px;">ЭТП <span style="color: var(--accent);">ЭРА</span></h1>
-    <p style="color: var(--text-dim); margin-top: 10px; font-size: 18px;">Единая среда цифровых торгов</p>
-    <button class="btn-enter" onclick="openApp()">Войти в кабинет</button>
-</div>
-
-<div id="main-app">
-    <div class="sidebar">
-        <div class="side-item active" id="m-home" onclick="showView('home')">Рабочий стол</div>
-        <div class="side-item" id="m-fin" onclick="showView('fin')">Финансы</div>
-        <div class="side-item" id="m-reg" onclick="showView('reg')">Реестр торгов</div>
-        <div class="side-item logout-btn" onclick="logout()">ВЫЙТИ</div>
-    </div>
-    <div class="content">
-        <div id="v-home" class="view active">
-            <h1>Рабочий стол</h1>
-            <div class="fin-card" style="border-left: 5px solid var(--accent);">
-                <p style="color: var(--text-dim); font-size: 11px; font-weight: bold;">ВАШ ПРОФИЛЬ</p>
-                <h2 id="display-user-name" style="margin: 10px 0;">Загрузка...</h2>
-                <p id="display-user-id" style="color: var(--accent); font-weight: 800;"></p>
-            </div>
+    <header>
+        <a href="#" class="logo" onclick="location.reload()">
+            <div class="logo-icon"></div>
+            <span>ЭТП ЭРА</span>
+        </a>
+        <div class="nav-info">
+            <span id="live-clock">00:00:00</span>
+            <div class="divider"></div>
+            <span>Служба контроля: 8 (800) 555-35-35</span>
         </div>
+    </header>
 
-        <div id="v-fin" class="view">
-            <h1>Управление финансами</h1>
-            <div class="fin-card">
-                <h3>Пополнение баланса</h3>
-                <input type="number" id="pay-amount" value="100000">
-                <select id="pay-method">
-                    <option value="bank">Безналичный расчет (Счет ООО «Форсаж»)</option>
-                    <option value="card">Оплата банковской картой</option>
-                    <option value="sbp">Система быстрых платежей (СБП)</option>
-                </select>
-                <button class="btn-enter" style="width: 100%;" onclick="processPayment()">Сформировать</button>
-            </div>
-        </div>
-
-        <div id="v-reg" class="view">
-            <h1>Реестр торгов</h1>
-            <div class="fin-card">
-                <p style="color: var(--text-dim);">Доступных тендеров в данный момент не обнаружено.</p>
-            </div>
+    <div id="modal-overlay">
+        <div class="modal">
+            <h2 id="m-title">Уведомление</h2>
+            <p id="m-body"></p>
+            <button class="btn-primary" onclick="closeModal()">Понятно</button>
         </div>
     </div>
-</div>
 
-<footer>
-    © 2026 ООО "ЭТП ЭРА" | ИНН 7700112233 | КПП 770101001<br>
-    г. Москва, ул. Киевская, д. 14, оф. 2а
-</footer>
+    <div id="landing-view">
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Торги нового поколения</h1>
+                <p>Профессиональная площадка для реализации имущества, государственных закупок и коммерческих тендеров.</p>
+                <button class="btn-primary hero-btn" onclick="openApp()">Войти в кабинет</button>
+            </div>
+        </section>
+    </div>
 
-<script>
-    // КОНФИГУРАЦИЯ ПОЛЬЗОВАТЕЛЯ
-    const config = {
-        name: "Владелец кабинета",
-        id: "ERA-77412"
-    };
+    <div id="app-view">
+        <aside class="sidebar">
+            <div class="nav-item active" onclick="nav('dashboard', this)">📊 Рабочий стол</div>
+            <div class="nav-item" onclick="nav('registry', this)">🔎 Реестр торгов</div>
+            <div class="nav-item" onclick="nav('commission', this)">📦 Комиссионная продажа</div>
+            <div class="nav-item" onclick="nav('finance', this)">💳 Финансы и счета</div>
+            <div class="nav-item logout" onclick="location.reload()">🔒 Завершить сессию</div>
+        </aside>
 
-    // ЧАСЫ
-    setInterval(() => {
-        document.getElementById('live-clock').innerText = new Date().toLocaleTimeString();
-    }, 1000);
-
-    function showView(id) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.side-item').forEach(s => s.classList.remove('active'));
-        document.getElementById('v-' + id).classList.add('active');
-        document.getElementById('m-' + id).classList.add('active');
-    }
-
-    function openApp() {
-        document.getElementById('display-user-name').innerText = config.name;
-        document.getElementById('display-user-id').innerText = "ID: " + config.id;
-        
-        showModal("Авторизация", "Выполняется вход в защищенный профиль " + config.id + "...");
-        setTimeout(() => {
-            closeModal();
-            document.getElementById('landing').style.display = 'none';
-            document.getElementById('main-app').style.display = 'grid';
-        }, 1000);
-    }
-
-    function showModal(title, text) {
-        document.getElementById('modal-title').innerText = title;
-        document.getElementById('modal-text').innerText = text;
-        document.getElementById('modal-overlay').style.display = 'flex';
-    }
-
-    function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
-    function logout() { location.reload(); }
-
-    function processPayment() {
-        const amount = document.getElementById('pay-amount').value;
-        const method = document.getElementById('pay-method').value;
-
-        if (method === 'bank') {
-            generateInvoice(amount);
-        } else {
-            showModal("Оплата", "Перенаправление на защищенный шлюз платежной системы...");
-        }
-    }
-
-    function generateInvoice(amount) {
-        const val = parseFloat(amount);
-        // МАТЕМАТИЧЕСКИ ВЕРНЫЙ НДС 22% ИЗНУТРИ СУММЫ
-        const vat = (val * 22 / 122).toFixed(2);
-        const invNum = Math.floor(Math.random() * 9000 + 1000);
-        const date = new Date().toLocaleDateString('ru-RU');
-
-        const invoiceHtml = `
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>Счет №${invNum}</title>
-                <style>
-                    body { font-family: Arial, sans-serif; padding: 40px; line-height: 1.5; color: #000; }
-                    .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 30px; }
-                    .details { margin-bottom: 30px; }
-                    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                    th, td { border: 1px solid #000; padding: 12px; text-align: left; }
-                    th { background: #f2f2f2; }
-                </style>
-            </head>
-            <body>
-                <div class="header"><h1>СЧЕТ НА ОПЛАТУ №${invNum} от ${date} г.</h1></div>
-                <div class="details">
-                    <p><strong>Поставщик:</strong> ООО «Форсаж», ИНН 7728282160, КПП 773001001</p>
-                    <p><strong>Юр. адрес:</strong> 121059, г.Москва, ул.Киевская, д.14, оф.2а</p>
-                    <p><strong>Банк:</strong> ООО «Банк Точка», БИК 044525104, Р/С 40702810101500033019, К/С 30101810745374525104</p>
-                    <p><strong>Плательщик:</strong> ${config.name} (ID: ${config.id})</p>
+        <main class="main-content">
+            <section id="p-dashboard" class="page active">
+                <h1>Рабочий стол</h1>
+                <div class="stats-grid">
+                    <div class="stat-box"><span>Ваш баланс</span><span class="val" id="user-balance">750 000.00 ₽</span></div>
+                    <div class="stat-box"><span>На проверке</span><span class="val">3 заявки</span></div>
+                    <div class="stat-box"><span>Статус</span><span class="val status-active">Аккредитован</span></div>
                 </div>
-                <table>
-                    <tr><th>Наименование</th><th>Сумма</th></tr>
-                    <tr>
-                        <td>Пополнение баланса лицевого счета ЭТП-Эра, ID пользователя ${config.id}</td>
-                        <td>${val.toLocaleString('ru-RU')}.00 руб.</td>
-                    </tr>
-                </table>
-                <p style="font-size: 18px; margin-top: 20px;"><strong>Итого к оплате: ${val.toLocaleString('ru-RU')}.00 руб.</strong></p>
-                <p><strong>Назначение платежа:</strong> Пополнение баланса лицевого счета ЭТП-Эра, ID пользователя ${config.id}. В т.ч. НДС (22%) — ${vat} руб.</p>
-            </body>
-            </html>
-        `;
-        const blob = new Blob([invoiceHtml], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        window.open(url, '_blank');
-    }
-</script>
+                <div class="card">
+                    <h3>Уведомления системы</h3>
+                    <p class="dim">Новых системных сообщений нет. Все ваши документы успешно прошли верификацию.</p>
+                </div>
+            </section>
+
+            <section id="p-registry" class="page">
+                <h1>Реестр актуальных торгов</h1>
+                <div class="lot-list">
+                    <div class="lot-item">
+                        <div class="lot-info">
+                            <h3>Поставка серверного оборудования</h3>
+                            <p class="dim">Заказчик: ПАО "Газпром" | Окончание: 25.03.2026</p>
+                        </div>
+                        <div class="lot-price">
+                            <div class="price">4 200 000.00 ₽</div>
+                            <button class="btn-action">Участвовать</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="p-commission" class="page">
+                <h1>Комиссионная продажа</h1>
+                <div class="card form-card">
+                    <div class="form-group">
+                        <label>Объект продажи</label>
+                        <input type="text" placeholder="Например: Складское оборудование">
+                    </div>
+                    <div class="form-group">
+                        <label>Ожидаемая стоимость (₽)</label>
+                        <input type="number" placeholder="0.00">
+                    </div>
+                    <button class="btn-primary" onclick="triggerModal('Принято', 'Заявка на оценку отправлена.')">Отправить на модерацию</button>
+                </div>
+            </section>
+
+            <section id="p-finance" class="page">
+                <h1>Управление финансами</h1>
+                <div class="finance-layout">
+                    <div class="history-section">
+                        <h3>История операций</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr><th>Дата</th><th>Операция</th><th>Сумма</th><th>Статус</th></tr>
+                            </thead>
+                            <tbody id="hist-body">
+                                <tr><td>10.03.2026</td><td>Пополнение (СБП)</td><td>+50 000.00 ₽</td><td><span class="badge">Успешно</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card payment-card">
+                        <h3>Пополнить счет</h3>
+                        <input type="number" id="f-amount" value="100000">
+                        <select id="f-method">
+                            <option value="bank">Банковский перевод (Счет)</option>
+                            <option value="card">Карта / СБП</option>
+                        </select>
+                        <button class="btn-primary" onclick="doPayment()">Продолжить</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-info">
+                <div class="footer-logo">ЭТП ЭРА</div>
+                <p>Лицензированный оператор электронных торгов. Работаем по 44-ФЗ и 223-ФЗ.</p>
+            </div>
+            <div class="footer-contacts">
+                <h4>Контакты</h4>
+                <p>г. Москва, ул. Киевская, 14</p>
+                <p>8 (800) 555-35-35</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
