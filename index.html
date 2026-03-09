@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЭТП ЭРА — Универсальная торговая платформа</title>
+    <title>ЭТП ЭРА — Личный кабинет</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <header>
-        <a href="#" class="logo" onclick="location.reload()">
+        <div class="logo" onclick="location.reload()">
             <div class="logo-icon"></div>
             <span>ЭТП ЭРА</span>
-        </a>
+        </div>
         <div class="nav-info">
             <span id="live-clock">00:00:00</span>
             <div class="divider"></div>
-            <span>Служба контроля: 8 (800) 555-35-35</span>
+            <span class="phone">8 (800) 555-35-35</span>
         </div>
     </header>
 
@@ -25,7 +24,7 @@
         <div class="modal">
             <h2 id="m-title">Уведомление</h2>
             <p id="m-body"></p>
-            <button class="btn-primary" onclick="closeModal()">Понятно</button>
+            <button class="btn-primary" onclick="closeModal()">Принять</button>
         </div>
     </div>
 
@@ -33,7 +32,7 @@
         <section class="hero-section">
             <div class="hero-content">
                 <h1>Торги нового поколения</h1>
-                <p>Профессиональная площадка для реализации имущества, государственных закупок и коммерческих тендеров.</p>
+                <p>Профессиональная площадка для реализации имущества и тендеров.</p>
                 <button class="btn-primary hero-btn" onclick="openApp()">Войти в кабинет</button>
             </div>
         </section>
@@ -45,95 +44,52 @@
             <div class="nav-item" onclick="nav('registry', this)">🔎 Реестр торгов</div>
             <div class="nav-item" onclick="nav('commission', this)">📦 Комиссионная продажа</div>
             <div class="nav-item" onclick="nav('finance', this)">💳 Финансы и счета</div>
-            <div class="nav-item logout" onclick="location.reload()">🔒 Завершить сессию</div>
+            <div class="nav-item logout" onclick="location.reload()">🔒 Выйти</div>
         </aside>
 
         <main class="main-content">
             <section id="p-dashboard" class="page active">
                 <h1>Рабочий стол</h1>
                 <div class="stats-grid">
-                    <div class="stat-box"><span>Ваш баланс</span><span class="val" id="user-balance">750 000.00 ₽</span></div>
-                    <div class="stat-box"><span>На проверке</span><span class="val">3 заявки</span></div>
+                    <div class="stat-box"><span>Баланс</span><span class="val" id="user-balance">750 000.00 ₽</span></div>
+                    <div class="stat-box"><span>Заявки</span><span class="val">3 активных</span></div>
                     <div class="stat-box"><span>Статус</span><span class="val status-active">Аккредитован</span></div>
-                </div>
-                <div class="card">
-                    <h3>Уведомления системы</h3>
-                    <p class="dim">Новых системных сообщений нет. Все ваши документы успешно прошли верификацию.</p>
                 </div>
             </section>
 
             <section id="p-registry" class="page">
-                <h1>Реестр актуальных торгов</h1>
-                <div class="lot-list">
-                    <div class="lot-item">
-                        <div class="lot-info">
-                            <h3>Поставка серверного оборудования</h3>
-                            <p class="dim">Заказчик: ПАО "Газпром" | Окончание: 25.03.2026</p>
-                        </div>
-                        <div class="lot-price">
-                            <div class="price">4 200 000.00 ₽</div>
-                            <button class="btn-action">Участвовать</button>
-                        </div>
-                    </div>
+                <h1>Реестр торгов</h1>
+                <div class="lot-item">
+                    <div class="lot-info"><h3>Поставка серверного оборудования</h3><p>Заказчик: ПАО "Газпром"</p></div>
+                    <div class="lot-price"><div class="price">4 200 000.00 ₽</div></div>
                 </div>
             </section>
 
             <section id="p-commission" class="page">
                 <h1>Комиссионная продажа</h1>
                 <div class="card form-card">
-                    <div class="form-group">
-                        <label>Объект продажи</label>
-                        <input type="text" placeholder="Например: Складское оборудование">
-                    </div>
-                    <div class="form-group">
-                        <label>Ожидаемая стоимость (₽)</label>
-                        <input type="number" placeholder="0.00">
-                    </div>
-                    <button class="btn-primary" onclick="triggerModal('Принято', 'Заявка на оценку отправлена.')">Отправить на модерацию</button>
+                    <input type="text" placeholder="Объект продажи">
+                    <input type="number" placeholder="Ожидаемая стоимость">
+                    <button class="btn-primary" onclick="triggerModal('Принято', 'Заявка на оценку отправлена.')">Отправить заявку</button>
                 </div>
             </section>
 
             <section id="p-finance" class="page">
-                <h1>Управление финансами</h1>
+                <h1>Финансы</h1>
                 <div class="finance-layout">
-                    <div class="history-section">
-                        <h3>История операций</h3>
-                        <table class="data-table">
-                            <thead>
-                                <tr><th>Дата</th><th>Операция</th><th>Сумма</th><th>Статус</th></tr>
-                            </thead>
-                            <tbody id="hist-body">
-                                <tr><td>10.03.2026</td><td>Пополнение (СБП)</td><td>+50 000.00 ₽</td><td><span class="badge">Успешно</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
                     <div class="card payment-card">
                         <h3>Пополнить счет</h3>
                         <input type="number" id="f-amount" value="100000">
                         <select id="f-method">
-                            <option value="bank">Банковский перевод (Счет)</option>
+                            <option value="bank">Безналичный расчет (Счет)</option>
                             <option value="card">Карта / СБП</option>
                         </select>
-                        <button class="btn-primary" onclick="doPayment()">Продолжить</button>
+                        <button class="btn-primary" onclick="doPayment()">Сформировать</button>
                     </div>
                 </div>
             </section>
         </main>
     </div>
-
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-info">
-                <div class="footer-logo">ЭТП ЭРА</div>
-                <p>Лицензированный оператор электронных торгов. Работаем по 44-ФЗ и 223-ФЗ.</p>
-            </div>
-            <div class="footer-contacts">
-                <h4>Контакты</h4>
-                <p>г. Москва, ул. Киевская, 14</p>
-                <p>8 (800) 555-35-35</p>
-            </div>
-        </div>
-    </footer>
 
     <script src="script.js"></script>
 </body>
