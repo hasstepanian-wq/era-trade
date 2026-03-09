@@ -1,6 +1,6 @@
 const dict = {
     ru: {
-        n_reg: "РЕЕСТР ТОРГОВ", n_comm: "КОМИССИОННАЯ ПРОДАЖА", b_login: "ВХОД",
+        n_reg: "РЕЕСТР ТОРГОВ", b_login: "ВХОД",
         c1_t: "Участник", c1_p: "Поиск актуальных процедур и подача заявок онлайн.",
         c2_t: "Регистрация", c2_p: "Получите аккредитацию в системе всего за 24 часа.",
         c3_t: "Организатор", c3_p: "Размещение лотов и управление торгами.",
@@ -8,7 +8,7 @@ const dict = {
         s_home: "Рабочий стол", s_reg: "Реестр торгов", s_fin: "Финансы", welcome: "Добро пожаловать, Артур!"
     },
     en: {
-        n_reg: "REGISTRY", n_comm: "COMMISSION", b_login: "LOGIN",
+        n_reg: "REGISTRY", b_login: "LOGIN",
         c1_t: "Bidder", c1_p: "Search lots and submit bids online instantly.",
         c2_t: "Registration", c2_p: "Get system accreditation in just 24 hours.",
         c3_t: "Organizer", c3_p: "Post lots and manage your auctions.",
@@ -27,7 +27,7 @@ function applyTranslations(lang) {
 }
 
 function setUserLang(lang) {
-    localStorage.setItem('era_lang', lang);
+    localStorage.setItem('app_lang', lang);
     applyTranslations(lang);
 }
 
@@ -38,8 +38,8 @@ function fastNavigate(id) {
 }
 
 function switchSection(id) {
-    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.side-link').forEach(l => l.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
     document.getElementById('s-' + id)?.classList.add('active');
     document.getElementById('l-' + id)?.classList.add('active');
 }
@@ -50,7 +50,7 @@ function updateClock() {
 }
 
 window.onload = () => {
-    const saved = localStorage.getItem('era_lang') || 'ru';
+    const saved = localStorage.getItem('app_lang') || 'ru';
     applyTranslations(saved);
     setInterval(updateClock, 1000);
     updateClock();
