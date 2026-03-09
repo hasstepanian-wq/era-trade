@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ЭТП ЭРА</title>
     <style>
-        :root { --primary: #0099d5; --dark-bg: #01040a; --glass: rgba(255, 255, 255, 0.05); }
+        :root { --primary: #0099d5; --dark-bg: #01040a; --glass: rgba(255, 255, 255, 0.08); }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', -apple-system, sans-serif; }
         
-        /* Занимаем ровно один экран без скролла */
         body, html { 
-            height: 100vh; height: 100svh; 
+            height: 100%; width: 100%;
             overflow: hidden; 
             background: var(--dark-bg); 
             color: #fff; 
@@ -20,95 +19,94 @@
 
         header { 
             background: #fff; 
-            padding: 8px 4%; 
+            padding: 10px 4%; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            z-index: 1000; 
+            z-index: 100; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
-            flex-shrink: 0; 
+            flex-shrink: 0;
         }
         
-        .logo-section { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 120px; }
-        .logo-img { height: 28px; display: block; }
-        .server-time { font-family: 'Courier New', monospace; font-size: 10px; font-weight: 900; color: #1a202c; margin-top: 1px; }
+        .logo-section { display: flex; flex-direction: column; align-items: center; cursor: pointer; z-index: 110; }
+        .logo-img { height: 30px; }
+        .server-time { font-family: 'Courier New', monospace; font-size: 10px; font-weight: 900; color: #1a202c; margin-top: 2px; }
         
-        .header-right { display: flex; align-items: center; gap: 8px; }
-        .lang-switcher { display: flex; border: 1px solid #cbd5e0; border-radius: 20px; overflow: hidden; }
-        .lang-btn { padding: 3px 8px; font-size: 9px; font-weight: bold; cursor: pointer; border: none; background: #fff; color: #64748b; }
+        .header-right { display: flex; align-items: center; gap: 10px; z-index: 110; }
+        .lang-switcher { display: flex; border: 1px solid #cbd5e0; border-radius: 20px; overflow: hidden; background: #fff; }
+        .lang-btn { padding: 4px 10px; font-size: 10px; font-weight: bold; cursor: pointer; border: none; background: transparent; color: #64748b; outline: none; }
         .lang-btn.active { background: var(--primary); color: #fff; }
         
-        .btn-login { background: var(--primary); color: #fff; padding: 7px 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 10px; }
+        .btn-login { background: var(--primary); color: #fff; padding: 8px 16px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 11px; }
 
         main { 
             flex: 1; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('sky_banner.jpg') no-repeat center/cover; 
-            padding: 10px;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('sky_banner.jpg') no-repeat center/cover; 
+            position: relative;
+            min-height: 0; /* Важно для Safari/iPhone */
         }
         
         .grid-container { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
-            gap: 15px; 
-            width: 100%; 
+            gap: 20px; 
+            width: 90%; 
             max-width: 900px; 
+            z-index: 10;
         }
         
         .glass-card { 
             background: var(--glass); 
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 15px;
+            border-radius: 20px;
             display: flex; 
             flex-direction: column; 
             justify-content: center; 
-            padding: 20px; 
+            padding: 25px; 
             text-align: center; 
             aspect-ratio: 1/1;
             transition: 0.3s;
+            cursor: pointer;
+            pointer-events: all;
         }
-        .glass-card:hover { border-color: var(--primary); transform: scale(1.02); }
-        .glass-card h3 { font-size: 16px; margin-bottom: 6px; text-transform: uppercase; font-weight: 800; }
-        .glass-card p { font-size: 11px; color: #cbd5e0; line-height: 1.3; }
+        .glass-card:hover { border-color: var(--primary); background: rgba(255, 255, 255, 0.12); transform: translateY(-5px); }
+        .glass-card h3 { font-size: 17px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .glass-card p { font-size: 12px; color: #cbd5e0; line-height: 1.4; pointer-events: none; }
 
         footer { 
             background: #01040a; 
-            padding: 10px; 
+            padding: 12px; 
             border-top: 1px solid #1e293b; 
             text-align: center; 
             flex-shrink: 0;
+            z-index: 100;
         }
-        .footer-text { font-size: 9px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-text { font-size: 10px; color: #64748b; letter-spacing: 1px; }
 
-        /* Адаптация под iPhone (В один экран) */
+        /* Адаптация под мобильные */
         @media (max-width: 480px) {
+            body, html { overflow-y: auto; } /* На iPhone разрешаем минимальный скролл если экран совсем крошечный */
             .grid-container { 
                 grid-template-columns: 1fr; 
-                grid-template-rows: repeat(3, 1fr);
-                gap: 10px;
-                max-width: 250px;
-                height: auto;
-                max-height: 70vh;
+                max-width: 280px;
+                gap: 12px;
+                margin: 20px 0;
             }
-            .glass-card { 
-                aspect-ratio: auto; 
-                padding: 12px;
-            }
-            .glass-card h3 { font-size: 14px; margin-bottom: 2px; }
-            .glass-card p { font-size: 10px; }
-            .logo-img { height: 24px; }
+            .glass-card { aspect-ratio: auto; padding: 20px; }
+            header { padding: 10px 15px; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-section">
+    <div class="logo-section" onclick="location.reload()">
         <img src="logo-forsage-modified.png" class="logo-img">
-        <div id="clock" class="server-time">--:--:-- МСК</div>
+        <div id="clock" class="server-time">00:00:00 МСК</div>
     </div>
     <div class="header-right">
         <div class="lang-switcher">
@@ -121,23 +119,23 @@
 
 <main>
     <div class="grid-container">
-        <div class="glass-card">
+        <div class="glass-card" onclick="alert('Переход в Реестр...')">
             <h3 data-i18n="c1_t">Участник</h3>
             <p data-i18n="c1_p">Поиск процедур и подача заявок онлайн.</p>
         </div>
-        <div class="glass-card" style="border-color: var(--primary); border-width: 2px; background: rgba(0, 153, 213, 0.05);">
+        <div class="glass-card" onclick="alert('Переход к Регистрации...')" style="border-color: var(--primary); border-width: 2px;">
             <h3 data-i18n="c2_t">Регистрация</h3>
             <p data-i18n="c2_p">Аккредитация в системе за 24 часа.</p>
         </div>
-        <div class="glass-card">
+        <div class="glass-card" onclick="alert('Размещение лота...')">
             <h3 data-i18n="c3_t">Организатор</h3>
-            <p data-i18n="c3_p">Размещение лотов и торги.</p>
+            <p data-i18n="c3_p">Размещение лотов и проведение торгов.</p>
         </div>
     </div>
 </main>
 
 <footer>
-    <p class="footer-text">© 2026 ЭТП ЭРА | 8 (800) 555-35-35</p>
+    <p class="footer-text">© 2026 ЭТП ЭРА | ПОДДЕРЖКА: 8 (800) 555-35-35</p>
 </footer>
 
 <script>
@@ -145,12 +143,12 @@
         ru: {
             b_login: "Вход", c1_t: "Участник", c1_p: "Поиск процедур и подача заявок онлайн.",
             c2_t: "Регистрация", c2_p: "Аккредитация в системе за 24 часа.",
-            c3_t: "Организатор", c3_p: "Размещение лотов и торги."
+            c3_t: "Организатор", c3_p: "Размещение лотов и проведение торгов."
         },
         en: {
-            b_login: "Login", c1_t: "Bidder", c1_p: "Search lots and submit bids online.",
-            c2_t: "Registration", c2_p: "Get accredited in just 24 hours.",
-            c3_t: "Organizer", c3_p: "Post lots and manage auctions."
+            b_login: "Login", c1_t: "Bidder", c1_p: "Search active procedures and submit bids online.",
+            c2_t: "Registration", c2_p: "Get system accreditation in 24 hours.",
+            c3_t: "Organizer", c3_p: "Post lots and manage trading procedures."
         }
     };
 
@@ -171,7 +169,6 @@
         if (manual) {
             applyTranslations(manual);
         } else {
-            // В Яндексе на русском ПК будет RU, в Хроме с англ. интерфейсом — EN
             const defaultLang = systemLang.includes('ru') ? 'ru' : 'en';
             applyTranslations(defaultLang);
         }
@@ -185,8 +182,7 @@
     function updateTime() {
         const now = new Date();
         const str = now.toLocaleTimeString('ru-RU', { timeZone: 'Europe/Moscow', hour12: false });
-        const clockEl = document.getElementById('clock');
-        if (clockEl) clockEl.innerText = str + ' МСК';
+        document.getElementById('clock').innerText = str + ' МСК';
     }
 
     window.onload = () => {
