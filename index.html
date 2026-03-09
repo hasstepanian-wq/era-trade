@@ -10,25 +10,25 @@
 
 <div id="landing-page">
     <header>
-        <div class="h-left">
-            <div class="logo-block" onclick="location.reload()">
-                <img src="logo-forsage-modified.png" alt="ЭТП ЭРА" class="header-logo">
-                <div id="clock">00:00:00 МСК</div>
-            </div>
-            <nav class="top-menu">
-                <a onclick="fastNavigate('tenders')" data-i18n="n_reg">РЕЕСТР ТОРГОВ</a>
-                <a href="#" data-i18n="n_comm">КОМИССИОННАЯ ПРОДАЖА</a>
-            </nav>
+    <div class="h-left">
+        <div class="logo-center-group" onclick="location.reload()">
+            <img src="logo-forsage-modified.png" alt="ЭТП ЭРА" class="main-logo-img">
+            <div id="clock">00:00:00 МСК</div>
         </div>
-        
-        <div class="h-right">
-            <div class="lang-selector">
-                <button class="l-btn active" id="btn-ru" onclick="setUserLang('ru')">RU</button>
-                <button class="l-btn" id="btn-en" onclick="setUserLang('en')">EN</button>
-            </div>
-            <button class="login-btn" onclick="fastNavigate('home')" data-i18n="b_login">ВХОД</button>
+        <nav class="top-nav nav-gap">
+            <a onclick="fastNavigate('tenders')" data-i18n="n_reg">РЕЕСТР ТОРГОВ</a>
+            <a href="#" data-i18n="n_comm">КОМИССИОННАЯ ПРОДАЖА</a>
+        </nav>
+    </div>
+    
+    <div class="h-right">
+        <div class="lang-box">
+            <button class="l-btn active" id="btn-ru" onclick="setUserLang('ru')">RU</button>
+            <button class="l-btn" id="btn-en" onclick="setUserLang('en')">EN</button>
         </div>
-    </header>
+        <button class="login-btn" onclick="fastNavigate('home')" data-i18n="b_login">ВХОД</button>
+    </div>
+</header>
 
     <main class="hero-screen" style="background-image: url('sky_banner.jpg');">
         <div class="cards-grid">
