@@ -1,83 +1,68 @@
-:root { --blue: #0099d5; --dark: #01040a; }
+:root { --blue: #0099d5; --dark: #01040a; --dark-blue: #06162c; }
 
 * { margin: 0; padding: 0; box-sizing: border-box; border-radius: 0 !important; text-decoration: none; }
 
-body, html { 
-    height: 100vh; width: 100%; overflow: hidden; 
-    background: var(--dark); font-family: 'Segoe UI', sans-serif; 
-}
+body, html { height: 100vh; width: 100%; overflow: hidden; background: var(--dark); font-family: 'Segoe UI', sans-serif; }
 
-/* HEADER — 120px высота */
-header { 
-    height: 120px; background: #fff; display: flex; 
-    justify-content: space-between; align-items: center; 
-    padding: 0 50px; border: none; z-index: 100;
-}
-
+/* LANDING HEADER */
+header { height: 120px; background: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 50px; z-index: 100; }
 .h-left, .h-right { display: flex; align-items: center; }
-
-/* Центровка лого и времени */
-.logo-group { 
-    display: flex; flex-direction: column; align-items: center; 
-    cursor: pointer; min-width: 160px; margin-right: 100px;
-}
+.logo-group { display: flex; flex-direction: column; align-items: center; cursor: pointer; min-width: 160px; margin-right: 100px; }
 .main-logo { height: 55px; width: auto; margin-bottom: 5px; }
 #clock { font-family: 'Courier New', monospace; font-size: 13px; font-weight: 900; color: var(--blue); letter-spacing: 1px; }
-
-/* Меню хедера с большим отступом */
 .top-nav { display: flex; align-items: center; }
-.top-nav a { color: #1a202c; font-size: 13px; font-weight: 800; cursor: pointer; transition: 0.3s; white-space: nowrap; }
-.top-nav a:hover { color: var(--blue); }
-.comm-link { margin-left: 80px; } 
-
+.top-nav a { color: #1a202c; font-size: 13px; font-weight: 800; cursor: pointer; }
+.comm-link { margin-left: 80px; }
 .lang-selector { display: flex; border: 1px solid #eee; margin-right: 30px; }
 .l-btn { background: none; border: none; padding: 8px 15px; font-size: 11px; font-weight: bold; cursor: pointer; color: #888; }
 .l-btn.active { background: var(--blue); color: #fff; }
-
 .login-btn { background: var(--blue); color: #fff; border: none; padding: 14px 40px; font-weight: bold; cursor: pointer; font-size: 13px; }
 
-/* ГЛАВНЫЙ ЭКРАН */
-.hero-section { 
-    height: calc(100vh - 260px); background-size: cover; background-position: center; 
-    display: flex; justify-content: center; align-items: center; 
-}
+/* HERO & CARDS */
+.hero-section { height: calc(100vh - 260px); background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center; }
 .cards-container { display: flex; gap: 30px; }
-.glass-card { 
-    background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.1); width: 310px; height: 310px;
-    display: flex; flex-direction: column; justify-content: center; 
-    padding: 30px; text-align: center; color: #fff; transition: 0.3s; cursor: pointer;
-}
-.glass-card:hover { border-color: var(--blue); transform: translateY(-5px); }
-.glass-card h3 { 
-    font-size: 18px; /* Уменьшил с 21px, чтобы Экспресс-регистрация влезла */
-    text-transform: uppercase; margin-bottom: 15px; font-weight: 800; 
-    white-space: nowrap; 
-}
-.glass-card p { font-size: 14px; color: #aaa; line-height: 1.6; }
+.glass-card { background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); width: 310px; height: 310px; display: flex; flex-direction: column; justify-content: center; padding: 30px; text-align: center; color: #fff; transition: 0.3s; cursor: pointer; }
+.glass-card h3 { font-size: 18px; text-transform: uppercase; margin-bottom: 15px; font-weight: 800; white-space: nowrap; }
 .glass-card.active { border: 2px solid var(--blue); }
 
-/* FOOTER — 140px высота */
-footer { 
-    height: 140px; background: var(--dark); border-top: 1px solid #1e293b; 
-    display: flex; align-items: center; padding: 0 50px; 
-}
+/* FOOTER */
+footer { height: 140px; background: var(--dark); border-top: 1px solid #1e293b; display: flex; align-items: center; padding: 0 50px; }
 .footer-content { width: 100%; display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 12px; }
-.f-left { display: flex; flex-direction: column; gap: 15px; }
-.footer-phone { color: #fff; font-weight: 900; font-size: 22px; transition: 0.2s; }
-.footer-phone:hover { color: var(--blue); }
-.footer-nav a { color: #64748b; margin-left: 30px; font-weight: bold; }
-.f-copy { margin-top: 10px; opacity: 0.5; font-size: 10px; }
+.footer-phone { color: #fff; font-weight: 900; font-size: 22px; }
 
-/* DASHBOARD */
+/* DASHBOARD LAYOUT */
 #dashboard { height: 100vh; display: grid; grid-template-columns: 260px 1fr; }
-.sidebar { background: #06162c; padding: 40px 25px; display: flex; flex-direction: column; border-right: 1px solid #1e293b; }
+.sidebar { background: var(--dark-blue); padding: 40px 25px; display: flex; flex-direction: column; border-right: 1px solid #1e293b; }
 .side-logo { color: var(--blue); font-size: 24px; font-weight: 900; margin-bottom: 50px; }
-.s-link { padding: 18px; color: #cbd5e0; cursor: pointer; font-weight: bold; }
-.s-link.active { background: var(--blue); color: #fff; }
+.s-link { padding: 18px; color: #cbd5e0; cursor: pointer; font-weight: bold; border-left: 3px solid transparent; }
+.s-link.active { background: rgba(0, 153, 213, 0.1); color: var(--blue); border-left-color: var(--blue); }
 .exit-btn { margin-top: auto; color: #ef4444; font-weight: bold; cursor: pointer; padding: 15px; }
-.dash-content { padding: 60px; color: #fff; }
+
+.dash-content { padding: 60px; color: #fff; background: #010814; overflow-y: auto; }
 .tab { display: none; }
 .tab.active { display: block; }
-.balance-widget { background: #0a1f3d; padding: 40px; border: 1px solid #1e293b; margin-top: 30px; display: inline-block; }
+
+/* WELCOME DASH */
+.welcome-grid { display: flex; gap: 20px; margin-top: 30px; }
+.status-card { background: #0a1f3d; padding: 25px; border: 1px solid #1e293b; flex: 1; }
+.status-card span { color: var(--blue); font-weight: 900; margin-left: 10px; }
+
+/* FINANCE TAB */
+.fin-header { display: flex; justify-content: space-between; align-items: center; margin: 30px 0; }
+.balance-widget { background: #0a1f3d; padding: 40px; border: 1px solid #1e293b; position: relative; }
 .balance-widget .sum { font-size: 42px; font-weight: 900; color: var(--blue); }
+.locked-sum { color: #64748b; font-size: 14px; margin-top: 5px; }
+
+.fin-actions { display: flex; flex-direction: column; gap: 15px; }
+.fin-btn { padding: 15px 40px; font-weight: bold; border: none; cursor: pointer; font-size: 14px; width: 220px; }
+.fin-btn.pay { background: var(--blue); color: #fff; }
+.fin-btn.withdraw { background: transparent; border: 1px solid #334155; color: #fff; }
+
+/* TABLE */
+.history-block { margin-top: 50px; }
+.fin-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+.fin-table th { text-align: left; color: #64748b; font-size: 12px; padding: 15px; border-bottom: 1px solid #1e293b; }
+.fin-table td { padding: 20px 15px; border-bottom: 1px solid #0f172a; font-size: 14px; }
+.plus { color: #10b981; font-weight: bold; }
+.minus { color: #f43f5e; font-weight: bold; }
+.st-ok { color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; font-size: 11px; font-weight: bold; }
