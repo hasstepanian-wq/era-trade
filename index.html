@@ -2,126 +2,81 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ЭТП ЭРА — Личный кабинет</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="logo" onclick="location.reload()">
-            <div class="logo-icon"></div>
-            <span>ЭТП ЭРА</span>
-        </div>
-        <div class="nav-info">
-            <span id="live-clock">00:00:00</span>
-            <div class="divider"></div>
-            <span class="phone">8 (800) 555-35-35</span>
-        </div>
-    </header>
 
-    <div id="modal-overlay">
-        <div class="modal">
-            <h2 id="m-title">Уведомление</h2>
-            <p id="m-body"></p>
-            <button class="btn-primary" onclick="closeModal()">Принять</button>
+<header>
+    <div class="logo" onclick="location.reload()">
+        <div class="logo-symbol">E</div>
+        <span>ЭТП ЭРА</span>
+    </div>
+    <div class="header-right">
+        <span id="live-clock">00:00:00</span>
+        <span class="support">8 (800) 555-35-35</span>
+    </div>
+</header>
+
+<div id="modal-overlay">
+    <div class="modal-content">
+        <h2 id="m-title">Вход в систему</h2>
+        <div id="m-inputs">
+            <input type="text" id="user-login" placeholder="Логин / ID">
+            <input type="password" id="user-pass" placeholder="Пароль">
+            <button class="btn-primary" onclick="processLogin()">Войти</button>
+        </div>
+        <p id="m-body" style="display:none;"></p>
+        <button id="m-close-btn" class="btn-primary" style="display:none;" onclick="closeModal()">Приступить</button>
+    </div>
+</div>
+
+<main>
+    <div class="stats-container">
+        <div class="stat-card">
+            <label>Баланс</label>
+            <div class="value" id="user-balance">750 000.00 ₽</div>
+        </div>
+        <div class="stat-card clickable" onclick="navToRequests()">
+            <label>Заявки</label>
+            <div class="value">3 активных</div>
+            <span class="link">посмотреть →</span>
+        </div>
+        <div class="stat-card">
+            <label>Статус</label>
+            <div class="value status-ok">Аккредитован</div>
         </div>
     </div>
 
-    <div id="landing-view">
-        <section class="hero-section">
-            <div class="hero-content">
-                <h1>Торги нового поколения</h1>
-                <p>Профессиональная площадка для реализации имущества и тендеров.</p>
-                <button class="btn-primary hero-btn" onclick="openApp()">Войти в кабинет</button>
-            </div>
-        </section>
+    <div class="main-banner" style="background-image: url('sky_banner.jpg');">
+        <div class="banner-text">
+            <h1>Торги и закупки</h1>
+            <p>Ваш персональный доступ к реестру ERA-TRADE</p>
+            <button class="btn-white" onclick="generateInvoice(100000)">Пополнить баланс</button>
+        </div>
     </div>
 
-    <div id="app-view">
-        <aside class="sidebar">
-            <nav>
-                <div class="nav-item active" onclick="nav('dashboard', this)">📊 Рабочий стол</div>
-                <div class="nav-item" onclick="nav('registry', this)">🔎 Реестр торгов</div>
-                <div class="nav-item" onclick="nav('requests', this)">📋 Мои заявки <span class="badge">3</span></div>
-                <div class="nav-item" onclick="nav('finance', this)">💳 Финансы</div>
-            </nav>
-            <div class="nav-item logout" onclick="location.reload()">🔒 Выйти</div>
-        </aside>
-
-        <main class="main-content">
-            <section id="p-dashboard" class="page active">
-                <h1>Рабочий стол</h1>
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <span>Баланс</span>
-                        <span class="val" id="user-balance">750 000.00 ₽</span>
-                    </div>
-                    <div class="stat-box clickable" onclick="nav('requests', document.querySelector('[onclick*=\'requests\']'))">
-                        <span>Заявки</span>
-                        <span class="val">3 активных</span>
-                        <small>Нажмите для просмотра</small>
-                    </div>
-                    <div class="stat-box">
-                        <span>Статус</span>
-                        <span class="val status-active">Аккредитован</span>
-                    </div>
-                </div>
-            </section>
-
-            <section id="p-registry" class="page">
-                <h1>Реестр торгов</h1>
-                <div class="lot-list">
-                    <div class="lot-item">
-                        <div class="lot-info">
-                            <h3>Поставка серверного оборудования</h3>
-                            <p>Заказчик: ПАО "Газпром"</p>
-                        </div>
-                        <div class="lot-price">
-                            <div class="price">4 200 000.00 ₽</div>
-                            <button class="btn-small" onclick="triggerModal('Заявка', 'Вы подали заявку на участие в лоте #441')">Участвовать</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="p-requests" class="page">
-                <h1>Мои заявки</h1>
-                <div class="card">
-                    <table class="app-table">
-                        <thead>
-                            <tr><th>ID</th><th>Наименование</th><th>Статус</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>#882</td><td>Аренда спецтехники</td><td><span class="t-status wait">На проверке</span></td></tr>
-                            <tr><td>#741</td><td>Поставка ГСМ</td><td><span class="t-status done">Одобрено</span></td></tr>
-                            <tr><td>#102</td><td>Оргтехника</td><td><span class="t-status wait">Черновик</span></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <section id="p-finance" class="page">
-                <h1>Финансы</h1>
-                <div class="card payment-card">
-                    <h3>Пополнить счет</h3>
-                    <div class="input-group">
-                        <label>Сумма пополнения (₽)</label>
-                        <input type="number" id="f-amount" value="100000">
-                    </div>
-                    <div class="input-group">
-                        <label>Способ оплаты</label>
-                        <select id="f-method">
-                            <option value="bank">Безналичный расчет (Счет с QR)</option>
-                            <option value="card">Карта / СБП (Мгновенно)</option>
-                        </select>
-                    </div>
-                    <button class="btn-primary" onclick="doPayment()">Сформировать документ</button>
-                </div>
-            </section>
-        </main>
+    <div id="requests-section" style="display:none; padding: 20px 40px;">
+        <h2>Мои заявки</h2>
+        <table class="data-table">
+            <thead><tr><th>ID</th><th>Предмет</th><th>Статус</th></tr></thead>
+            <tbody>
+                <tr><td>#882</td><td>Аренда спецтехники</td><td class="status-wait">На проверке</td></tr>
+                <tr><td>#741</td><td>Поставка ГСМ</td><td class="status-ok">Одобрено</td></tr>
+            </tbody>
+        </table>
     </div>
+</main>
 
-    <script src="script.js"></script>
+<footer>
+    <div class="footer-content">
+        <p>© 2026 ЭТП ЭРА — Электронная торговая площадка</p>
+        <div class="footer-links">
+            <span>Регламент</span> | <span>Помощь</span> | <span>Контакты</span>
+        </div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
