@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЭТП ЭРА | Личный кабинет</title>
+    <title>ЭТП ЭРА | Официальный сайт</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <style>
         :root {
             --bg: #050505; --surface: #111111; --accent: #007aff;
             --border: rgba(255, 255, 255, 0.1); --text: #ffffff; --text-dim: #888888;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
+        body { background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; min-height: 100vh; }
         
+        /* HEADER */
         header {
             background: #fff; padding: 12px 5%; display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -24,6 +23,7 @@
         .header-right { display: flex; align-items: center; gap: 25px; color: #444; font-size: 14px; font-weight: 600; }
         #live-clock { color: var(--accent); font-family: monospace; font-size: 16px; font-weight: 800; }
 
+        /* UNIVERSAL MODAL */
         #modal-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); 
@@ -32,25 +32,32 @@
         .modal { background: var(--surface); padding: 40px; border-radius: 24px; border: 1px solid var(--border); max-width: 400px; text-align: center; }
         .btn-modal { background: var(--accent); color: #fff; border: none; padding: 14px; border-radius: 12px; margin-top: 20px; cursor: pointer; width: 100%; font-weight: 700; }
 
+        /* LANDING & BANNER */
+        #landing { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .hero-banner { 
+            width: 90%; max-width: 1200px; height: 400px; 
+            background: url('sky_banner.jpg') center/cover no-repeat; 
+            border-radius: 30px; margin-bottom: 40px; position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .btn-enter { background: var(--accent); color: #fff; padding: 18px 50px; border-radius: 15px; border: none; font-weight: 700; cursor: pointer; font-size: 18px; transition: 0.3s; }
+
+        /* APP LAYOUT */
         #main-app { display: none; flex: 1; grid-template-columns: 260px 1fr; }
         .sidebar { background: #000; border-right: 1px solid var(--border); padding: 30px 20px; display: flex; flex-direction: column; }
-        .side-item { padding: 14px 18px; border-radius: 12px; color: var(--text-dim); cursor: pointer; font-weight: 600; margin-bottom: 5px; transition: 0.2s; }
-        .side-item.active { background: var(--surface); color: var(--accent); }
+        .side-item { padding: 14px 18px; border-radius: 12px; color: var(--text-dim); cursor: pointer; font-weight: 600; margin-bottom: 5px; }
+        .side-item:hover, .side-item.active { background: var(--surface); color: var(--accent); }
         .logout-btn { margin-top: auto; color: #ff3b30; }
 
         .content { padding: 40px; }
         .view { display: none; }
-        .view.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .view.active { display: block; }
 
+        /* FORMS */
         .fin-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin-top: 20px; }
-        input, select { width: 100%; padding: 14px; background: #1a1a1a; border: 1px solid var(--border); border-radius: 10px; color: #fff; margin: 10px 0 20px; font-size: 16px; outline: none; }
-        .btn-pay { background: var(--accent); color: #fff; border: none; padding: 16px; border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer; transition: 0.2s; }
-
-        #landing { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
-        .btn-enter { background: var(--accent); color: #fff; padding: 18px 50px; border-radius: 15px; border: none; font-weight: 700; cursor: pointer; font-size: 18px; }
-
-        footer { padding: 20px; text-align: center; color: var(--text-dim); font-size: 12px; background: #000; border-top: 1px solid var(--border); }
+        input, select { width: 100%; padding: 14px; background: #1a1a1a; border: 1px solid var(--border); border-radius: 10px; color: #fff; margin: 10px 0 20px; font-size: 16px; }
+        
+        footer { padding: 30px 5%; text-align: center; color: var(--text-dim); font-size: 13px; background: #000; border-top: 1px solid var(--border); margin-top: auto; }
     </style>
 </head>
 <body>
@@ -71,47 +78,60 @@
     <div class="modal">
         <h2 id="modal-title">Безопасность</h2>
         <p id="modal-text" style="color: var(--text-dim); margin-top: 15px;"></p>
-        <button class="btn-modal" onclick="closeModal()">Войти</button>
+        <button class="btn-modal" onclick="closeModal()">Продолжить</button>
     </div>
 </div>
 
 <div id="landing">
-    <h1 style="font-size: 64px; font-weight: 800; letter-spacing: -2px;">ЭТП <span style="color: var(--accent);">ЭРА</span></h1>
-    <p style="color: var(--text-dim); margin-top: 15px; font-size: 20px;">Цифровая система торговых процедур</p>
-    <button class="btn-enter" onclick="openApp()">Войти в кабинет</button>
+    <div class="hero-banner"></div>
+    <h1 style="font-size: 52px; font-weight: 800;">Торговая платформа <span style="color: var(--accent);">ЭРА</span></h1>
+    <p style="color: var(--text-dim); margin-top: 10px; font-size: 18px;">Безопасные торги и государственные контракты</p>
+    <button class="btn-enter" onclick="openApp()">Личный кабинет</button>
 </div>
 
 <div id="main-app">
     <div class="sidebar">
         <div class="side-item active" id="m-home" onclick="showView('home')">Рабочий стол</div>
         <div class="side-item" id="m-fin" onclick="showView('fin')">Финансы</div>
+        <div class="side-item" id="m-reg" onclick="showView('reg')">Реестр торгов</div>
         <div class="side-item logout-btn" onclick="logout()">ВЫЙТИ</div>
     </div>
     <div class="content">
         <div id="v-home" class="view active">
             <h1>Рабочий стол</h1>
             <div class="fin-card" style="border-left: 5px solid var(--accent);">
-                <p style="color: var(--text-dim); font-size: 12px; font-weight: bold;">ПОЛЬЗОВАТЕЛЬ</p>
+                <p style="color: var(--text-dim); font-size: 11px; font-weight: bold;">ВАШ ПРОФИЛЬ</p>
                 <h2 style="margin: 10px 0;">Артур Степанян</h2>
-                <p style="color: var(--accent); font-weight: 800; font-size: 18px;">ID: ERA-77412</p>
+                <p style="color: var(--accent); font-weight: 800;">ID: ERA-77412</p>
             </div>
         </div>
+
         <div id="v-fin" class="view">
-            <h1>Финансы</h1>
+            <h1>Управление счетом</h1>
             <div class="fin-card">
-                <h3>Пополнение счета</h3>
+                <h3>Пополнение баланса</h3>
                 <input type="number" id="pay-amount" value="100000">
                 <select id="pay-method">
-                    <option value="bank">Безналичный расчет (ООО «Форсаж»)</option>
+                    <option value="bank">Безналичный расчет (Счет ООО «Форсаж»)</option>
+                    <option value="card">Оплата банковской картой</option>
+                    <option value="sbp">Система быстрых платежей (СБП)</option>
                 </select>
-                <button class="btn-pay" onclick="generatePDFInvoice()">Сформировать PDF-счет</button>
+                <button class="btn-enter" style="width: 100%;" onclick="handlePayment()">Продолжить</button>
+            </div>
+        </div>
+
+        <div id="v-reg" class="view">
+            <h1>Реестр торгов</h1>
+            <div class="fin-card">
+                <p style="color: var(--text-dim);">Список доступных процедур в данный момент пуст.</p>
             </div>
         </div>
     </div>
 </div>
 
-<footer id="footer">
-    © 2026 ООО "ЭТП ЭРА" | Служба поддержки: 8 (800) 555-35-35
+<footer>
+    © 2026 ООО "ЭТП ЭРА" | ИНН 7700112233 | КПП 770101001<br>
+    г. Москва, ул. Киевская, д. 14, оф. 2а
 </footer>
 
 <script>
@@ -129,64 +149,73 @@
     }
 
     function openApp() {
-        document.getElementById('modal-text').innerText = "Вход в систему под ID: " + uID;
+        showUniversalModal("Авторизация", "Выполняется вход в кабинет пользователя " + uID + "...");
+        setTimeout(() => {
+            closeModal();
+            document.getElementById('landing').style.display = 'none';
+            document.getElementById('main-app').style.display = 'grid';
+        }, 1200);
+    }
+
+    function showUniversalModal(title, text) {
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-text').innerText = text;
         document.getElementById('modal-overlay').style.display = 'flex';
     }
 
-    function closeModal() {
-        document.getElementById('modal-overlay').style.display = 'none';
-        document.getElementById('landing').style.display = 'none';
-        document.getElementById('main-app').style.display = 'grid';
-    }
+    function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
 
     function logout() { location.reload(); }
 
-    function generatePDFInvoice() {
-        const amount = parseFloat(document.getElementById('pay-amount').value);
-        const vatRate = 0.20; // НДС 20%
-        const vatAmount = (amount * vatRate).toFixed(2);
+    function handlePayment() {
+        const amount = document.getElementById('pay-amount').value;
+        const method = document.getElementById('pay-method').value;
+
+        if (method === 'bank') {
+            generateInvoice(amount);
+        } else {
+            showUniversalModal("Оплата", "Перенаправление на защищенный платежный шлюз...");
+        }
+    }
+
+    function generateInvoice(amount) {
         const invNum = Math.floor(Math.random() * 9000 + 1000);
+        const vat = (amount * 0.22).toFixed(2); // НДС 22%
         const date = new Date().toLocaleDateString('ru-RU');
 
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-
-        // Для корректного отображения кириллицы в PDF при открытии в новой вкладке 
-        // мы используем стандартный метод формирования HTML-контента в Blob, 
-        // так как стандартные шрифты jsPDF без подгрузки .ttf не знают русский.
-        
-        const invoiceContent = `
+        const invoiceHtml = `
             <html>
             <head>
                 <meta charset="UTF-8">
+                <title>Счет №${invNum}</title>
                 <style>
-                    body { font-family: Arial, sans-serif; padding: 40px; color: #000; }
-                    .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; }
-                    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                    body { font-family: sans-serif; padding: 40px; color: #000; }
+                    h1 { border-bottom: 2px solid #000; padding-bottom: 10px; text-align: center; }
+                    .details { margin: 20px 0; line-height: 1.6; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
                     th, td { border: 1px solid #000; padding: 10px; text-align: left; }
                 </style>
             </head>
             <body>
-                <div class="header"><h1>СЧЕТ НА ОПЛАТУ №${invNum} от ${date}</h1></div>
-                <p><strong>Поставщик:</strong> ООО «Форсаж» (ИНН 7728282160, КПП 773001001)</p>
-                <p><strong>Адрес:</strong> 121059, г.Москва, ул.Киевская, д.14, оф.2а</p>
-                <p><strong>Банк:</strong> ООО «Банк Точка», БИК 044525104, Р/С 40702810101500033019</p>
-                <hr>
-                <p><strong>Плательщик:</strong> Артур Степанян (ID: ${uID})</p>
+                <h1>СЧЕТ НА ОПЛАТУ №${invNum} от ${date} г.</h1>
+                <div class="details">
+                    <p><strong>Поставщик:</strong> ООО «Форсаж», ИНН 7728282160, КПП 773001001</p>
+                    <p><strong>Банк:</strong> ООО «Банк Точка», БИК 044525104, Р/С 40702810101500033019</p>
+                    <p><strong>Плательщик:</strong> Артур Степанян (ID: ${uID})</p>
+                </div>
                 <table>
-                    <tr><th>Наименование</th><th>Сумма</th></tr>
+                    <tr><th>Назначение</th><th>Сумма</th></tr>
                     <tr>
-                        <td>Пополнение баланса лицевого счета ЭТП-Эра (ID: ${uID})</td>
-                        <td>${amount.toLocaleString('ru-RU')}.00 руб.</td>
+                        <td>Пополнение лицевого счета ЭТП-Эра, ID пользователя ${uID}</td>
+                        <td>${amount}.00 руб.</td>
                     </tr>
                 </table>
-                <p><strong>Всего к оплате: ${amount.toLocaleString('ru-RU')}.00 руб.</strong></p>
-                <p><strong>Назначение платежа:</strong> Пополнение баланса лицевого счета ЭТП-Эра, ID пользователя ${uID}. В т.ч. НДС (20%) — ${vatAmount} руб.</p>
+                <p style="margin-top:20px;"><strong>Итого к оплате: ${amount}.00 руб.</strong></p>
+                <p><strong>Назначение платежа:</strong> Пополнение счета ID ${uID}. В т.ч. НДС (22%) — ${vat} руб.</p>
             </body>
             </html>
         `;
-
-        const blob = new Blob([invoiceContent], { type: 'text/html' });
+        const blob = new Blob([invoiceHtml], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
         window.open(url, '_blank');
     }
