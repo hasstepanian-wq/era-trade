@@ -1,95 +1,72 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЭТП ЭРА</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+:root { --blue: #0099d5; --black: #01040a; }
 
-<div id="landing-page">
-    <header>
-        <div class="h-left">
-            <div class="logo-wrap" onclick="location.reload()">
-                <img src="logo-forsage-modified.png" alt="ЭТП ЭРА" class="logo-img">
-                <span id="clock">00:00:00 МСК</span>
-            </div>
-            <nav class="main-nav">
-                <a onclick="fastNavigate('tenders')" data-i18n="n_reg">РЕЕСТР ТОРГОВ</a>
-                <a href="#">КОМИССИОННАЯ ПРОДАЖА</a>
-            </nav>
-        </div>
-        
-        <div class="h-right">
-            <div class="lang-box">
-                <button class="l-btn active" id="btn-ru" onclick="setUserLang('ru')">RU</button>
-                <button class="l-btn" id="btn-en" onclick="setUserLang('en')">EN</button>
-            </div>
-            <div class="auth-box">
-                <span class="tel">8 (800) 555-35-35</span>
-                <button class="login-btn" onclick="fastNavigate('home')" data-i18n="b_login">ВХОД</button>
-            </div>
-        </div>
-    </header>
+* { margin: 0; padding: 0; box-sizing: border-box; outline: none; border-radius: 0 !important; text-decoration: none; }
 
-    <section class="hero" style="background-image: url('sky_banner.jpg');">
-        <div class="hero-content">
-            <div class="card-grid">
-                <div class="card" onclick="fastNavigate('home')">
-                    <h3 data-i18n="c1_t">Участник</h3>
-                    <p data-i18n="c1_p">Поиск актуальных процедур и подача заявок онлайн.</p>
-                </div>
-                <div class="card active" onclick="fastNavigate('home')">
-                    <h3 data-i18n="c2_t">Регистрация</h3>
-                    <p data-i18n="c2_p">Получите аккредитацию в системе всего за 24 часа.</p>
-                </div>
-                <div class="card" onclick="fastNavigate('home')">
-                    <h3 data-i18n="c3_t">Организатор</h3>
-                    <p data-i18n="c3_p">Размещение лотов и управление торгами.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+body, html { 
+    height: 100vh; width: 100vw; overflow: hidden; 
+    background: var(--black); font-family: 'Segoe UI', Arial, sans-serif; 
+}
 
-    <footer>
-        <div class="f-container">
-            <p data-i18n="f_about_p">ЭТП ЭРА — цифровая экосистема для проведения торгов.</p>
-            <div class="f-nav">
-                <a href="#">РЕГЛАМЕНТ</a>
-                <a href="#">ТАРИФЫ</a>
-                <a href="#">ПОДДЕРЖКА</a>
-            </div>
-            <div class="copy">© 2026 ETP ERA</div>
-        </div>
-    </footer>
-</div>
+/* HEADER */
+header { 
+    height: 80px; background: #ffffff; display: flex; 
+    justify-content: space-between; align-items: center; 
+    padding: 0 40px; border-bottom: 3px solid var(--blue); position: relative; z-index: 50;
+}
 
-<div id="dashboard" style="display:none;">
-    <aside class="sidebar">
-        <div class="side-head">ЭТП ЭРА</div>
-        <nav class="side-menu">
-            <div class="menu-item active" id="l-home" onclick="switchSection('home')" data-i18n="s_home">Рабочий стол</div>
-            <div class="menu-item" id="l-fin" onclick="switchSection('fin')" data-i18n="s_fin">Финансы</div>
-            <div class="menu-item" id="l-tenders" onclick="switchSection('tenders')" data-i18n="s_reg">Реестр торгов</div>
-        </nav>
-        <div class="exit" onclick="location.reload()">ВЫХОД</div>
-    </aside>
-    <main class="dash-body">
-        <div id="s-home" class="tab active">
-            <h1 data-i18n="welcome">Добро пожаловать, Артур!</h1>
-            <p>Аккаунт активен. Доступ ко всем торговым секциям открыт.</p>
-        </div>
-        <div id="s-fin" class="tab">
-            <h1 data-i18n="s_fin">Финансы</h1>
-            <div class="wallet">
-                <span>Баланс:</span>
-                <div class="price">450 000.00 ₽</div>
-            </div>
-        </div>
-    </main>
-</div>
+.h-left, .h-right { display: flex; align-items: center; gap: 30px; }
 
-<script src="script.js"></script>
-</body>
-</html>
+.logo-wrap { display: flex; flex-direction: column; cursor: pointer; max-width: 150px; }
+.logo-img { height: 30px; width: auto; object-fit: contain; }
+#clock { font-family: monospace; font-size: 11px; font-weight: bold; color: var(--blue); margin-top: 3px; }
+
+.main-nav a { color: #1a202c; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; cursor: pointer; }
+.main-nav a:hover { color: var(--blue); }
+
+.lang-box { display: flex; border: 1px solid #ddd; }
+.l-btn { background: none; border: none; padding: 6px 12px; font-size: 10px; font-weight: bold; cursor: pointer; color: #777; }
+.l-btn.active { background: var(--blue); color: #fff; }
+
+.tel { font-weight: 900; font-size: 15px; color: #000; }
+.login-btn { background: var(--blue); color: #fff; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer; font-size: 11px; }
+
+/* HERO SECTION */
+.hero { 
+    height: calc(100vh - 140px); background-size: cover; background-position: center; 
+    display: flex; justify-content: center; align-items: center; 
+}
+
+.card-grid { display: flex; gap: 30px; }
+
+.card { 
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1); width: 270px; height: 270px;
+    display: flex; flex-direction: column; justify-content: center; 
+    padding: 30px; text-align: center; color: #fff; transition: 0.3s; cursor: pointer;
+}
+.card:hover { border-color: var(--blue); transform: translateY(-5px); }
+.card h3 { font-size: 19px; text-transform: uppercase; margin-bottom: 15px; font-weight: 800; color: #fff; }
+.card p { font-size: 13px; color: #bbb; line-height: 1.5; }
+.card.active { border: 2px solid var(--blue); }
+
+/* FOOTER */
+footer { 
+    height: 60px; background: var(--black); border-top: 1px solid #1e293b; 
+    display: flex; align-items: center; padding: 0 40px; 
+}
+.f-container { width: 100%; display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 11px; }
+.f-nav a { color: #64748b; margin: 0 15px; font-weight: bold; }
+.f-nav a:hover { color: #fff; }
+
+/* DASHBOARD */
+#dashboard { height: 100vh; width: 100%; display: grid; grid-template-columns: 250px 1fr; }
+.sidebar { background: #06162c; border-right: 1px solid #1e293b; padding: 40px 20px; display: flex; flex-direction: column; }
+.side-head { color: var(--blue); font-size: 20px; font-weight: 900; margin-bottom: 40px; }
+.menu-item { padding: 15px; color: #cbd5e0; cursor: pointer; font-weight: bold; font-size: 14px; }
+.menu-item.active { background: var(--blue); color: #fff; }
+.exit { margin-top: auto; color: #ef4444; font-weight: bold; cursor: pointer; padding: 15px; }
+.dash-body { padding: 60px; background: var(--black); color: #fff; }
+.tab { display: none; }
+.tab.active { display: block; }
+.wallet { background: #0a1f3d; padding: 30px; border: 1px solid #1e293b; margin-top: 30px; max-width: 350px; }
+.price { font-size: 34px; font-weight: 900; color: var(--blue); margin-top: 10px; }
