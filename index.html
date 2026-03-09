@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>ЭТП ЭРА — Главная</title>
+    <title>ЭТП ЭРА</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,13 +13,11 @@
             <div class="blue-sq"></div>
             <span>ЭТП ЭРА</span>
         </a>
-        
         <nav class="top-nav">
-            <a href="tenders.html">ТОРГИ</a>
+            <a href="tenders.html">РЕЕСТР ТОРГОВ</a>
             <a href="commission.html">КОМИССИОННАЯ ПРОДАЖА</a>
         </nav>
     </div>
-
     <div class="h-right">
         <span id="live-clock">00:00:00</span>
         <span class="phone">8 (800) 555-35-35</span>
@@ -27,37 +25,53 @@
 </header>
 
 <main>
-    <a href="tenders.html" class="hero-link">
-        <section class="main-hero" style="background-image: url('sky_banner.jpg');">
-            <div class="hero-text">
-                <h1>ЭЛЕКТРОННАЯ ТОРГОВАЯ ПЛОЩАДКА</h1>
-                <p>ОФИЦИАЛЬНЫЙ РЕЕСТР ПРОЦЕДУР И ТОРГОВ</p>
-            </div>
-        </section>
-    </a>
-
-    <div class="site-nav-grid">
-        <a href="tenders.html" class="nav-tile">
+    <div class="stats-row">
+        <a href="tenders.html" class="card">
             <label>ТОРГИ</label>
-            <div class="tile-name">РЕЕСТР ЛОТОВ</div>
+            <div class="val">РЕЕСТР ЛОТОВ</div>
         </a>
-        <a href="documents.html" class="nav-tile">
+        <a href="documents.html" class="card">
             <label>ИНФОРМАЦИЯ</label>
-            <div class="tile-name">РЕГЛАМЕНТ ЭТП</div>
+            <div class="val">РЕГЛАМЕНТ ЭТП</div>
         </a>
-        <a href="login.html" class="nav-tile highlight">
+        <a href="login.html" class="card">
             <label>ДОСТУП</label>
-            <div class="tile-name">ЛИЧНЫЙ КАБИНЕТ</div>
+            <div class="val">ЛИЧНЫЙ КАБИНЕТ</div>
         </a>
     </div>
+
+    <a href="tenders.html" class="main-banner" style="background-image: url('sky_banner.jpg');">
+        <div class="banner-text">
+            <h1>ЭЛЕКТРОННАЯ ТОРГОВАЯ ПЛОЩАДКА</h1>
+            <p>ОФИЦИАЛЬНЫЙ РЕЕСТР ПРОЦЕДУР И ТОРГОВ</p>
+        </div>
+    </a>
 </main>
 
 <footer>
-    <div class="f-wrap">
-        <p>© 2026 ЭТП ЭРА — ВСЕ ПРАВА ЗАЩИЩЕНЫ</p>
-        <div class="f-links">
-            <a href="contacts.html">КОНТАКТЫ</a> | <a href="support.html">ПОДДЕРЖКА</a>
+    <div class="footer-grid">
+        <div class="f-col">
+            <div class="logo-f">
+                <div class="blue-sq sm"></div>
+                <span>ЭТП ЭРА</span>
+            </div>
+            <p>Официальный оператор электронной площадки.</p>
         </div>
+        <div class="f-col">
+            <h4>РАЗДЕЛЫ</h4>
+            <a href="tenders.html">Реестр торгов</a>
+            <a href="regulations.html">Регламент</a>
+            <a href="tariffs.html">Тарифы</a>
+        </div>
+        <div class="f-col">
+            <h4>КОНТАКТЫ</h4>
+            <span>8 (800) 555-35-35</span>
+            <span>support@era-trade.ru</span>
+            <span>г. Москва, ул. Большая Полянка, д. 2</span>
+        </div>
+    </div>
+    <div class="f-bottom">
+        © 2026 ЭТП ЭРА — Все права защищены.
     </div>
 </footer>
 
