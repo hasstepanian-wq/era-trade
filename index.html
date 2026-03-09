@@ -1,50 +1,47 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Ваш Проект</title>
+    <title>Мой Проект</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-    <div class="logo">
-        <div class="sq"></div>
-        <span>ТВОЁ НАЗВАНИЕ</span>
+<header style="background:#fff; color:#000; display:flex; justify-content:space-between; padding:20px 40px; align-items:center;">
+    <div style="font-weight:bold; font-size:20px; display:flex; align-items:center; gap:10px;">
+        <div style="width:30px; height:30px; background:#007aff; border-radius:5px;"></div>
+        ЭТП ЭРА
     </div>
-    <div class="h-right">
-        <span id="live-clock">00:00:00</span>
-        <span>ТВОЙ ТЕЛЕФОН</span>
-    </div>
+    <div id="live-clock">00:00:00</div>
 </header>
 
-<main>
-    <div class="stats-row">
-        <div class="card">
-            <label>БЛОК 1</label>
-            <div class="val">ТВОЙ ТЕКСТ 1</div>
+<main style="padding:40px;">
+    <div style="display:flex; gap:20px; margin-bottom:40px;">
+        <div style="flex:1; background:#111; border:1px solid #333; padding:20px; border-radius:15px;">
+            <label style="color:#555; font-size:12px;">БЛОК 1</label>
+            <div style="font-size:22px; font-weight:bold; margin-top:10px;">Текст 1</div>
         </div>
-        <div class="card">
-            <label>БЛОК 2</label>
-            <div class="val">ТВОЙ ТЕКСТ 2</div>
+        <div style="flex:1; background:#111; border:1px solid #333; padding:20px; border-radius:15px;">
+            <label style="color:#555; font-size:12px;">БЛОК 2</label>
+            <div style="font-size:22px; font-weight:bold; margin-top:10px;">Текст 2</div>
         </div>
-        <div class="card">
-            <label>БЛОК 3</label>
-            <div class="val">ТВОЙ ТЕКСТ 3</div>
+        <div style="flex:1; background:#111; border:1px solid #333; padding:20px; border-radius:15px;">
+            <label style="color:#555; font-size:12px;">БЛОК 3</label>
+            <div style="font-size:22px; font-weight:bold; margin-top:10px;">Текст 3</div>
         </div>
     </div>
 
-    <div class="hero-block" style="background-image: url('sky_banner.jpg');">
-        <div class="hero-inner">
-            <h1>ТВОЙ ГЛАВНЫЙ ЗАГОЛОВОК</h1>
-            <p>ТВОЁ ОПИСАНИЕ ЗДЕСЬ</p>
-            <button onclick="generateInvoice(100000)">КНОПКА ДЕЙСТВИЯ</button>
+    <div style="background:url('sky_banner.jpg') center/cover; height:350px; border-radius:20px; display:flex; align-items:center; padding:40px; border:1px solid #333;">
+        <div>
+            <h1 style="font-size:40px; margin:0;">ТВОЙ ЗАГОЛОВОК</h1>
+            <p style="margin:20px 0; color:#ccc;">Твое описание проекта</p>
+            <button onclick="alert('Кнопка работает!')" style="background:#007aff; color:#fff; border:none; padding:15px 30px; border-radius:10px; cursor:pointer; font-weight:bold;">ДЕЙСТВИЕ</button>
         </div>
     </div>
 </main>
 
-<footer>
-    <p>© 2026 ТВОЯ КОМПАНИЯ</p>
+<footer style="padding:30px 40px; border-top:1px solid #222; color:#444; font-size:12px;">
+    © 2026 ЭТП ЭРА
 </footer>
 
 <script src="script.js"></script>
