@@ -7,7 +7,7 @@ body, html {
     background: var(--dark); font-family: 'Segoe UI', sans-serif; 
 }
 
-/* HEADER — Высокий (120px) */
+/* HEADER — 120px высота */
 header { 
     height: 120px; background: #fff; display: flex; 
     justify-content: space-between; align-items: center; 
@@ -24,11 +24,11 @@ header {
 .main-logo { height: 55px; width: auto; margin-bottom: 5px; }
 #clock { font-family: 'Courier New', monospace; font-size: 13px; font-weight: 900; color: var(--blue); letter-spacing: 1px; }
 
-/* Навигация с большим отступом */
+/* Меню хедера с большим отступом */
 .top-nav { display: flex; align-items: center; }
-.top-nav a { color: #1a202c; font-size: 13px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+.top-nav a { color: #1a202c; font-size: 13px; font-weight: 800; cursor: pointer; transition: 0.3s; white-space: nowrap; }
 .top-nav a:hover { color: var(--blue); }
-.comm-link { margin-left: 80px; } /* Тот самый отступ */
+.comm-link { margin-left: 80px; } 
 
 .lang-selector { display: flex; border: 1px solid #eee; margin-right: 30px; }
 .l-btn { background: none; border: none; padding: 8px 15px; font-size: 11px; font-weight: bold; cursor: pointer; color: #888; }
@@ -36,7 +36,7 @@ header {
 
 .login-btn { background: var(--blue); color: #fff; border: none; padding: 14px 40px; font-weight: bold; cursor: pointer; font-size: 13px; }
 
-/* HERO */
+/* ГЛАВНЫЙ ЭКРАН */
 .hero-section { 
     height: calc(100vh - 260px); background-size: cover; background-position: center; 
     display: flex; justify-content: center; align-items: center; 
@@ -44,16 +44,20 @@ header {
 .cards-container { display: flex; gap: 30px; }
 .glass-card { 
     background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.1); width: 290px; height: 290px;
+    border: 1px solid rgba(255,255,255,0.1); width: 310px; height: 310px;
     display: flex; flex-direction: column; justify-content: center; 
-    padding: 40px; text-align: center; color: #fff; transition: 0.3s; cursor: pointer;
+    padding: 30px; text-align: center; color: #fff; transition: 0.3s; cursor: pointer;
 }
 .glass-card:hover { border-color: var(--blue); transform: translateY(-5px); }
-.glass-card h3 { font-size: 21px; text-transform: uppercase; margin-bottom: 15px; font-weight: 800; }
+.glass-card h3 { 
+    font-size: 18px; /* Уменьшил с 21px, чтобы Экспресс-регистрация влезла */
+    text-transform: uppercase; margin-bottom: 15px; font-weight: 800; 
+    white-space: nowrap; 
+}
 .glass-card p { font-size: 14px; color: #aaa; line-height: 1.6; }
 .glass-card.active { border: 2px solid var(--blue); }
 
-/* FOOTER — Двойная ширина (140px) */
+/* FOOTER — 140px высота */
 footer { 
     height: 140px; background: var(--dark); border-top: 1px solid #1e293b; 
     display: flex; align-items: center; padding: 0 50px; 
