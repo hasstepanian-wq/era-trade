@@ -1,22 +1,54 @@
-/* Общие настройки для левой части хедера */
-.header-left { display: flex; align-items: center; gap: 40px; }
-
-/* СТИЛИ МЕНЮ В ХЕДЕРЕ */
-.top-nav { display: flex; gap: 25px; }
-.top-nav a { 
-    color: #000; font-size: 13px; font-weight: 800; 
-    text-transform: uppercase; letter-spacing: 0.5px; 
-    transition: 0.2s; 
-}
-.top-nav a:hover { color: #007aff; }
-
-/* Остальное оставляем как было, но убедимся что закруглений нет */
+/* НИКАКИХ ЗАКРУГЛЕНИЙ */
 * { box-sizing: border-box; border-radius: 0 !important; text-decoration: none; }
+
 body { margin: 0; background: #000; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
 
+/* ХЕДЕР (ФИКСИРУЕМ ВЫСОТУ И ВИД) */
 header { 
-    height: 70px; background: #fff; color: #000; 
-    display: flex; justify-content: space-between; align-items: center; 
-    padding: 0 40px; border-bottom: 3px solid #007aff; 
+    height: 85px; /* Сделал чуть выше, чтобы не жало */
+    background: #fff; 
+    color: #000; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 0 40px; 
+    border-bottom: 4px solid #007aff; 
 }
-/* ... далее все стили из предыдущего шага ... */
+
+.header-left { display: flex; align-items: center; gap: 50px; }
+
+/* ЛОГОТИП */
+.logo { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 24px; color: #000; }
+.blue-sq { width: 32px; height: 32px; background: #007aff; display: block; }
+
+/* МЕНЮ В ШАПКЕ */
+.top-nav { display: flex; gap: 30px; }
+.top-nav a { color: #000; font-size: 13px; font-weight: 800; text-transform: uppercase; }
+.top-nav a:hover { color: #007aff; }
+
+.h-right { display: flex; gap: 25px; align-items: center; font-weight: 900; color: #000; }
+
+/* СЛАЙДЕР */
+.hero-link { display: block; margin: 40px; }
+.main-hero { 
+    height: 420px; 
+    background-size: cover; 
+    background-position: center; 
+    border: 1px solid #333; 
+    display: flex; 
+    align-items: center; 
+    padding: 60px; 
+}
+.hero-text h1 { font-size: 52px; font-weight: 900; margin: 0; line-height: 1; color: #fff; }
+.hero-text p { font-size: 16px; margin-top: 15px; color: #007aff; letter-spacing: 2px; font-weight: bold; }
+
+/* ПЛИТКИ */
+.site-nav-grid { display: flex; gap: 15px; padding: 0 40px 40px 40px; }
+.nav-tile { background: #0f0f0f; border: 1px solid #222; padding: 35px; flex: 1; color: #fff; transition: 0.2s; }
+.nav-tile:hover { border-color: #007aff; background: #151515; }
+.nav-tile label { font-size: 10px; color: #444; font-weight: bold; text-transform: uppercase; }
+.nav-tile .tile-name { font-size: 22px; font-weight: bold; margin-top: 10px; }
+
+footer { margin-top: auto; padding: 40px; border-top: 1px solid #111; color: #444; font-size: 12px; }
+.f-wrap { display: flex; justify-content: space-between; }
+.f-links a { color: #444; font-weight: bold; }
