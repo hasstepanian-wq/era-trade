@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЭТП ЭРА | Официальный сайт</title>
+    <title>ЭТП ЭРА | Личный кабинет</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -52,17 +52,8 @@
         /* LANDING */
         #landing { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
         .btn-enter { background: var(--accent); color: #fff; padding: 18px 50px; border-radius: 15px; border: none; font-weight: 700; cursor: pointer; font-size: 18px; transition: 0.3s; }
-        .btn-enter:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,122,255,0.3); }
 
         footer { padding: 20px; text-align: center; color: var(--text-dim); font-size: 12px; background: #000; border-top: 1px solid var(--border); }
-
-        /* PRINT FORM */
-        @media print {
-            body * { visibility: hidden; }
-            #invoice-box, #invoice-box * { visibility: visible; }
-            #invoice-box { position: absolute; left: 0; top: 0; width: 100%; color: #000 !important; background: #fff !important; padding: 40px; font-family: serif; }
-        }
-        #invoice-box { display: none; }
     </style>
 </head>
 <body>
@@ -89,8 +80,8 @@
 
 <div id="landing">
     <h1 style="font-size: clamp(40px, 8vw, 64px); font-weight: 800; letter-spacing: -2px;">ЭТП <span style="color: var(--accent);">ЭРА</span></h1>
-    <p style="color: var(--text-dim); margin-top: 15px; font-size: 20px;">Цифровая система торговых процедур</p>
-    <button class="btn-enter" onclick="openApp()">Личный кабинет</button>
+    <p style="color: var(--text-dim); margin-top: 15px; font-size: 20px;">Единая среда торговых процедур</p>
+    <button class="btn-enter" onclick="openApp()">Войти в кабинет</button>
 </div>
 
 <div id="main-app">
@@ -111,7 +102,7 @@
         </div>
 
         <div id="v-fin" class="view">
-            <h1>Управление счетом</h1>
+            <h1>Управление финансами</h1>
             <div style="display: grid; grid-template-columns: 1fr 400px; gap: 30px; margin-top: 20px;">
                 <div class="fin-card">
                     <p style="color: var(--text-dim);">Доступный остаток</p>
@@ -121,10 +112,10 @@
                     <h3>Пополнение</h3>
                     <input type="number" id="pay-amount" value="50000">
                     <select id="pay-method">
-                        <option value="bank">Безналичный расчет (Счет)</option>
-                        <option value="card">Карта / СБП</option>
+                        <option value="bank">Безналичный расчет (Счет ООО «Форсаж»)</option>
+                        <option value="card">Оплата картой / СБП</option>
                     </select>
-                    <button class="btn-pay" onclick="doPay()">Сформировать счет</button>
+                    <button class="btn-pay" onclick="generateInvoice()">Сформировать счет</button>
                 </div>
             </div>
         </div>
@@ -132,13 +123,7 @@
         <div id="v-reg" class="view">
             <h1>Реестр торгов</h1>
             <div class="fin-card">
-                <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                    <tr style="color: var(--text-dim); font-size: 12px; border-bottom: 1px solid var(--border);">
-                        <th style="padding: 15px;">ID</th><th>Наименование</th><th>Цена</th>
-                    </tr>
-                    <tr><td style="padding: 15px;">#2026-01</td><td>Поставка оборудования</td><td>1 200 000 ₽</td></tr>
-                    <tr><td style="padding: 15px;">#2026-05</td><td>Оказание услуг связи</td><td>850 000 ₽</td></tr>
-                </table>
+                <p style="color: var(--text-dim);">На данный момент активные процедуры отсутствуют.</p>
             </div>
         </div>
     </div>
@@ -148,30 +133,9 @@
     © 2026 ООО "ЭТП ЭРА" | ИНН 7700112233 | Служба поддержки: 8 (800) 555-35-35
 </footer>
 
-<div id="invoice-box">
-    <h1 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">СЧЕТ НА ОПЛАТУ №<span id="inv-id"></span></h1>
-    <div style="margin: 30px 0;">
-        <p><strong>Поставщик:</strong> ООО "ЭТП ЭРА", ИНН 7700112233, КПП 770101001</p>
-        <p><strong>Р/С:</strong> 40702810900001234567 в ПАО СБЕРБАНК, БИК 044525225</p>
-        <p style="margin-top: 20px;"><strong>Плательщик:</strong> Артур Степанян (Пользователь ID: ERA-77412)</p>
-    </div>
-    <table style="width: 100%; border: 1px solid #000; margin: 20px 0;">
-        <tr style="background: #eee;">
-            <th style="border: 1px solid #000; padding: 10px;">Назначение</th>
-            <th style="border: 1px solid #000; padding: 10px;">Сумма</th>
-        </tr>
-        <tr>
-            <td style="border: 1px solid #000; padding: 10px;">Пополнение лицевого счета ID ERA-77412 для участия в торгах</td>
-            <td style="border: 1px solid #000; padding: 10px;"><span id="inv-sum"></span>.00 руб.</td>
-        </tr>
-    </table>
-    <p><strong>Назначение платежа:</strong> Пополнение счета пользователя ID ERA-77412. Без НДС.</p>
-</div>
-
 <script>
     const uID = "ERA-77412";
 
-    // ЖИВЫЕ ЧАСЫ
     setInterval(() => {
         document.getElementById('live-clock').innerText = new Date().toLocaleTimeString();
     }, 1000);
@@ -184,7 +148,7 @@
     }
 
     function openApp() {
-        document.getElementById('modal-text').innerText = "Выполняется вход в защищенный профиль " + uID + "...";
+        document.getElementById('modal-text').innerText = "Вход в систему под ID: " + uID;
         document.getElementById('modal-overlay').style.display = 'flex';
     }
 
@@ -194,21 +158,62 @@
         document.getElementById('main-app').style.display = 'grid';
     }
 
-    function logout() {
-        location.reload(); // Самый надежный способ очистить сессию
-    }
+    function logout() { location.reload(); }
 
-    function doPay() {
+    function generateInvoice() {
         const amount = document.getElementById('pay-amount').value;
         const method = document.getElementById('pay-method').value;
 
-        if (method === 'bank') {
-            document.getElementById('inv-id').innerText = Math.floor(Math.random()*9000+1000);
-            document.getElementById('inv-sum').innerText = amount;
-            window.print();
-        } else {
-            alert("Перенаправление на оплату картой...");
+        if (method !== 'bank') {
+            alert("Перенаправление на шлюз оплаты картой...");
+            return;
         }
+
+        const invNum = Math.floor(Math.random() * 9000 + 1000);
+        const date = new Date().toLocaleDateString();
+
+        const invoiceHtml = `
+            <html>
+            <head>
+                <title>Счет на оплату №${invNum}</title>
+                <style>
+                    body { font-family: sans-serif; padding: 40px; line-height: 1.4; color: #000; }
+                    .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+                    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                    th, td { border: 1px solid #000; padding: 10px; text-align: left; }
+                    .footer { margin-top: 50px; display: flex; justify-content: space-between; }
+                </style>
+            </head>
+            <body>
+                <div class="header"><h1>СЧЕТ НА ОПЛАТУ №${invNum} от ${date}</h1></div>
+                <p><strong>Поставщик:</strong> ООО «Форсаж»</p>
+                <p>ИНН 7728282160, КПП 773001001</p>
+                <p>Адрес: 121059, г.Москва, ул.Киевская, д.14, оф.2а</p>
+                <p><strong>Банк:</strong> ООО «Банк Точка»</p>
+                <p>БИК 044525104, К/С 30101810745374525104, Р/С 40702810101500033019</p>
+                <hr>
+                <p><strong>Плательщик:</strong> Степанян Артур (Пользователь ID: ${uID})</p>
+                <table>
+                    <tr style="background:#eee"><th>Наименование услуги</th><th>Сумма</th></tr>
+                    <tr>
+                        <td>Пополнение лицевого счета ЭТП-Эра, ID пользователя ${uID}</td>
+                        <td>${amount}.00 руб.</td>
+                    </tr>
+                </table>
+                <p><strong>Всего к оплате: ${amount}.00 руб.</strong></p>
+                <p><strong>Назначение платежа:</strong> Пополнение баланса лицевого счета ЭТП-Эра, ID пользователя ${uID}. Без НДС.</p>
+                <div class="footer">
+                    <div>Генеральный директор: ___________ /Степанян А./</div>
+                    <div>М.П.</div>
+                </div>
+                <script>window.print();<\/script>
+            </body>
+            </html>
+        `;
+
+        const win = window.open("", "_blank");
+        win.document.write(invoiceHtml);
+        win.document.close();
     }
 </script>
 </body>
