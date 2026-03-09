@@ -9,144 +9,197 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', -apple-system, sans-serif; }
         
         html, body { 
-            height: 100%;
-            min-height: 100vh;
-            background: var(--dark-bg); 
-            color: #fff; 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; /* Запрет скролла на ПК */
+            height: 100%; min-height: 100vh;
+            background: var(--dark-bg); color: #fff; 
+            display: flex; flex-direction: column; 
         }
 
-        /* УВЕЛИЧЕННЫЙ ХЕДЕР */
+        /* СОЛИДНЫЙ ХЕДЕР */
         header { 
-            background: #fff; 
-            padding: 15px 5%; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            z-index: 1000; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
-            flex-shrink: 0;
+            background: #fff; padding: 15px 5%; 
+            display: flex; justify-content: space-between; align-items: center; 
+            z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.15); flex-shrink: 0;
         }
         
         .logo-section { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .logo-img { height: 40px; } /* Лого крупнее */
+        .logo-img { height: 40px; }
         .server-time { font-family: 'Courier New', monospace; font-size: 11px; font-weight: 900; color: #1a202c; margin-top: 4px; }
         
         .header-right { display: flex; align-items: center; gap: 15px; }
         .lang-switcher { display: flex; border: 1px solid #cbd5e0; border-radius: 20px; overflow: hidden; background: #fff; }
-        .lang-btn { padding: 6px 12px; font-size: 11px; font-weight: bold; cursor: pointer; border: none; background: transparent; color: #64748b; transition: 0.2s; }
+        .lang-btn { padding: 6px 12px; font-size: 11px; font-weight: bold; cursor: pointer; border: none; background: transparent; color: #64748b; }
         .lang-btn.active { background: var(--primary); color: #fff; }
         
-        .btn-login { background: var(--primary); color: #fff; padding: 10px 22px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; transition: 0.3s; }
-        .btn-login:hover { background: #007bb1; transform: translateY(-1px); }
+        .btn-login { background: var(--primary); color: #fff; padding: 10px 22px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 12px; }
 
-        /* ЦЕНТРАЛЬНЫЙ БЛОК */
+        /* КОНТЕНТ */
+        #landing-page { flex: 1; display: flex; flex-direction: column; }
         main { 
-            flex: 1; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
+            flex: 1; display: flex; align-items: center; justify-content: center; 
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('sky_banner.jpg') no-repeat center/cover; 
-            position: relative;
-            padding: 20px;
+            padding: 40px 20px;
         }
         
         .grid-container { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 25px; 
-            width: 100%; 
-            max-width: 1000px; 
+            display: grid; grid-template-columns: repeat(3, 1fr); 
+            gap: 25px; width: 100%; max-width: 1000px; 
         }
         
         .glass-card { 
-            background: var(--glass); 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 24px;
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            padding: 30px; 
-            text-align: center; 
-            aspect-ratio: 1/1;
-            transition: 0.3s;
-            cursor: pointer;
+            background: var(--glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px;
+            display: flex; flex-direction: column; justify-content: center; 
+            padding: 30px; text-align: center; aspect-ratio: 1/1; transition: 0.3s; cursor: pointer;
         }
-        .glass-card:hover { border-color: var(--primary); background: rgba(255, 255, 255, 0.12); transform: scale(1.03); }
-        .glass-card h3 { font-size: 19px; margin-bottom: 12px; text-transform: uppercase; font-weight: 800; }
+        .glass-card:hover { border-color: var(--primary); transform: scale(1.03); background: rgba(255, 255, 255, 0.12); }
+        .glass-card h3 { font-size: 19px; margin-bottom: 12px; text-transform: uppercase; }
         .glass-card p { font-size: 13px; color: #cbd5e0; line-height: 1.5; }
 
-        /* ФИКСИРОВАННЫЙ ФУТЕР */
+        /* ТОТ САМЫЙ ШИРОКИЙ ФУТЕР */
         footer { 
             background: #01040a; 
-            padding: 20px; 
+            padding: 40px 5%; 
             border-top: 1px solid #1e293b; 
-            text-align: center; 
             flex-shrink: 0;
         }
-        .footer-text { font-size: 11px; color: #64748b; letter-spacing: 1px; text-transform: uppercase; }
+        .footer-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 30px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        .footer-col h4 { 
+            color: var(--primary); 
+            margin-bottom: 15px; 
+            font-size: 14px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+        }
+        .footer-col p, .footer-col li { 
+            font-size: 12px; 
+            color: #94a3b8; 
+            line-height: 1.6; 
+            list-style: none;
+        }
+        .copyright { 
+            text-align: center; 
+            margin-top: 30px; 
+            padding-top: 20px; 
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 10px;
+            color: #64748b;
+        }
+
+        /* ЛИЧНЫЙ КАБИНЕТ */
+        #dashboard { display: none; flex: 1; grid-template-columns: 260px 1fr; background: #01040a; animation: fadeIn 0.5s ease; }
+        .sidebar { background: #06162c; border-right: 1px solid #1e293b; padding: 30px 20px; display: flex; flex-direction: column; }
+        .side-link { padding: 15px; color: #cbd5e0; border-radius: 8px; margin-bottom: 10px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .side-link:hover, .side-link.active { background: var(--primary); color: #fff; }
+        .main-content { padding: 40px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* МОБИЛКА */
         @media (max-width: 768px) {
-            html, body { overflow-y: auto; }
-            .grid-container { grid-template-columns: 1fr; max-width: 300px; margin: 30px 0; }
+            #dashboard { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .grid-container { grid-template-columns: 1fr; max-width: 300px; }
             .glass-card { aspect-ratio: auto; padding: 25px; }
-            .logo-img { height: 32px; }
-            .btn-login { padding: 8px 15px; }
+            footer { padding: 30px 20px; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo-section" onclick="location.reload()">
-        <img src="logo-forsage-modified.png" class="logo-img">
-        <div id="clock" class="server-time">00:00:00 МСК</div>
-    </div>
-    <div class="header-right">
-        <div class="lang-switcher">
-            <button class="lang-btn" id="btn-ru" onclick="setUserLang('ru')">RU</button>
-            <button class="lang-btn" id="btn-en" onclick="setUserLang('en')">EN</button>
+<div id="landing-page">
+    <header>
+        <div class="logo-section" onclick="location.reload()">
+            <img src="logo-forsage-modified.png" class="logo-img">
+            <div id="clock" class="server-time">00:00:00 МСК</div>
         </div>
-        <button class="btn-login" onclick="loginAction()" data-i18n="b_login">Вход</button>
-    </div>
-</header>
+        <div class="header-right">
+            <div class="lang-switcher">
+                <button class="lang-btn" id="btn-ru" onclick="setUserLang('ru')">RU</button>
+                <button class="lang-btn" id="btn-en" onclick="setUserLang('en')">EN</button>
+            </div>
+            <button class="btn-login" onclick="goToDashboard()" data-i18n="b_login">Вход</button>
+        </div>
+    </header>
 
-<main>
-    <div class="grid-container">
-        <div class="glass-card" onclick="loginAction()">
-            <h3 data-i18n="c1_t">Участник</h3>
-            <p data-i18n="c1_p">Поиск актуальных процедур и подача заявок онлайн.</p>
+    <main>
+        <div class="grid-container">
+            <div class="glass-card" onclick="goToDashboard()">
+                <h3 data-i18n="c1_t">Участник</h3>
+                <p data-i18n="c1_p">Поиск актуальных процедур и подача заявок онлайн.</p>
+            </div>
+            <div class="glass-card" onclick="goToDashboard()" style="border-color: var(--primary); border-width: 2px;">
+                <h3 data-i18n="c2_t">Регистрация</h3>
+                <p data-i18n="c2_p">Получите аккредитацию в системе за 24 часа.</p>
+            </div>
+            <div class="glass-card" onclick="goToDashboard()">
+                <h3 data-i18n="c3_t">Организатор</h3>
+                <p data-i18n="c3_p">Размещение лотов и управление торгами.</p>
+            </div>
         </div>
-        <div class="glass-card" onclick="loginAction()" style="border-color: var(--primary); border-width: 2px;">
-            <h3 data-i18n="c2_t">Регистрация</h3>
-            <p data-i18n="c2_p">Получите аккредитацию в системе за 24 часа.</p>
-        </div>
-        <div class="glass-card" onclick="loginAction()">
-            <h3 data-i18n="c3_t">Организатор</h3>
-            <p data-i18n="c3_p">Размещение лотов и управление торгами.</p>
-        </div>
-    </div>
-</main>
+    </main>
 
-<footer>
-    <p class="footer-text">© 2026 ЭТП ЭРА | ПОДДЕРЖКА: 8 (800) 555-35-35</p>
-</footer>
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4 data-i18n="f_about">О платформе</h4>
+                <p data-i18n="f_about_p">ЭТП ЭРА — это современная цифровая экосистема для проведения электронных торгов любой сложности.</p>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="f_docs">Документы</h4>
+                <ul>
+                    <li>Регламент работы</li>
+                    <li>Тарифы и платежи</li>
+                    <li>Политика конфиденциальности</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="f_supp">Поддержка</h4>
+                <p>8 (800) 555-35-35<br>Ежедневно: 09:00 – 21:00 МСК<br>help@era-trade.ru</p>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2026 ЭТП ЭРА. ВСЕ ПРАВА ЗАЩИЩЕНЫ.
+        </div>
+    </footer>
+</div>
+
+<div id="dashboard">
+    <div class="sidebar">
+        <div style="text-align:center; margin-bottom:40px;">
+            <img src="logo-forsage-modified.png" style="height:30px; filter: brightness(0) invert(1);">
+        </div>
+        <div class="side-link active" data-i18n="s_home">Рабочий стол</div>
+        <div class="side-link" data-i18n="s_fin">Финансы</div>
+        <div class="side-link" data-i18n="n_reg">Реестр торгов</div>
+        <div style="margin-top:auto; color:#ff4d4d; padding:15px; cursor:pointer; font-weight:bold;" onclick="location.reload()">ВЫХОД</div>
+    </div>
+    <div class="main-content">
+        <h1 id="welcome-msg" style="font-size:32px; margin-bottom:10px;">Добро пожаловать, Артур!</h1>
+        <p style="color:#64748b;">Ваш профиль подтвержден. Текущий статус: Активен.</p>
+    </div>
+</div>
 
 <script>
     const dict = {
         ru: {
             b_login: "Вход", c1_t: "Участник", c1_p: "Поиск актуальных процедур и подача заявок онлайн.",
             c2_t: "Регистрация", c2_p: "Аккредитация в системе за 24 часа.",
-            c3_t: "Организатор", c3_p: "Размещение лотов и управление торгами."
+            c3_t: "Организатор", c3_p: "Размещение лотов и управление торгами.",
+            f_about: "О платформе", f_about_p: "ЭТП ЭРА — современная экосистема для проведения торгов.",
+            f_docs: "Документы", f_supp: "Поддержка", s_home: "Рабочий стол", s_fin: "Финансы", n_reg: "Реестр"
         },
         en: {
             b_login: "Login", c1_t: "Bidder", c1_p: "Search active procedures and submit bids online.",
             c2_t: "Registration", c2_p: "Get accredited in just 24 hours.",
-            c3_t: "Organizer", c3_p: "Post lots and manage your auctions."
+            c3_t: "Organizer", c3_p: "Post lots and manage your auctions.",
+            f_about: "Platform", f_about_p: "ERA ETP is a modern trading ecosystem.",
+            f_docs: "Documents", f_supp: "Support", s_home: "Dashboard", s_fin: "Finance", n_reg: "Registry"
         }
     };
 
@@ -158,18 +211,15 @@
         document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
         document.getElementById('btn-en').classList.toggle('active', lang === 'en');
         document.documentElement.lang = lang;
+        const welcome = document.getElementById('welcome-msg');
+        if (welcome) welcome.innerText = lang === 'ru' ? "Добро пожаловать, Артур!" : "Welcome back, Arthur!";
     }
 
     function initLang() {
         const manual = localStorage.getItem('user_lang_pref');
         const systemLang = (navigator.language || navigator.userLanguage).toLowerCase();
-        
-        if (manual) {
-            applyTranslations(manual);
-        } else {
-            const defaultLang = systemLang.includes('ru') ? 'ru' : 'en';
-            applyTranslations(defaultLang);
-        }
+        const defaultLang = manual || (systemLang.includes('ru') ? 'ru' : 'en');
+        applyTranslations(defaultLang);
     }
 
     function setUserLang(lang) {
@@ -180,18 +230,13 @@
     function updateTime() {
         const now = new Date();
         const str = now.toLocaleTimeString('ru-RU', { timeZone: 'Europe/Moscow', hour12: false });
-        document.getElementById('clock').innerText = str + ' МСК';
+        const clockEl = document.getElementById('clock');
+        if (clockEl) clockEl.innerText = str + ' МСК';
     }
 
-    // РЕАЛЬНОЕ ДЕЙСТВИЕ ДЛЯ КНОПОК
-    function loginAction() {
-        // Здесь будет переход на страницу авторизации или появление окна
-        console.log("Клик сработал");
-        document.body.style.opacity = '0.5';
-        setTimeout(() => {
-            alert('Перенаправление в личный кабинет...');
-            document.body.style.opacity = '1';
-        }, 100);
+    function goToDashboard() {
+        document.getElementById('landing-page').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'grid';
     }
 
     window.onload = () => {
