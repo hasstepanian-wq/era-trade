@@ -4,65 +4,54 @@
 
 body, html { height: 100vh; width: 100%; overflow: hidden; background: var(--dark); font-family: 'Segoe UI', sans-serif; }
 
-/* LANDING HEADER */
+/* HEADER & LANDING */
 header { height: 120px; background: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 50px; z-index: 100; }
-.h-left, .h-right { display: flex; align-items: center; }
 .logo-group { display: flex; flex-direction: column; align-items: center; cursor: pointer; min-width: 160px; margin-right: 100px; }
 .main-logo { height: 55px; width: auto; margin-bottom: 5px; }
-#clock { font-family: 'Courier New', monospace; font-size: 13px; font-weight: 900; color: var(--blue); letter-spacing: 1px; }
+#clock { font-family: 'Courier New', monospace; font-size: 13px; font-weight: 900; color: var(--blue); }
 .top-nav { display: flex; align-items: center; }
 .top-nav a { color: #1a202c; font-size: 13px; font-weight: 800; cursor: pointer; }
 .comm-link { margin-left: 80px; }
-.lang-selector { display: flex; border: 1px solid #eee; margin-right: 30px; }
-.l-btn { background: none; border: none; padding: 8px 15px; font-size: 11px; font-weight: bold; cursor: pointer; color: #888; }
-.l-btn.active { background: var(--blue); color: #fff; }
-.login-btn { background: var(--blue); color: #fff; border: none; padding: 14px 40px; font-weight: bold; cursor: pointer; font-size: 13px; }
+.login-btn { background: var(--blue); color: #fff; border: none; padding: 14px 40px; font-weight: bold; cursor: pointer; }
 
-/* HERO & CARDS */
+/* HERO */
 .hero-section { height: calc(100vh - 260px); background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center; }
 .cards-container { display: flex; gap: 30px; }
 .glass-card { background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); width: 310px; height: 310px; display: flex; flex-direction: column; justify-content: center; padding: 30px; text-align: center; color: #fff; transition: 0.3s; cursor: pointer; }
-.glass-card h3 { font-size: 18px; text-transform: uppercase; margin-bottom: 15px; font-weight: 800; white-space: nowrap; }
 .glass-card.active { border: 2px solid var(--blue); }
 
-/* FOOTER */
-footer { height: 140px; background: var(--dark); border-top: 1px solid #1e293b; display: flex; align-items: center; padding: 0 50px; }
-.footer-content { width: 100%; display: flex; justify-content: space-between; align-items: center; color: #64748b; font-size: 12px; }
-.footer-phone { color: #fff; font-weight: 900; font-size: 22px; }
-
-/* DASHBOARD LAYOUT */
+/* DASHBOARD */
 #dashboard { height: 100vh; display: grid; grid-template-columns: 260px 1fr; }
 .sidebar { background: var(--dark-blue); padding: 40px 25px; display: flex; flex-direction: column; border-right: 1px solid #1e293b; }
-.side-logo { color: var(--blue); font-size: 24px; font-weight: 900; margin-bottom: 50px; }
-.s-link { padding: 18px; color: #cbd5e0; cursor: pointer; font-weight: bold; border-left: 3px solid transparent; }
-.s-link.active { background: rgba(0, 153, 213, 0.1); color: var(--blue); border-left-color: var(--blue); }
-.exit-btn { margin-top: auto; color: #ef4444; font-weight: bold; cursor: pointer; padding: 15px; }
-
+.s-link { padding: 18px; color: #cbd5e0; cursor: pointer; font-weight: bold; }
+.s-link.active { background: rgba(0, 153, 213, 0.1); color: var(--blue); border-left: 3px solid var(--blue); }
 .dash-content { padding: 60px; color: #fff; background: #010814; overflow-y: auto; }
 .tab { display: none; }
 .tab.active { display: block; }
 
-/* WELCOME DASH */
-.welcome-grid { display: flex; gap: 20px; margin-top: 30px; }
-.status-card { background: #0a1f3d; padding: 25px; border: 1px solid #1e293b; flex: 1; }
-.status-card span { color: var(--blue); font-weight: 900; margin-left: 10px; }
-
-/* FINANCE TAB */
-.fin-header { display: flex; justify-content: space-between; align-items: center; margin: 30px 0; }
-.balance-widget { background: #0a1f3d; padding: 40px; border: 1px solid #1e293b; position: relative; }
+/* FINANCE */
+.balance-widget { background: #0a1f3d; padding: 40px; border: 1px solid #1e293b; }
 .balance-widget .sum { font-size: 42px; font-weight: 900; color: var(--blue); }
-.locked-sum { color: #64748b; font-size: 14px; margin-top: 5px; }
-
-.fin-actions { display: flex; flex-direction: column; gap: 15px; }
-.fin-btn { padding: 15px 40px; font-weight: bold; border: none; cursor: pointer; font-size: 14px; width: 220px; }
+.fin-btn { padding: 15px 40px; font-weight: bold; border: none; cursor: pointer; width: 220px; }
 .fin-btn.pay { background: var(--blue); color: #fff; }
-.fin-btn.withdraw { background: transparent; border: 1px solid #334155; color: #fff; }
+.fin-btn.withdraw { background: transparent; border: 1px solid #334155; color: #fff; margin-top: 15px; }
 
 /* TABLE */
-.history-block { margin-top: 50px; }
-.fin-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-.fin-table th { text-align: left; color: #64748b; font-size: 12px; padding: 15px; border-bottom: 1px solid #1e293b; }
+.fin-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+.fin-table th { text-align: left; color: #64748b; padding: 15px; border-bottom: 1px solid #1e293b; font-size: 12px; }
 .fin-table td { padding: 20px 15px; border-bottom: 1px solid #0f172a; font-size: 14px; }
-.plus { color: #10b981; font-weight: bold; }
-.minus { color: #f43f5e; font-weight: bold; }
-.st-ok { color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; font-size: 11px; font-weight: bold; }
+.plus { color: #10b981; }
+.st-ok { color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; font-size: 11px; }
+
+/* MODAL */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
+.modal-content { background: #0a1f3d; margin: 10% auto; padding: 40px; border: 1px solid var(--blue); width: 500px; color: #fff; }
+.close { float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+.pay-options { display: flex; flex-direction: column; gap: 20px; margin-top: 30px; }
+.pay-opt-card { background: #0f2a4d; padding: 20px; display: flex; align-items: center; gap: 20px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+.pay-opt-card:hover { border-color: var(--blue); background: #153866; }
+.opt-icon { font-size: 30px; }
+.opt-text b { display: block; font-size: 16px; margin-bottom: 4px; }
+.opt-text small { color: #64748b; }
+
+footer { height: 140px; background: var(--dark); border-top: 1px solid #1e293b; display: flex; align-items: center; padding: 0 50px; }
