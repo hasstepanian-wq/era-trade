@@ -20,7 +20,6 @@
                 <a href="#" class="comm-link" data-i18n="n_comm">КОМИССИОННАЯ ПРОДАЖА</a>
             </nav>
         </div>
-        
         <div class="h-right">
             <div class="lang-selector">
                 <button class="l-btn active" id="btn-ru" onclick="setUserLang('ru')">RU</button>
@@ -75,17 +74,65 @@
         </nav>
         <div class="exit-btn" onclick="location.reload()">ВЫХОД</div>
     </aside>
+
     <main class="dash-content">
         <div id="s-home" class="tab active">
             <h1 data-i18n="welcome">Добро пожаловать, Артур!</h1>
-            <p>Система работает в штатном режиме.</p>
-        </div>
-        <div id="s-fin" class="tab">
-            <h1 data-i18n="s_fin">Финансы</h1>
-            <div class="balance-widget">
-                <small>Ваш баланс:</small>
-                <div class="sum">450 000.00 ₽</div>
+            <div class="welcome-grid">
+                <div class="status-card">Аккредитация: <span>ДЕЙСТВУЕТ</span></div>
+                <div class="status-card">ЭЦП: <span>АКТИВНА</span></div>
             </div>
+        </div>
+
+        <div id="s-fin" class="tab">
+            <h1>Управление финансами</h1>
+            <div class="fin-header">
+                <div class="balance-widget">
+                    <small>Свободный остаток:</small>
+                    <div class="sum" id="user-balance">450 000.00 ₽</div>
+                    <div class="locked-sum">Заблокировано: 0.00 ₽</div>
+                </div>
+                <div class="fin-actions">
+                    <button class="fin-btn pay" onclick="alert('Формирование счета...')">ПОПОЛНИТЬ</button>
+                    <button class="fin-btn withdraw" onclick="alert('Заявка на вывод создана')">ВЫВЕСТИ</button>
+                </div>
+            </div>
+
+            <div class="history-block">
+                <h3>История операций</h3>
+                <table class="fin-table">
+                    <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Тип</th>
+                            <th>Назначение</th>
+                            <th>Сумма</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fin-history">
+                        <tr>
+                            <td>09.03.2026</td>
+                            <td>Пополнение</td>
+                            <td>Через р/с организации</td>
+                            <td class="plus">+50 000.00 ₽</td>
+                            <td><span class="st-ok">Выполнено</span></td>
+                        </tr>
+                        <tr>
+                            <td>05.03.2026</td>
+                            <td>Списание</td>
+                            <td>Тариф «Оптимальный»</td>
+                            <td class="minus">-15 000.00 ₽</td>
+                            <td><span class="st-ok">Выполнено</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="s-tenders" class="tab">
+            <h1>Реестр торгов</h1>
+            <p>Загрузка актуальных процедур...</p>
         </div>
     </main>
 </div>
