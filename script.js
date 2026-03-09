@@ -33,13 +33,7 @@ function switchSection(id) {
 function updateClock() {
     const clock = document.getElementById('clock');
     if (clock) {
-        const moscowTime = new Date().toLocaleTimeString('ru-RU', {
-            timeZone: 'Europe/Moscow',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        });
-        clock.innerText = moscowTime + ' МСК';
+        clock.innerText = new Date().toLocaleTimeString('ru-RU', { timeZone: 'Europe/Moscow' }) + ' МСК';
     }
 }
 
