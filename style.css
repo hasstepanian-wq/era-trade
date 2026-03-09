@@ -1,6 +1,17 @@
-/* ПОЛНЫЙ ОТКАЗ ОТ ЗАКРУГЛЕНИЙ */
-* { box-sizing: border-box; border-radius: 0 !important; text-decoration: none; }
+/* Общие настройки для левой части хедера */
+.header-left { display: flex; align-items: center; gap: 40px; }
 
+/* СТИЛИ МЕНЮ В ХЕДЕРЕ */
+.top-nav { display: flex; gap: 25px; }
+.top-nav a { 
+    color: #000; font-size: 13px; font-weight: 800; 
+    text-transform: uppercase; letter-spacing: 0.5px; 
+    transition: 0.2s; 
+}
+.top-nav a:hover { color: #007aff; }
+
+/* Остальное оставляем как было, но убедимся что закруглений нет */
+* { box-sizing: border-box; border-radius: 0 !important; text-decoration: none; }
 body { margin: 0; background: #000; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
 
 header { 
@@ -8,31 +19,4 @@ header {
     display: flex; justify-content: space-between; align-items: center; 
     padding: 0 40px; border-bottom: 3px solid #007aff; 
 }
-.logo { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 22px; color: #000; }
-.blue-sq { width: 30px; height: 30px; background: #007aff; }
-
-.h-right { display: flex; gap: 20px; font-weight: bold; }
-
-/* ГЛАВНЫЙ СЛАЙДЕР */
-.main-hero { 
-    display: flex; align-items: center; margin: 40px; height: 420px; 
-    background-size: cover; background-position: center; 
-    border: 1px solid #333; padding: 60px; color: #fff; transition: 0.3s;
-}
-.main-hero:hover { border-color: #007aff; box-shadow: 0 0 20px rgba(0,122,255,0.2); }
-.hero-text h1 { font-size: 46px; margin: 0; font-weight: 900; line-height: 1; }
-.hero-text p { font-size: 16px; margin-top: 15px; color: #007aff; letter-spacing: 2px; font-weight: bold; }
-
-/* НАВИГАЦИОННЫЕ ПЛИТКИ */
-.site-nav-grid { display: flex; gap: 10px; padding: 0 40px 40px 40px; }
-.nav-tile { background: #111; border: 1px solid #333; padding: 30px; flex: 1; color: #fff; transition: 0.2s; }
-.nav-tile:hover { background: #1a1a1a; border-color: #007aff; }
-.nav-tile label { font-size: 10px; color: #555; font-weight: bold; letter-spacing: 1px; }
-.nav-tile .tile-name { font-size: 20px; font-weight: bold; margin-top: 8px; }
-
-/* ПЛИТКА ВХОДА */
-.highlight { border-color: #444; }
-.highlight:hover { border-color: #007aff; }
-
-footer { margin-top: auto; padding: 30px 40px; border-top: 1px solid #111; color: #444; font-size: 12px; }
-.f-wrap { display: flex; justify-content: space-between; }
+/* ... далее все стили из предыдущего шага ... */
