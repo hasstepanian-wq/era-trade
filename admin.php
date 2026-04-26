@@ -5,6 +5,7 @@ session_start();
 header('Content-Type: text/html; charset=utf-8');
 
 include 'db.php';
+require_once __DIR__ . '/db_schema_extra.php';
 
 // Принудительная установка кодировки
 $pdo->exec("SET NAMES utf8mb4");
@@ -82,7 +83,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $stmt = $pdo->prepare("UPDATE offers SET status = 'rejected' WHERE id = ?");
         $stmt->execute([$offerId]);
         $_SESSION['admin_msg'] = '❌ Предложение отклонено';
-        
+
+    } elseif ($_POST['action'] === 'closed_approve_participant' || $_POST['action'] === 'closed_reject_participant') {
+        $partId   = (int)($_POST['participant_id'] ?? 0);
+        $newState = $_POST['action'] === 'closed_approve_participant' ? 'approved' : 'rejected';
+        $stmt = $pdo->prepare("
+            UPDATE closed_participants
+               SET status = ?, decided_at = NOW(), decided_by = ?
+             WHERE id = ?
+        ");
+        $stmt->execute([$newState, (int)$_SESSION['user_id'], $partId]);
+        $_SESSION['admin_msg'] = $newState === 'approved'
+            ? '✅ Участник допущен к закрытому аукциону'
+            : '❌ Заявка участника отклонена';
+
     } elseif ($_POST['action'] === 'approve_lot') {
         $lotId = (int)$_POST['lot_id'];
         $stmt = $pdo->prepare("UPDATE torgi SET status = 'open' WHERE id = ?");
@@ -404,6 +418,7 @@ td.price-cell {
         <a href="admin.php?tab=offers" class="tab-btn <?= $tab === 'offers' ? 'active' : '' ?>">💰 Предложения</a>
         <a href="admin.php?tab=commission" class="tab-btn <?= $tab === 'commission' ? 'active' : '' ?>">🏷️ Комиссионные лоты</a>
         <a href="admin.php?tab=inspection" class="tab-btn <?= $tab === 'inspection' ? 'active' : '' ?>">🔍 Заявки на осмотр</a>
+        <a href="admin.php?tab=closed_admit" class="tab-btn <?= $tab === 'closed_admit' ? 'active' : '' ?>">🔐 Закрытые аукционы</a>
         <a href="admin_payments.php" class="tab-btn">💳 Оплата отчётов</a>
     </div>
 
@@ -792,6 +807,117 @@ $jsdate        = addslashes($lot['datecreated'] ?? ($lot['date_created'] ?? ($lo
                 </tbody>
             </table>
         <?php endif; ?>
+
+    <?php elseif ($tab === 'closed_admit'): ?>
+        <?php
+        // Фильтр по конкретному лоту, если передан
+        $only_lot = isset($_GET['lot_id']) ? (int)$_GET['lot_id'] : 0;
+
+        // Только закрытые аукционы
+        if ($only_lot > 0) {
+            $closedStmt = $pdo->prepare("SELECT id, title, end_time, owner_id, price FROM lots WHERE auction_type = 'closed' AND id = ? ORDER BY id DESC");
+            $closedStmt->execute([$only_lot]);
+        } else {
+            $closedStmt = $pdo->query("SELECT id, title, end_time, owner_id, price FROM lots WHERE auction_type = 'closed' ORDER BY id DESC");
+        }
+        $closedLots = $closedStmt->fetchAll(PDO::FETCH_ASSOC);
+        ?>
+        <h3>🔐 Допуск участников к закрытым аукционам</h3>
+        <p style="color:#94a3b8;font-size:13px;margin:6px 0 16px;">
+            В процессе торгов участникам видна только лучшая цена; данные других участников скрыты.
+            Допуск к торгам подтверждается организатором/администратором вручную.
+        </p>
+
+        <?php if (empty($closedLots)): ?>
+            <div style="text-align:center;padding:60px;color:#64748b;">Нет закрытых аукционов</div>
+        <?php else: ?>
+            <?php foreach ($closedLots as $clot): ?>
+                <?php
+                $partsStmt = $pdo->prepare("
+                    SELECT cp.*, u.username, u.email
+                      FROM closed_participants cp
+                      JOIN users u ON u.id = cp.user_id
+                     WHERE cp.lot_id = ?
+                     ORDER BY cp.created_at DESC
+                ");
+                $partsStmt->execute([(int)$clot['id']]);
+                $parts = $partsStmt->fetchAll(PDO::FETCH_ASSOC);
+
+                $cnt = ['pending'=>0,'approved'=>0,'rejected'=>0];
+                foreach ($parts as $p) { $cnt[$p['status']] = ($cnt[$p['status']] ?? 0) + 1; }
+                ?>
+                <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px;margin-bottom:18px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                        <div>
+                            <b style="color:#fff;font-size:15px;"><?= htmlspecialchars($clot['title'] ?? '') ?></b>
+                            <span style="color:#64748b;font-size:12px;">· Лот №<?= (int)$clot['id'] ?> · до <?= htmlspecialchars($clot['end_time']) ?></span>
+                        </div>
+                        <div style="display:flex;gap:8px;font-size:11px;">
+                            <span style="background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:8px;">Ожидают: <?= (int)($cnt['pending']??0) ?></span>
+                            <span style="background:#dcfce7;color:#166534;padding:3px 8px;border-radius:8px;">Допущены: <?= (int)($cnt['approved']??0) ?></span>
+                            <span style="background:#fee2e2;color:#991b1b;padding:3px 8px;border-radius:8px;">Отклонены: <?= (int)($cnt['rejected']??0) ?></span>
+                        </div>
+                    </div>
+                    <?php if (empty($parts)): ?>
+                        <div style="color:#64748b;font-size:13px;padding:8px 0;">Заявок на участие пока нет</div>
+                    <?php else: ?>
+                        <div style="overflow-x:auto;">
+                        <table style="margin-bottom:0;">
+                            <thead>
+                                <tr>
+                                    <th>Участник</th>
+                                    <th>Информация</th>
+                                    <th>Подал</th>
+                                    <th>Статус</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($parts as $p): ?>
+                                <tr>
+                                    <td>
+                                        <b><?= htmlspecialchars($p['username']) ?></b><br>
+                                        <small style="color:#94a3b8;"><?= htmlspecialchars($p['email'] ?? '') ?></small>
+                                    </td>
+                                    <td style="max-width:340px;font-size:12px;color:#cbd5e1;white-space:pre-wrap;">
+                                        <?= htmlspecialchars($p['application_text'] ?? '—') ?>
+                                    </td>
+                                    <td style="font-size:12px;color:#94a3b8;"><?= date('d.m.Y H:i', strtotime($p['created_at'])) ?></td>
+                                    <td>
+                                        <?php if ($p['status']==='pending'): ?>
+                                            <span style="color:#fbbf24;">Ожидает</span>
+                                        <?php elseif ($p['status']==='approved'): ?>
+                                            <span style="color:#4ade80;">Допущен</span>
+                                        <?php else: ?>
+                                            <span style="color:#f87171;">Отклонён</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td style="white-space:nowrap;">
+                                        <?php if ($p['status']!=='approved'): ?>
+                                            <form method="POST" style="display:inline;">
+                                                <input type="hidden" name="action" value="closed_approve_participant">
+                                                <input type="hidden" name="participant_id" value="<?= (int)$p['id'] ?>">
+                                                <button type="submit" class="btn btn-approve btn-sm">✅ Допустить</button>
+                                            </form>
+                                        <?php endif; ?>
+                                        <?php if ($p['status']!=='rejected'): ?>
+                                            <form method="POST" style="display:inline;">
+                                                <input type="hidden" name="action" value="closed_reject_participant">
+                                                <input type="hidden" name="participant_id" value="<?= (int)$p['id'] ?>">
+                                                <button type="submit" class="btn btn-reject btn-sm">❌ Отклонить</button>
+                                            </form>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
     <?php endif; ?>
 </div>
 

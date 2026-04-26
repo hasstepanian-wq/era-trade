@@ -116,6 +116,7 @@ $type_labels = [
     'closed'       => '🔒 Закрытый аукцион',
     'descending'   => '📉 На понижение',
     'quotation'    => '📋 Запрос котировок',
+    'proposal'     => '📨 Запрос предложений',
 ];
 
 include 'header.php';
@@ -151,6 +152,7 @@ include 'header.php';
 .type-closed{background:#f5f3ff;color:#7c3aed}
 .type-descending{background:#fef2f2;color:#dc2626}
 .type-quotation{background:#f0fdf4;color:#16a34a}
+.type-proposal{background:#fff7ed;color:#c2410c}
 .status-badge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
 .price-main{font-size:15px;font-weight:800;color:#0f172a}
 .price-sub{font-size:11px;color:#94a3b8}
@@ -208,6 +210,8 @@ include 'header.php';
                class="filter-btn <?= $filter_type==='descending' ? 'active' : '' ?>">📉 На понижение</a>
             <a href="?status=<?= htmlspecialchars($filter_status) ?>&type=quotation"
                class="filter-btn <?= $filter_type==='quotation' ? 'active' : '' ?>">📋 Котировки</a>
+            <a href="?status=<?= htmlspecialchars($filter_status) ?>&type=proposal"
+               class="filter-btn <?= $filter_type==='proposal' ? 'active' : '' ?>">📨 Предложения</a>
             <div class="filter-divider"></div>
             <a href="?status=<?= htmlspecialchars($filter_status) ?>&type=scandinavian"
                class="filter-btn scand <?= $filter_type==='scandinavian' ? 'active' : '' ?>">🔥 Скандинавский</a>
@@ -307,7 +311,19 @@ include 'header.php';
                     $btn_url = '#';
                     $onclick = 'openAuthModal(); return false;';
                 } else {
-                    $btn_url = $is_scand ? "lot_scandinavian.php?id=$id" : "lot_details.php?id=$id";
+                    if ($is_scand) {
+                        $btn_url = "lot_scandinavian.php?id=$id";
+                    } elseif ($atype === 'closed') {
+                        $btn_url = "lot_closed.php?id=$id";
+                    } elseif ($atype === 'quotation') {
+                        $btn_url = "lot_quotation.php?id=$id";
+                    } elseif ($atype === 'proposal') {
+                        $btn_url = "lot_proposal.php?id=$id";
+                    } elseif ($atype === 'descending') {
+                        $btn_url = "lot_descending.php?id=$id";
+                    } else {
+                        $btn_url = "lot_details.php?id=$id";
+                    }
                     $onclick = '';
                 }
                 // ---------------------------------------------------------------

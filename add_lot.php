@@ -55,7 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Параметры для запроса котировок
     $quotation_deadline = !empty($_POST['quotation_deadline']) ? $_POST['quotation_deadline'] : null;
     $max_quotation_price = (float)($_POST['max_quotation_price'] ?? 0);
-    
+
+    // Параметры запроса предложений (продажа товара, побеждает max цена)
+    $proposal_deadline = !empty($_POST['proposal_deadline']) ? $_POST['proposal_deadline'] : null;
+
+    // Параметры закрытого аукциона (real-time на повышение, фиксированный таймер)
+    $closed_duration_min = (int)($_POST['closed_duration_min'] ?? 0);
+
     // Временные метки
     $start_at = !empty($_POST['start_at']) ? $_POST['start_at'] : null;
     $time_before_start = (int)($_POST['time_before_start'] ?? 0);
@@ -102,8 +108,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'reserve_price' => $reserve_price,
                 'sealed_bid_deadline' => $sealed_bid_deadline,
                 'quotation_deadline' => $quotation_deadline,
-                'max_quotation_price' => $max_quotation_price
+                'max_quotation_price' => $max_quotation_price,
+                'proposal_deadline' => $proposal_deadline,
+                'closed_duration_min' => $closed_duration_min
             ]);
+
+            // Для закрытого аукциона: end_time считается по продолжительности,
+            // заданной организатором. Таймер фиксированный (без авто-продления).
+            if ($auction_type === 'closed' && $closed_duration_min > 0) {
+                $end_time = date('Y-m-d H:i:s', $base_time + ($closed_duration_min * 60));
+                $max_end_time = $end_time;
+            }
+
+            // Для запроса котировок/предложений end_time равен дедлайну.
+            if ($auction_type === 'quotation' && !empty($quotation_deadline)) {
+                $end_time = date('Y-m-d H:i:s', strtotime($quotation_deadline));
+                $max_end_time = $end_time;
+            }
+            if ($auction_type === 'proposal' && !empty($proposal_deadline)) {
+                $end_time = date('Y-m-d H:i:s', strtotime($proposal_deadline));
+                $max_end_time = $end_time;
+            }
             
             $sql = "INSERT INTO lots (
                 title, start_price, price, deposit, description,
@@ -143,6 +168,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $redirect_url = "lot_descending.php?id={$new_id}";
             } elseif ($auction_type === 'quotation') {
                 $redirect_url = "lot_quotation.php?id={$new_id}";
+            } elseif ($auction_type === 'proposal') {
+                $redirect_url = "lot_proposal.php?id={$new_id}";
             }
             
             header("Location: {$redirect_url}");
@@ -452,7 +479,7 @@ include 'header.php';
                             <div class="type-option" data-type="closed">
                                 <div class="icon">🔒</div>
                                 <div class="name">Закрытый аукцион</div>
-                                <div class="desc">Участники подают заявки в конвертах</div>
+                                <div class="desc">Real-time, видна только лучшая ставка, ручной допуск</div>
                             </div>
                             <div class="type-option" data-type="descending">
                                 <div class="icon">📉</div>
@@ -462,7 +489,12 @@ include 'header.php';
                             <div class="type-option" data-type="quotation">
                                 <div class="icon">📋</div>
                                 <div class="name">Запрос котировок</div>
-                                <div class="desc">Участники предлагают лучшую цену</div>
+                                <div class="desc">Закупка: побеждает наименьшая цена</div>
+                            </div>
+                            <div class="type-option" data-type="proposal">
+                                <div class="icon">📨</div>
+                                <div class="name">Запрос предложений</div>
+                                <div class="desc">Продажа: побеждает наибольшая цена</div>
                             </div>
                         </div>
                         <input type="hidden" name="auction_type" id="auction_type" value="classic">
@@ -580,17 +612,20 @@ const templates = {
             </div>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Дедлайн подачи заявок</label>
-                    <input type="datetime-local" name="sealed_bid_deadline">
-                    <div class="hint">Время, до которого принимаются заявки</div>
+                    <label>Продолжительность торгов (мин)</label>
+                    <input type="number" name="closed_duration_min" value="30" min="1" step="1">
+                    <div class="hint">Таймер фиксированный, не продлевается при ставках</div>
                 </div>
                 <div class="form-group">
                     <label>Минимальный шаг (₽)</label>
                     <input type="number" name="bid_step" value="1000" min="100" step="100">
+                    <div class="hint">Минимальное повышение ставки</div>
                 </div>
             </div>
-            <div class="hint" style="margin-top: 8px;">
-                🔒 Заявки будут рассмотрены после окончания приёма, победитель — с наивысшей ценой
+            <div class="hint" style="margin-top: 8px;line-height:1.5;">
+                🔒 Real-time торги: ставки подаются как в открытом аукционе.<br>
+                В процессе видна только лучшая цена; данные участников скрыты.<br>
+                Допуск к торгам — вручную организатором/админом через админку.
             </div>
         </div>
     `,
@@ -627,16 +662,34 @@ const templates = {
                 <div class="form-group">
                     <label>Дедлайн подачи предложений</label>
                     <input type="datetime-local" name="quotation_deadline">
+                    <div class="hint">Участники могут менять своё предложение до дедлайна</div>
                 </div>
                 <div class="form-group">
                     <label>Максимальная цена (₽)</label>
                     <input type="number" name="max_quotation_price" value="0" min="0">
                     <div class="hint">Ограничение по максимальной цене</div>
                 </div>
+            </div>
+            <div class="hint" style="margin-top: 8px;">
+                📋 Закупка: победитель — участник с наименьшей ценой.
+            </div>
+        </div>
+    `,
+    proposal: `
+        <div class="dynamic-params">
+            <div class="section-title" style="margin-bottom: 16px;">
+                <i data-lucide="mail"></i>
+                Параметры запроса предложений
+            </div>
+            <div class="grid-2">
                 <div class="form-group">
-                    <label>Минимальный шаг (₽)</label>
-                    <input type="number" name="bid_step" value="1000" min="100" step="100">
+                    <label>Дедлайн подачи предложений</label>
+                    <input type="datetime-local" name="proposal_deadline">
+                    <div class="hint">Участники могут менять своё предложение до дедлайна</div>
                 </div>
+            </div>
+            <div class="hint" style="margin-top: 8px;">
+                📨 Продажа: победитель — участник с наибольшей ценой за товар.
             </div>
         </div>
     `
@@ -647,7 +700,7 @@ function updateTypeParams(type) {
     dynamicParamsDiv.innerHTML = templates[type] || '';
     
     // Показываем/скрываем maxDurationGroup для некоторых типов
-    if (type === 'closed' || type === 'quotation') {
+    if (type === 'closed' || type === 'quotation' || type === 'proposal') {
         maxDurationGroup.style.display = 'none';
     } else {
         maxDurationGroup.style.display = 'block';
