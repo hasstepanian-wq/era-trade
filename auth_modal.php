@@ -377,6 +377,7 @@ function authDoRegister() {
     var email    = document.getElementById('auth-r-email').value.trim();
     var pass     = document.getElementById('auth-r-pass').value;
     var agree    = document.getElementById('auth-r-agree').checked;
+    var pd       = document.getElementById('auth-r-pd') ? document.getElementById('auth-r-pd').checked : false;
     var express  = document.getElementById('auth-r-express').checked;
     var msg      = document.getElementById('auth-msg');
 
@@ -386,17 +387,19 @@ function authDoRegister() {
         return;
     }
     if (!agree) {
-        if (!document.getElementById('auth-r-pd')?.checked) {
-        msg.style.color = '#ef4444';
-        msg.textContent = '<?= $lang === "en" ? "Please accept the personal data processing terms" : "Необходимо согласие на обработку персональных данных" ?>';
+        msg.textContent = '<?= $lang === "en" ? "Please accept the platform regulations" : "Примите условия Регламента площадки" ?>';
+        msg.className = 'error';
         return;
     }
-    msg.textContent = '<?= $lang === "en" ? "Accept the terms" : "Примите условия регламента" ?>';
+    if (!pd) {
+        msg.textContent = '<?= $lang === "en" ? "Please consent to the processing of personal data" : "Необходимо согласие на обработку персональных данных" ?>';
         msg.className = 'error';
         return;
     }
 
     var fd = new FormData();
+    fd.append('agree_regulations',   '1');
+    fd.append('agree_personal_data', '1');
     fd.append('full_name',  fullname);
     fd.append('username',   user);
     fd.append('email',      email);

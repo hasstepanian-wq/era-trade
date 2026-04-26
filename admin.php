@@ -85,17 +85,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $_SESSION['admin_msg'] = '❌ Предложение отклонено';
 
     } elseif ($_POST['action'] === 'closed_approve_participant' || $_POST['action'] === 'closed_reject_participant') {
+        // Допуск/отклонение разрешён только администратору или владельцу (организатору) лота.
         $partId   = (int)($_POST['participant_id'] ?? 0);
         $newState = $_POST['action'] === 'closed_approve_participant' ? 'approved' : 'rejected';
-        $stmt = $pdo->prepare("
-            UPDATE closed_participants
-               SET status = ?, decided_at = NOW(), decided_by = ?
-             WHERE id = ?
+        $authStmt = $pdo->prepare("
+            SELECT cp.lot_id, l.owner_id
+              FROM closed_participants cp
+              JOIN lots l ON l.id = cp.lot_id
+             WHERE cp.id = ?
         ");
-        $stmt->execute([$newState, (int)$_SESSION['user_id'], $partId]);
-        $_SESSION['admin_msg'] = $newState === 'approved'
-            ? '✅ Участник допущен к закрытому аукциону'
-            : '❌ Заявка участника отклонена';
+        $authStmt->execute([$partId]);
+        $authRow = $authStmt->fetch(PDO::FETCH_ASSOC);
+
+        $roleStmt = $pdo->prepare("SELECT user_type FROM users WHERE id = ?");
+        $roleStmt->execute([(int)$_SESSION['user_id']]);
+        $roleRow = $roleStmt->fetch(PDO::FETCH_ASSOC);
+        $isAdmin = $roleRow && ($roleRow['user_type'] === 'admin');
+        $isOwner = $authRow && ((int)$authRow['owner_id'] === (int)$_SESSION['user_id']);
+
+        if (!$authRow || (!$isAdmin && !$isOwner)) {
+            $_SESSION['admin_msg'] = '⛔ Недостаточно прав для решения по этой заявке';
+        } else {
+            $stmt = $pdo->prepare("
+                UPDATE closed_participants
+                   SET status = ?, decided_at = NOW(), decided_by = ?
+                 WHERE id = ?
+            ");
+            $stmt->execute([$newState, (int)$_SESSION['user_id'], $partId]);
+            $_SESSION['admin_msg'] = $newState === 'approved'
+                ? '✅ Участник допущен к закрытому аукциону'
+                : '❌ Заявка участника отклонена';
+        }
 
     } elseif ($_POST['action'] === 'approve_lot') {
         $lotId = (int)$_POST['lot_id'];

@@ -74,5 +74,5 @@ try {
     ]);
 } catch (Exception $e) {
     error_log('send_quotation_offer error: ' . $e->getMessage());
-    jerr('Ошибка сервера: ' . $e->getMessage(), 500);
+    jerr('Ошибка сервера. Попробуйте ещё раз.', 500);
 }

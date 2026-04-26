@@ -7,6 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once 'db.php';
+require_once __DIR__ . '/db_schema_extra.php';
 date_default_timezone_set('Europe/Moscow');
 
 // Проверка авторизации
@@ -72,6 +73,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($start_price <= 0) $errors[] = 'Укажите начальную цену (больше 0)';
     if ($auction_type === 'classic' && $bid_step < 100) $errors[] = 'Шаг аукциона должен быть не менее 100 ₽';
     if ($auction_type === 'descending' && $reserve_price >= $start_price) $errors[] = 'Цена отсечения должна быть ниже начальной цены';
+
+    // Закрытый аукцион: продолжительность обязательна.
+    if ($auction_type === 'closed' && $closed_duration_min <= 0) {
+        $errors[] = 'Укажите продолжительность закрытого аукциона (в минутах)';
+    }
+    // Запрос котировок / запрос предложений: дедлайн обязателен и должен быть в будущем.
+    if ($auction_type === 'quotation') {
+        $ts = !empty($quotation_deadline) ? strtotime($quotation_deadline) : 0;
+        if ($ts <= 0) $errors[] = 'Укажите дедлайн подачи котировок';
+        elseif ($ts <= time()) $errors[] = 'Дедлайн подачи котировок должен быть в будущем';
+    }
+    if ($auction_type === 'proposal') {
+        $ts = !empty($proposal_deadline) ? strtotime($proposal_deadline) : 0;
+        if ($ts <= 0) $errors[] = 'Укажите дедлайн подачи предложений';
+        elseif ($ts <= time()) $errors[] = 'Дедлайн подачи предложений должен быть в будущем';
+    }
     
     // ── ВАЛИДАЦИЯ ЗАДАТКА ДЛЯ СКАНДИНАВСКИХ АУКЦИОНОВ ──
     if ($auction_type === 'scandinavian') {

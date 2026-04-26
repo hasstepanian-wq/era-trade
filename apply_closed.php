@@ -65,5 +65,5 @@ try {
     jok(['message' => 'Заявка подана. Ожидайте решения организатора.', 'status' => 'pending']);
 } catch (Exception $e) {
     error_log('apply_closed error: ' . $e->getMessage());
-    jerr('Ошибка сервера: ' . $e->getMessage(), 500);
+    jerr('Ошибка сервера. Попробуйте ещё раз.', 500);
 }
