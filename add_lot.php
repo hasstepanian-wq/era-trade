@@ -152,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 end_time, owner_id, auction_type, bid_step, timer_start, timer_add,
                 max_end_time, started_at, time_before_start, extra_params,
                 auction_status, trade_status, published_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft', 'draft', NOW())";
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', 'active', NOW())";
             
             $stmt = $pdo->prepare($sql);
             $stmt->execute([

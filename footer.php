@@ -25,9 +25,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
     <div style="max-width:1200px;margin:8px auto 0;padding-top:12px;border-top:1px solid #334155;display:flex;flex-wrap:wrap;gap:16px;font-size:12px;">
         <a href="user_agreement.php" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Пользовательское соглашение</a>
         <a href="personal_data.php" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Обработка персональных данных</a>
-        <a href="regulations.php" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Регламент</a>
         <a href="cookie_policy.php" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Политика Cookie</a>
-        <a href="tariffs.php" style="color:#64748b;text-decoration:none;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'">Тарифы</a>
         <span style="margin-left:auto;color:#475569;">© 2024–2026 ООО «Форсаж» · ERA ETP · ФЗ-152</span>
     </div>
 </footer>

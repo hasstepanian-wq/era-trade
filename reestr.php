@@ -5,6 +5,16 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once 'db.php';
 
+// ================= МИГРАЦИЯ СТАРЫХ ЛОТОВ DRAFT -> ACTIVE =================
+// До правок add_lot.php лоты создавались со статусом 'draft' и не отображались
+// в реестре ни под одним фильтром. Этот UPDATE приводит их к 'active', чтобы
+// фильтры различали этап жизненного цикла по started_at/end_time.
+try {
+    $pdo->exec("UPDATE lots SET auction_status = 'active' WHERE auction_status = 'draft'");
+} catch (Exception $e) {
+    error_log('Draft migration error: ' . $e->getMessage());
+}
+
 // ================= ПРИНУДИТЕЛЬНОЕ ЗАВЕРШЕНИЕ ПРОСРОЧЕННЫХ ЛОТОВ =================
 try {
     $pdo->exec("

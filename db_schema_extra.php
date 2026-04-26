@@ -32,6 +32,43 @@ try {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     ");
 
+    // Расширяем enum auction_type значением 'proposal', если его ещё нет
+    try {
+        $st = $pdo->query("SHOW COLUMNS FROM lots LIKE 'auction_type'");
+        $row = $st ? $st->fetch() : null;
+        if ($row && stripos($row['Type'], "'proposal'") === false) {
+            $pdo->exec("ALTER TABLE lots MODIFY auction_type ENUM('classic','scandinavian','closed','descending','quotation','proposal','commission') NOT NULL DEFAULT 'classic'");
+        }
+    } catch (Exception $e) {
+        error_log('db_schema_extra (alter enum) error: ' . $e->getMessage());
+    }
+
+    // Добавляем недостающие колонки в lots (миграция со старых деплоев)
+    $missing_cols = [
+        'time_before_start' => 'INT DEFAULT 0',
+        'extra_params'      => 'TEXT NULL',
+    ];
+    foreach ($missing_cols as $col => $def) {
+        try {
+            $st = $pdo->query("SHOW COLUMNS FROM lots LIKE " . $pdo->quote($col));
+            if ($st && !$st->fetch()) {
+                $pdo->exec("ALTER TABLE lots ADD COLUMN `$col` $def");
+            }
+        } catch (Exception $e) {
+            error_log("db_schema_extra (add lots.$col) error: " . $e->getMessage());
+        }
+    }
+
+    // Миграция: старые лоты, оставшиеся со статусом 'draft' от прошлых
+    // версий add_lot.php, не появлялись в реестре ни под одним фильтром.
+    // Переводим их в 'active' — фильтры reestr.php различают этап жизненного
+    // цикла по started_at и end_time, а не по 'draft'.
+    try {
+        $pdo->exec("UPDATE lots SET auction_status = 'active' WHERE auction_status = 'draft'");
+    } catch (Exception $e) {
+        error_log('db_schema_extra (draft -> active migration) error: ' . $e->getMessage());
+    }
+
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS closed_participants (
             id               INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
