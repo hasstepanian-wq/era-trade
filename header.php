@@ -46,8 +46,21 @@ $base_url    = $current_url . ($qs ? '?'.$qs.'&' : '?');
 <html lang="<?= htmlspecialchars($lang) ?>">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ERA ETP</title>
+
+<!-- PWA -->
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0088cc">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ЭРА ЭТП">
+<meta name="application-name" content="ЭРА ЭТП">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
@@ -179,6 +192,17 @@ function toggleMobileMenu() {
 }
 
 lucide.createIcons();
+
+/* Регистрация service-worker'а — включает PWA-доставку и offline-fallback.
+   Работает только по HTTPS (или localhost). Регистрируем после загрузки
+   основного контента, чтобы не конкурировать за полосу. */
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js').catch(function(err){
+            console.warn('SW registration failed:', err);
+        });
+    });
+}
 </script>
 </body>
 </html>
