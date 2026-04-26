@@ -53,13 +53,15 @@ $base_url    = $current_url . ($qs ? '?'.$qs.'&' : '?');
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
-body{font-family:'Inter',sans-serif;background:#fff;display:flex;flex-direction:column;padding-top:80px}
-header{position:fixed;top:0;left:0;right:0;height:80px;background:#e5e4e2;display:flex;justify-content:space-between;align-items:center;padding:0 4%;box-shadow:0 4px 20px rgba(0,0,0,.08);z-index:1000}
-.logo-img{height:40px}
-.nav-menu{display:flex;gap:24px;align-items:center}
+html{overflow-x:hidden}
+body{font-family:'Inter',sans-serif;background:#fff;display:flex;flex-direction:column;padding-top:80px;overflow-x:hidden;max-width:100vw}
+header{position:fixed;top:0;left:0;right:0;height:80px;background:#e5e4e2;display:flex;justify-content:space-between;align-items:center;padding:0 4%;box-shadow:0 4px 20px rgba(0,0,0,.08);z-index:1000;width:100%;max-width:100vw}
+.logo-img{height:40px;flex-shrink:0}
+.nav-menu{display:flex;gap:24px;align-items:center;min-width:0;flex:1 1 auto;justify-content:center}
 .nav-link{text-decoration:none;color:#1e293b;font-weight:800;font-size:13px;white-space:nowrap}
 .nav-link:hover,.nav-link.active{color:#0088cc}
-.header-right{display:flex;align-items:center;gap:10px}
+.header-right{display:flex;align-items:center;gap:10px;min-width:0;flex-shrink:0}
+.header-auth-block{display:flex;align-items:center;gap:10px}
 .msc-box{display:flex;align-items:center;gap:6px;background:#fff;padding:5px 12px;border-radius:50px;border:1px solid #d1d5db;font-weight:800;font-size:12px;white-space:nowrap}
 .dot{width:7px;height:7px;background:#22c55e;border-radius:50%;animation:pulse 2s infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
@@ -85,8 +87,12 @@ header{position:fixed;top:0;left:0;right:0;height:80px;background:#e5e4e2;displa
 .mob-link-lk{color:#0088cc;border:2px solid rgba(0,136,204,.2)}
 .mob-link-out{color:#ef4444;border:2px solid #fee2e2}
 @media(max-width:1100px){.nav-menu{display:none}.lang-switcher{display:none}.burger-trigger{display:block}}
+/* На мобильных блок имени/баланса из хедера убираем — в бургер-меню они уже есть. */
+@media(max-width:768px){.header-auth-block{display:none}}
 @media(max-width:600px){header{height:70px;padding:0 3%}body{padding-top:70px}.logo-img{height:32px}.msc-box{font-size:11px;padding:4px 9px}.btn-login{padding:7px 14px;font-size:12px}.header-right{gap:8px}}
-@media(max-width:380px){.msc-box{font-size:10px;padding:3px 7px}.btn-login{padding:6px 10px;font-size:11px}}
+/* На самых узких экранах прячем московское время, иначе хедер выходит за экран. */
+@media(max-width:480px){.msc-box{display:none}.btn-login{padding:6px 12px;font-size:12px}}
+@media(max-width:380px){.btn-login{padding:6px 10px;font-size:11px}.logo-img{height:28px}.header-right{gap:6px}}
 </style>
 </head>
 <body>
@@ -108,7 +114,7 @@ header{position:fixed;top:0;left:0;right:0;height:80px;background:#e5e4e2;displa
             <a href="<?= htmlspecialchars($base_url) ?>lang=en" class="lang-btn <?= $lang==='en'?'active':'' ?>">EN</a>
         </div>
         <?php if ($is_auth): ?>
-        <div style="display:flex;align-items:center;gap:10px;">
+        <div class="header-auth-block">
             <div style="text-align:right;line-height:1.3;">
                 <div style="font-weight:800;font-size:13px;"><?= htmlspecialchars($user_name) ?></div>
                 <div style="font-size:11px;color:#22c55e;"><?= number_format((float)$user_bal,2) ?> &#8381;</div>

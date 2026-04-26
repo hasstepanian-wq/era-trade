@@ -11,10 +11,11 @@ if (!isset($lang)) $lang = $_SESSION['lang'] ?? 'ru';
     background: rgba(0,0,0,0.85);
     z-index: 9999;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     backdrop-filter: blur(6px);
     padding: 16px;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 #auth-modal-overlay.active { display: flex; }
 
@@ -24,10 +25,17 @@ if (!isset($lang)) $lang = $_SESSION['lang'] ?? 'ru';
     max-width: 480px;
     border-radius: 24px;
     border: 1px solid #334155;
-    overflow: hidden;
     box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
     position: relative;
     margin: 20px auto;
+    /* Окно не выходит за высоту экрана даже на самых низких устройствах —
+       внутри включён собственный скролл. dvh лучше vh, потому что учитывает
+       реальный viewport без адресной строки браузера. */
+    max-height: calc(100vh - 40px);
+    max-height: calc(100dvh - 40px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 #auth-modal-close {
@@ -56,7 +64,12 @@ if (!isset($lang)) $lang = $_SESSION['lang'] ?? 'ru';
 }
 .auth-tab-btn.active { background: #1e293b; color: #fff; }
 
-.auth-content { padding: 28px; }
+.auth-content {
+    padding: 28px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    flex: 1 1 auto;
+}
 
 .auth-input {
     width: 100%; padding: 14px;
@@ -159,11 +172,15 @@ if (!isset($lang)) $lang = $_SESSION['lang'] ?? 'ru';
     .auth-btn { font-size: 15px; padding: 14px; }
 }
 @media(max-width:480px) {
+    #auth-modal-overlay { padding: 0; align-items: stretch; }
     #auth-modal-content {
         max-width: 100%; width: 100%;
         border-radius: 20px 20px 0 0;
         position: fixed; bottom: 0; top: auto;
         left: 0; right: 0; margin: 0;
+        /* Боттом-шит прячется за экран, если не ограничить высоту. */
+        max-height: 92vh;
+        max-height: 92dvh;
     }
     #auth-modal-close { top: 12px; right: 12px; width: 32px; height: 32px; font-size: 24px; }
     .auth-content { padding: 20px 16px; padding-bottom: max(20px, env(safe-area-inset-bottom)); }
@@ -177,12 +194,105 @@ if (!isset($lang)) $lang = $_SESSION['lang'] ?? 'ru';
     .auth-btn { padding: 12px; font-size: 14px; }
 }
 @media(max-height:600px) and (orientation:landscape) {
-    #auth-modal-content { max-height: 90vh; overflow-y: auto; border-radius: 16px; position: relative; bottom: auto; }
+    #auth-modal-content { max-height: 92vh; max-height: 92dvh; border-radius: 16px; position: relative; bottom: auto; }
     .auth-content { padding: 16px; }
     .auth-tab-btn { padding: 10px; }
     .auth-input { padding: 10px; margin-bottom: 8px; }
     .auth-btn { padding: 11px; }
     .auth-divider { margin: 10px 0; }
+}
+
+/* Карточки выбора статуса в форме регистрации */
+.auth-status-block {
+    margin-bottom: 14px;
+    background: rgba(15,23,42,0.6);
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 14px;
+}
+.auth-status-title {
+    font-size: 12px; font-weight: 700;
+    color: #94a3b8; text-transform: uppercase;
+    letter-spacing: 0.05em; margin-bottom: 10px;
+}
+.auth-status-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+.auth-status-card {
+    cursor: pointer;
+    padding: 12px 8px;
+    border-radius: 10px;
+    border: 1.5px solid #334155;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+    transition: all 0.18s;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+    position: relative;
+}
+.auth-status-card:hover { border-color: #3b82f6; }
+.auth-status-card.selected {
+    border-color: #3b82f6;
+    background: rgba(59,130,246,0.12);
+    color: #fff;
+}
+.auth-status-card .icon { font-size: 22px; line-height: 1; }
+.auth-status-card .name { font-size: 12px; font-weight: 700; }
+.auth-status-card .price { font-size: 11px; color: #94a3b8; }
+.auth-status-card.selected .price { color: #60a5fa; }
+.auth-status-card input[type="radio"] { display: none; }
+
+/* Блок выбора способа оплаты (появляется при выборе Ответственный). */
+.auth-payment-block {
+    display: none;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed #334155;
+    font-size: 12px;
+    color: #cbd5e1;
+}
+.auth-payment-block.visible { display: block; }
+.auth-payment-row {
+    display: flex; align-items: center;
+    gap: 8px; padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.auth-payment-row:hover { background: rgba(59,130,246,0.08); }
+.auth-payment-row input[type="radio"] { accent-color: #3b82f6; }
+.auth-payment-info {
+    margin-top: 10px;
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.4);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 11px;
+    color: #86efac;
+    line-height: 1.5;
+}
+
+/* Блок СОГЛАСИЯ ОРГАНИЗАТОРА (12 мес бесплатно). */
+.auth-organizer-info {
+    display: none;
+    margin-top: 10px;
+    background: rgba(168,85,247,0.08);
+    border: 1px solid rgba(168,85,247,0.4);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 11px;
+    color: #c4b5fd;
+    line-height: 1.5;
+}
+.auth-organizer-info.visible { display: block; }
+
+@media(max-width:380px) {
+    .auth-status-grid { grid-template-columns: 1fr; }
+    .auth-status-card { flex-direction: row; justify-content: flex-start; padding: 10px 12px; gap: 10px; text-align: left; }
+    .auth-status-card .name { flex: 1; }
 }
 @media(min-width:1024px) { #auth-modal-content { max-width: 520px; } }
 </style>
@@ -232,6 +342,61 @@ if (!isset($lang)) $lang = $_SESSION['lang'] ?? 'ru';
 
             <!-- РЕГИСТРАЦИЯ -->
             <div id="auth-tab-register" style="display:none;">
+
+                <!-- Выбор статуса -->
+                <div class="auth-status-block">
+                    <div class="auth-status-title">
+                        <?= $lang === 'en' ? 'Choose your status' : 'Выберите ваш статус' ?>
+                    </div>
+                    <div class="auth-status-grid">
+                        <label class="auth-status-card selected" data-utype="respected" onclick="authSelectStatus('respected')">
+                            <input type="radio" name="auth-r-utype" value="respected" checked>
+                            <span class="icon">🤝</span>
+                            <span class="name"><?= $lang === 'en' ? 'Respected' : 'Уважаемый' ?></span>
+                            <span class="price"><?= $lang === 'en' ? 'Free' : 'Бесплатно' ?></span>
+                        </label>
+                        <label class="auth-status-card" data-utype="responsible" onclick="authSelectStatus('responsible')">
+                            <input type="radio" name="auth-r-utype" value="responsible">
+                            <span class="icon">🛡️</span>
+                            <span class="name"><?= $lang === 'en' ? 'Responsible' : 'Ответственный' ?></span>
+                            <span class="price">8 000 ₽</span>
+                        </label>
+                        <label class="auth-status-card" data-utype="organizer" onclick="authSelectStatus('organizer')">
+                            <input type="radio" name="auth-r-utype" value="organizer">
+                            <span class="icon">👔</span>
+                            <span class="name"><?= $lang === 'en' ? 'Organizer' : 'Организатор' ?></span>
+                            <span class="price"><?= $lang === 'en' ? 'Free 12 months' : 'Бесплатно 12 мес' ?></span>
+                        </label>
+                    </div>
+
+                    <!-- Способ оплаты для статуса "Ответственный" -->
+                    <div id="auth-payment-block" class="auth-payment-block">
+                        <div style="font-weight:600; margin-bottom:6px; color:#cbd5e1;">
+                            <?= $lang === 'en' ? 'Payment method' : 'Способ оплаты' ?>:
+                        </div>
+                        <label class="auth-payment-row">
+                            <input type="radio" name="auth-r-payment" value="qr" checked>
+                            <span><?= $lang === 'en' ? 'QR-code (SBP / bank app)' : 'QR-код (СБП / банк)' ?></span>
+                        </label>
+                        <label class="auth-payment-row">
+                            <input type="radio" name="auth-r-payment" value="receipt">
+                            <span><?= $lang === 'en' ? 'Receipt with bank details' : 'Квитанция с реквизитами' ?></span>
+                        </label>
+                        <div class="auth-payment-info">
+                            <?= $lang === 'en'
+                                ? 'After registration you will be redirected to a payment page with QR / receipt. The Responsible status is activated by the administrator after the payment is verified.'
+                                : 'После регистрации откроется страница с QR-кодом или квитанцией. Статус «Ответственный» активируется администратором после подтверждения оплаты.' ?>
+                        </div>
+                    </div>
+
+                    <!-- Информация по статусу "Организатор" -->
+                    <div id="auth-organizer-info" class="auth-organizer-info">
+                        <?= $lang === 'en'
+                            ? 'Organizer status is granted free of charge for 12 months. After the period ends you can prolong the status from your profile.'
+                            : 'Статус «Организатор» предоставляется бесплатно на 12 месяцев. По истечении срока продлить статус можно из личного кабинета.' ?>
+                    </div>
+                </div>
+
                 <input id="auth-r-fullname" type="text" class="auth-input"
                        placeholder="<?= $lang === 'en' ? 'Full Name / Company Name' : 'ФИО / Наименование организации' ?>">
 
@@ -371,6 +536,22 @@ function authDoLogin() {
     });
 }
 
+/* Выбор статуса в форме регистрации — подсветить выбранную карточку
+   и показать/скрыть блоки способа оплаты / информации для Организатора. */
+function authSelectStatus(value) {
+    var cards = document.querySelectorAll('.auth-status-card');
+    cards.forEach(function(c){
+        var isMatch = c.getAttribute('data-utype') === value;
+        c.classList.toggle('selected', isMatch);
+        var radio = c.querySelector('input[type="radio"]');
+        if (radio) radio.checked = isMatch;
+    });
+    var pay  = document.getElementById('auth-payment-block');
+    var info = document.getElementById('auth-organizer-info');
+    if (pay)  pay.classList.toggle('visible',  value === 'responsible');
+    if (info) info.classList.toggle('visible', value === 'organizer');
+}
+
 function authDoRegister() {
     var fullname = document.getElementById('auth-r-fullname').value.trim();
     var user     = document.getElementById('auth-r-user').value.trim();
@@ -380,6 +561,12 @@ function authDoRegister() {
     var pd       = document.getElementById('auth-r-pd') ? document.getElementById('auth-r-pd').checked : false;
     var express  = document.getElementById('auth-r-express').checked;
     var msg      = document.getElementById('auth-msg');
+
+    /* Считываем выбранный статус и способ оплаты. */
+    var utypeEl  = document.querySelector('input[name="auth-r-utype"]:checked');
+    var utype    = utypeEl ? utypeEl.value : 'respected';
+    var paymentEl = document.querySelector('input[name="auth-r-payment"]:checked');
+    var payment   = paymentEl ? paymentEl.value : 'qr';
 
     if (!fullname || !user || !email || !pass) {
         msg.textContent = '<?= $lang === "en" ? "Fill in all fields" : "Заполните все поля" ?>';
@@ -400,11 +587,13 @@ function authDoRegister() {
     var fd = new FormData();
     fd.append('agree_regulations',   '1');
     fd.append('agree_personal_data', '1');
-    fd.append('full_name',  fullname);
-    fd.append('username',   user);
-    fd.append('email',      email);
-    fd.append('password',   pass);
-    fd.append('express',    express ? '1' : '0');
+    fd.append('full_name',     fullname);
+    fd.append('username',      user);
+    fd.append('email',         email);
+    fd.append('password',      pass);
+    fd.append('express',       express ? '1' : '0');
+    fd.append('user_type',     utype);
+    fd.append('payment_method', payment);
 
     var f1 = document.getElementById('auth-r-file1').files[0];
     var f2 = document.getElementById('auth-r-file2').files[0];
@@ -422,9 +611,14 @@ function authDoRegister() {
         if (data.success) {
             msg.textContent = '✅ ' + (data.message || '<?= $lang === "en" ? "Registration successful!" : "Регистрация отправлена!" ?>');
             msg.className = 'success';
-            setTimeout(function(){ location.reload(); }, 1200);
+            /* Для Ответственного — открываем страницу оплаты QR/квитанции. */
+            if (data.payment_url) {
+                setTimeout(function(){ location.href = data.payment_url; }, 1000);
+            } else {
+                setTimeout(function(){ location.reload(); }, 1200);
+            }
         } else {
-            msg.textContent = '❌ ' + (data.error || '<?= $lang === "en" ? "Registration error" : "Ошибка регистрации" ?>');
+            msg.textContent = '❌ ' + (data.error || data.message || '<?= $lang === "en" ? "Registration error" : "Ошибка регистрации" ?>');
             msg.className = 'error';
         }
     })

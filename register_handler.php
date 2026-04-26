@@ -8,12 +8,23 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$username = trim($_POST['username'] ?? '');
+$username  = trim($_POST['username']  ?? '');
 $full_name = trim($_POST['full_name'] ?? '');
-$email = trim($_POST['email'] ?? '');
-$password = $_POST['password'] ?? '';
-$user_type = $_POST['user_type'] ?? 'respected';
-$express = isset($_POST['express_fee']) ? (int)$_POST['express_fee'] : 0;
+$email     = trim($_POST['email']     ?? '');
+$password  = $_POST['password'] ?? '';
+
+/* Выбранный статус и способ оплаты приходят из модального окна регистрации.
+   Допустимые статусы:
+     - 'respected'   — Уважаемый, бесплатно, активируется сразу;
+     - 'responsible' — Ответственный, 8000 ₽, регистрируем как 'respected'
+                       и создаём заявку на повышение статуса (status_upgrades),
+                       затем перенаправляем на страницу оплаты QR / квитанции;
+     - 'organizer'   — Организатор, бесплатно на 12 месяцев, активируется сразу,
+                       срок действия записывается в users.organizer_until. */
+$requested_type   = $_POST['user_type']      ?? 'respected';
+$payment_method   = $_POST['payment_method'] ?? 'qr';
+$express          = isset($_POST['express']) ? (int)$_POST['express'] : 0;
+
 $agree_regulations   = !empty($_POST['agree_regulations']);
 $agree_personal_data = !empty($_POST['agree_personal_data']);
 
@@ -30,16 +41,26 @@ if (!$agree_personal_data) {
     echo json_encode(['success' => false, 'message' => 'Необходимо согласие на обработку персональных данных']);
     exit;
 }
-
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode(['success' => false, 'message' => 'Неверный формат email']);
     exit;
 }
-
 if (strlen($password) < 6) {
     echo json_encode(['success' => false, 'message' => 'Пароль минимум 6 символов']);
     exit;
 }
+
+if (!in_array($requested_type, ['respected', 'responsible', 'organizer'], true)) {
+    $requested_type = 'respected';
+}
+if (!in_array($payment_method, ['qr', 'receipt'], true)) {
+    $payment_method = 'qr';
+}
+
+/* Тип, под которым реально создаётся запись в users.
+   Для "Ответственного" сначала регистрируем как "Уважаемый",
+   статус повышается администратором после подтверждения оплаты. */
+$user_type_to_save = ($requested_type === 'responsible') ? 'respected' : $requested_type;
 
 try {
     $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ? OR email = ?');
@@ -51,13 +72,34 @@ try {
 
     $hash = password_hash($password, PASSWORD_DEFAULT);
 
+    /* Лениво обеспечиваем наличие колонки organizer_until — нужна для
+       фиксации 12-месячного бесплатного срока статуса "Организатор". */
+    try {
+        $st = $pdo->query("SHOW COLUMNS FROM users LIKE 'organizer_until'");
+        if ($st && !$st->fetch()) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN organizer_until DATETIME NULL");
+        }
+    } catch (Exception $migrErr) {
+        error_log('register_handler (organizer_until migration) error: ' . $migrErr->getMessage());
+    }
+
     $stmt = $pdo->prepare('INSERT INTO users (username, full_name, email, password, user_type, balance) VALUES (?, ?, ?, ?, ?, ?)');
     $balance = 0;
-    if (!$stmt->execute([$username, $full_name, $email, $hash, $user_type, $balance])) {
+    if (!$stmt->execute([$username, $full_name, $email, $hash, $user_type_to_save, $balance])) {
         throw new Exception('Не удалось создать пользователя');
     }
 
-    $user_id = $pdo->lastInsertId();
+    $user_id = (int)$pdo->lastInsertId();
+
+    /* Для "Организатора" сразу проставляем 12 месяцев бесплатного срока. */
+    if ($requested_type === 'organizer') {
+        try {
+            $pdo->prepare("UPDATE users SET organizer_until = DATE_ADD(NOW(), INTERVAL 12 MONTH) WHERE id = ?")
+                ->execute([$user_id]);
+        } catch (Exception $orgErr) {
+            error_log('register_handler (organizer_until set) error: ' . $orgErr->getMessage());
+        }
+    }
 
     // Сохранить прикрепленные документы (если есть)
     $uploadDir = __DIR__ . '/uploads/docs/';
@@ -94,11 +136,65 @@ try {
         error_log('register_handler consent log error: ' . $consentErr->getMessage());
     }
 
-    $_SESSION['user_id'] = $user_id;
-    $_SESSION['user_name'] = $full_name;
+    $_SESSION['user_id']      = $user_id;
+    $_SESSION['user_name']    = $full_name;
     $_SESSION['user_balance'] = $balance;
+    $_SESSION['usertype']     = $user_type_to_save;
 
-    echo json_encode(['success' => true, 'message' => 'Регистрация успешна', 'user_id' => $user_id]);
+    /* Платный статус "Ответственный" — создаём pending-заявку и
+       возвращаем URL страницы оплаты (QR-код или квитанция),
+       по аналогии с process_upgrade.php / upgrade_qr.php. */
+    if ($requested_type === 'responsible') {
+        try {
+            $base_price  = 8000;
+            $express_fee = 0;
+            $total       = $base_price + $express_fee;
+
+            $stmt = $pdo->prepare("
+                INSERT INTO status_upgrades
+                (user_id, target_status, base_price, express_fee, total_amount, payment_method, requested_at, status)
+                VALUES (?, 'responsible', ?, ?, ?, ?, NOW(), 'pending')
+            ");
+            $stmt->execute([$user_id, $base_price, $express_fee, $total, $payment_method]);
+            $upgrade_id = (int)$pdo->lastInsertId();
+
+            try {
+                $pdo->prepare("UPDATE users SET status_upgrade_requested_at = NOW() WHERE id = ?")
+                    ->execute([$user_id]);
+            } catch (Exception $tsErr) {
+                error_log('register_handler (status_upgrade_requested_at) error: ' . $tsErr->getMessage());
+            }
+
+            $payment_url = ($payment_method === 'receipt')
+                ? "upgrade_receipt.php?id={$upgrade_id}"
+                : "upgrade_qr.php?id={$upgrade_id}";
+
+            echo json_encode([
+                'success'     => true,
+                'message'     => 'Регистрация успешна. Откройте страницу оплаты.',
+                'user_id'     => $user_id,
+                'upgrade_id'  => $upgrade_id,
+                'payment_url' => $payment_url,
+            ]);
+            exit;
+        } catch (Exception $upErr) {
+            /* Учётная запись уже создана как "Уважаемый", поэтому возвращаем
+               успех регистрации, но просим оплатить статус из ЛК. */
+            error_log('register_handler (status_upgrades insert) error: ' . $upErr->getMessage());
+            echo json_encode([
+                'success' => true,
+                'message' => 'Регистрация успешна. Заявку на статус "Ответственный" можно оформить из личного кабинета.',
+                'user_id' => $user_id,
+            ]);
+            exit;
+        }
+    }
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'Регистрация успешна',
+        'user_id' => $user_id,
+    ]);
 } catch (Exception $e) {
     error_log('register_handler error: ' . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Ошибка регистрации. Попробуйте ещё раз.']);
