@@ -55,7 +55,7 @@ body {
 }
 .nav-shell.solid { background: rgba(5, 9, 19, .82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .nav-shell .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #fff; font-weight: 900; }
-.nav-shell .brand img { height: 32px; filter: drop-shadow(0 2px 8px rgba(0,136,204,.35)); }
+.nav-shell .brand img { height: 36px; filter: drop-shadow(0 0 12px rgba(56,189,248,.55)); }
 .nav-shell .links { display: flex; gap: 28px; align-items: center; }
 .nav-shell .links a { color: #cbd5e1; text-decoration: none; font-weight: 700; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; transition: color .2s; }
 .nav-shell .links a:hover { color: #38bdf8; }
@@ -78,19 +78,57 @@ body {
         radial-gradient(2px 2px at 40% 80%, rgba(255,255,255,.4), transparent 50%),
         radial-gradient(1.5px 1.5px at 90% 25%, rgba(255,255,255,.5), transparent 50%),
         radial-gradient(2px 2px at 15% 70%, rgba(255,255,255,.5), transparent 50%),
-        #050913;
-    background-size: 700px 700px;
+        radial-gradient(1.2px 1.2px at 60% 15%, rgba(255,255,255,.45), transparent 50%),
+        radial-gradient(1.5px 1.5px at 35% 50%, rgba(255,255,255,.35), transparent 50%),
+        radial-gradient(1px 1px at 80% 85%, rgba(255,255,255,.5), transparent 50%),
+        radial-gradient(circle at center, #0c1426 0%, #050913 70%);
+    background-size: 700px 700px, 700px 700px, 700px 700px, 700px 700px, 700px 700px, 900px 900px, 900px 900px, 900px 900px, 100% 100%;
+    animation: starDrift 90s linear infinite;
 }
-.fallback-logo {
+@keyframes starDrift {
+    0%   { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, center; }
+    100% { background-position: 700px 350px, -700px 350px, 350px 700px, -350px -700px, 700px -350px, 900px 450px, -900px 450px, 450px 900px, center; }
+}
+
+/* CSS-«ядро» — ВСЕГДА видно, даже без WebGL. На него Three.js накладывается сверху. */
+.hero-orb-css {
     position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: min(60vw, 320px); opacity: .35; z-index: 0; pointer-events: none;
-    filter: drop-shadow(0 10px 60px rgba(0,136,204,.6));
-    animation: floaty 6s ease-in-out infinite;
+    width: min(75vw, 720px); height: min(75vw, 720px);
+    z-index: 0; pointer-events: none;
+    display: flex; align-items: center; justify-content: center;
 }
-@keyframes floaty {
-    0%, 100% { transform: translate(-50%, -50%) translateY(0); }
-    50%      { transform: translate(-50%, -50%) translateY(-14px); }
+.hero-orb-css .core {
+    position: absolute; width: 32%; height: 32%; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ffffff 0%, #38bdf8 28%, #0088cc 60%, transparent 80%);
+    box-shadow: 0 0 90px 30px rgba(56,189,248,.55), 0 0 180px 60px rgba(0,136,204,.35);
+    animation: corePulse 3.4s ease-in-out infinite;
 }
+.hero-orb-css .ring {
+    position: absolute; border-radius: 50%; border: 1px solid rgba(56,189,248,.55);
+    box-shadow: 0 0 30px rgba(56,189,248,.25) inset;
+}
+.hero-orb-css .ring.r1 { width: 55%; height: 55%; animation: ringSpin 22s linear infinite; border-style: dashed; }
+.hero-orb-css .ring.r2 { width: 75%; height: 75%; animation: ringSpin 36s linear infinite reverse; border-color: rgba(255,255,255,.25); }
+.hero-orb-css .ring.r3 { width: 95%; height: 95%; animation: ringSpin 60s linear infinite; border-color: rgba(0,136,204,.45); border-style: dotted; }
+.hero-orb-css .ring.r4 { width: 115%; height: 115%; animation: ringSpin 90s linear infinite reverse; border-color: rgba(56,189,248,.18); }
+.hero-orb-css .ring::before {
+    content: ''; position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
+    width: 8px; height: 8px; border-radius: 50%; background: #38bdf8; box-shadow: 0 0 14px #38bdf8;
+}
+.hero-orb-css .ring.r2::before { background: #ffffff; box-shadow: 0 0 16px #ffffff; }
+.hero-orb-css .ring.r3::before { background: #0088cc; box-shadow: 0 0 18px #0088cc; }
+.hero-orb-css .ring.r4::before { background: #38bdf8; box-shadow: 0 0 12px #38bdf8; opacity: .7; }
+@keyframes corePulse {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50%      { transform: scale(1.07); filter: brightness(1.18); }
+}
+@keyframes ringSpin {
+    from { transform: rotate(0deg); } to { transform: rotate(360deg); }
+}
+/* Когда WebGL включён — приглушаем CSS-ядро (Three.js рисует поверх). */
+body.webgl-on .hero-orb-css { opacity: 0.55; transition: opacity .8s ease; }
+
+.fallback-logo { display: none; } /* больше не нужен — есть hero-orb-css */
 
 /* --- Секции / акты -------------------------------------------------------- */
 section {
@@ -177,6 +215,9 @@ footer.f-foot {
     padding: 50px 5% 32px; color: #64748b; font-size: 13px; line-height: 1.7;
     text-align: center;
 }
+footer.f-foot .foot-brand { display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 22px; }
+footer.f-foot .foot-brand img { height: 38px; filter: drop-shadow(0 0 14px rgba(56,189,248,.4)); }
+footer.f-foot .foot-brand span { font-weight: 900; color: #cbd5e1; letter-spacing: .15em; font-size: 13px; text-transform: uppercase; }
 footer.f-foot a { color: #94a3b8; text-decoration: none; margin: 0 10px; }
 footer.f-foot a:hover { color: #38bdf8; }
 .f-foot .req { margin-bottom: 10px; }
@@ -191,11 +232,17 @@ footer.f-foot a:hover { color: #38bdf8; }
 
 <canvas id="hero-bg-canvas"></canvas>
 <div class="starfield" aria-hidden="true"></div>
-<img class="fallback-logo" id="fallback-logo" src="/logo-forsage-modified.png" alt="" hidden>
+<div class="hero-orb-css" aria-hidden="true">
+    <div class="ring r4"></div>
+    <div class="ring r3"></div>
+    <div class="ring r2"></div>
+    <div class="ring r1"></div>
+    <div class="core"></div>
+</div>
 
 <header class="nav-shell" id="navShell">
     <a href="/index-new.php" class="brand">
-        <img src="/logo-forsage-modified.png" alt="ЭРА ЭТП">
+        <img src="/logo-forsage-white.png" alt="ЭРА ЭТП">
     </a>
     <nav class="links">
         <a href="/reestr.php">Реестр торгов</a>
@@ -232,7 +279,7 @@ footer.f-foot a:hover { color: #38bdf8; }
     <div class="tiles-grid">
         <a class="tile" href="/reestr.php" data-tile>
             <div class="tile-icon">🎯</div>
-            <h3>Биддер</h3>
+            <h3>Участник</h3>
             <p>Ищите подходящие лоты, подавайте заявки, делайте ставки. Доступны все шесть типов торгов и реестр в реальном времени.</p>
             <span class="tile-cta">К реестру →</span>
         </a>
@@ -331,6 +378,10 @@ footer.f-foot a:hover { color: #38bdf8; }
 </section>
 
 <footer class="f-foot">
+    <div class="foot-brand">
+        <img src="/logo-forsage-white.png" alt="ЭРА ЭТП">
+        <span>Электронная торговая площадка</span>
+    </div>
     <div class="req">
         ООО «Форсаж» · ИНН 7728282160 · ОГРН 1037728010396 · 121059, г. Москва, ул. Киевская, д. 14, оф. 2а
     </div>
@@ -366,21 +417,27 @@ window.addEventListener('scroll', () => {
 
 /* Решаем, нужно ли вообще пытаться рисовать 3D. */
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const tooSmall     = window.innerWidth <= 640;
-const lowDevice    = (navigator.deviceMemory && navigator.deviceMemory < 4) ||
-                     (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4);
+const tooSmall     = window.innerWidth <= 480;
+const lowDevice    = (navigator.deviceMemory && navigator.deviceMemory < 2) ||
+                     (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 2);
 const skip3D       = reduceMotion || tooSmall || lowDevice;
 
-if (skip3D) {
-    document.getElementById('fallback-logo').hidden = false;
-} else {
-    /* Тяжёлые модули грузим только если есть смысл. */
+/* CSS-ядро (.hero-orb-css) видно ВСЕГДА. Three.js накладывается поверх как
+   усиление, но и без него страница уже визуально 3D. */
+if (!skip3D) {
     import('three').then(THREE => {
-        initThreeScene(THREE);
+        try {
+            initThreeScene(THREE);
+            document.body.classList.add('webgl-on');
+        } catch (err) {
+            console.warn('Three.js init failed, CSS orb остаётся.', err);
+        }
     }).catch(err => {
-        console.warn('Three.js failed to load, fallback to static.', err);
-        document.getElementById('fallback-logo').hidden = false;
+        console.warn('Three.js failed to load, CSS orb остаётся.', err);
     });
+} else {
+    /* На очень слабых устройствах ничего больше не делаем — CSS-ядро уже на месте. */
+    startScrollTimeline();
 }
 
 function initThreeScene(THREE) {
@@ -388,81 +445,156 @@ function initThreeScene(THREE) {
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight, false);
+    renderer.setClearColor(0x000000, 0);
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 0, 5);
+    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 200);
+    camera.position.set(0, 0, 6);
 
-    /* Звёзды-частицы. */
+    /* --- Звёзды (фон) --- */
     const starGeo = new THREE.BufferGeometry();
-    const STAR_COUNT = 1500;
+    const STAR_COUNT = 1800;
     const starPos = new Float32Array(STAR_COUNT * 3);
     for (let i = 0; i < STAR_COUNT; i++) {
-        starPos[i*3+0] = (Math.random() - 0.5) * 60;
-        starPos[i*3+1] = (Math.random() - 0.5) * 60;
-        starPos[i*3+2] = (Math.random() - 0.5) * 60;
+        starPos[i*3+0] = (Math.random() - 0.5) * 80;
+        starPos[i*3+1] = (Math.random() - 0.5) * 80;
+        starPos[i*3+2] = (Math.random() - 0.5) * 80;
     }
     starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
     const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({
-        color: 0xffffff, size: 0.03, sizeAttenuation: true, transparent: true, opacity: 0.85
+        color: 0xffffff, size: 0.04, sizeAttenuation: true, transparent: true, opacity: 0.9
     }));
     scene.add(stars);
 
-    /* Логотип-метеор: спрайт с PNG логотипа. */
-    const loader = new THREE.TextureLoader();
-    let meteor = null;
-    loader.load('/logo-forsage-modified.png', (tex) => {
-        tex.colorSpace = THREE.SRGBColorSpace;
-        const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0.95 });
-        meteor = new THREE.Sprite(mat);
-        meteor.scale.set(3.2, 3.2 * (392/1384), 1); // сохраняем пропорции PNG
-        scene.add(meteor);
+    /* --- Главный 3D-объект: светящаяся сфера-«ядро» ЭРА --- */
+    const core = new THREE.Group();
+    scene.add(core);
 
-        /* Светящееся гало вокруг логотипа. */
+    // Внутренняя яркая сфера
+    const innerSphere = new THREE.Mesh(
+        new THREE.SphereGeometry(0.55, 64, 64),
+        new THREE.MeshBasicMaterial({ color: 0x38bdf8 })
+    );
+    core.add(innerSphere);
+
+    // Каркасная сфера — wireframe со знакомой синей айдентикой
+    const wire = new THREE.Mesh(
+        new THREE.SphereGeometry(0.85, 32, 24),
+        new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true, transparent: true, opacity: 0.55 })
+    );
+    core.add(wire);
+
+    // Светящееся гало (3 слоя для мягкого bloom-эффекта без постпроцессинга)
+    [{r:1.05,o:0.18},{r:1.4,o:0.10},{r:1.85,o:0.05}].forEach(({r,o}) => {
         const halo = new THREE.Mesh(
-            new THREE.SphereGeometry(1.6, 32, 32),
-            new THREE.MeshBasicMaterial({ color: 0x0088cc, transparent: true, opacity: 0.06 })
+            new THREE.SphereGeometry(r, 32, 32),
+            new THREE.MeshBasicMaterial({ color: 0x0088cc, transparent: true, opacity: o,
+                blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.BackSide })
         );
-        meteor.add(halo);
-
-        startScrollTimeline();
-    }, undefined, (err) => {
-        console.warn('logo texture failed', err);
-        document.getElementById('fallback-logo').hidden = false;
+        core.add(halo);
     });
 
-    /* Реакция на курсор — лёгкий параллакс. */
+    // Орбитальные кольца — намёк на «торги» / связи
+    const ring1 = new THREE.Mesh(
+        new THREE.TorusGeometry(1.5, 0.012, 16, 96),
+        new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.65 })
+    );
+    ring1.rotation.x = Math.PI/2.2;
+    core.add(ring1);
+
+    const ring2 = new THREE.Mesh(
+        new THREE.TorusGeometry(1.85, 0.008, 16, 96),
+        new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.35 })
+    );
+    ring2.rotation.x = Math.PI/3;
+    ring2.rotation.y = Math.PI/4;
+    core.add(ring2);
+
+    const ring3 = new THREE.Mesh(
+        new THREE.TorusGeometry(2.2, 0.006, 16, 96),
+        new THREE.MeshBasicMaterial({ color: 0x0088cc, transparent: true, opacity: 0.45 })
+    );
+    ring3.rotation.x = Math.PI/4;
+    ring3.rotation.z = Math.PI/3;
+    core.add(ring3);
+
+    /* --- Хвост из частиц вокруг ядра --- */
+    const trailCount = 220;
+    const trailGeo = new THREE.BufferGeometry();
+    const trailPos = new Float32Array(trailCount * 3);
+    const trailRadius = new Float32Array(trailCount);
+    const trailAngle = new Float32Array(trailCount);
+    const trailSpeed = new Float32Array(trailCount);
+    for (let i = 0; i < trailCount; i++) {
+        trailRadius[i] = 1.1 + Math.random() * 2.2;
+        trailAngle[i]  = Math.random() * Math.PI * 2;
+        trailSpeed[i]  = 0.002 + Math.random() * 0.01;
+        const a = trailAngle[i], r = trailRadius[i];
+        trailPos[i*3+0] = Math.cos(a) * r;
+        trailPos[i*3+1] = (Math.random() - 0.5) * 0.6;
+        trailPos[i*3+2] = Math.sin(a) * r;
+    }
+    trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPos, 3));
+    const trail = new THREE.Points(trailGeo, new THREE.PointsMaterial({
+        color: 0x38bdf8, size: 0.06, sizeAttenuation: true, transparent: true, opacity: 0.85,
+        blending: THREE.AdditiveBlending, depthWrite: false
+    }));
+    core.add(trail);
+
+    /* --- Реакция на курсор --- */
     const mouse = { x: 0, y: 0 };
     window.addEventListener('mousemove', (e) => {
-        mouse.x = (e.clientX / window.innerWidth  - 0.5) * 0.4;
-        mouse.y = (e.clientY / window.innerHeight - 0.5) * 0.4;
+        mouse.x = (e.clientX / window.innerWidth  - 0.5) * 0.5;
+        mouse.y = (e.clientY / window.innerHeight - 0.5) * 0.5;
     });
 
-    let scrollProgress = 0; // 0..1 относительно всей длины страницы
+    startScrollTimeline();
+
+    let scrollProgress = 0; // 0..1 от всей длины страницы
     const docHeight = () => document.documentElement.scrollHeight - window.innerHeight;
+    const clock = new THREE.Clock();
 
     function tick() {
-        scrollProgress = Math.min(1, Math.max(0, window.scrollY / docHeight()));
+        const dt = clock.getDelta();
+        const tt = clock.getElapsedTime();
+        scrollProgress = Math.min(1, Math.max(0, window.scrollY / Math.max(1, docHeight())));
 
+        /* Звёзды плавно дрейфуют. */
         stars.rotation.y += 0.0006;
         stars.rotation.x += 0.0002;
-        stars.position.z = scrollProgress * 8; // звёзды улетают назад при скролле
 
-        if (meteor) {
-            /* Метеор пролетает по дуге: hero center → правый верх → ближе и крупнее в финале. */
-            const t = scrollProgress;
-            meteor.position.x = -0.4 + t * 6 - t*t * 7;          // змейка
-            meteor.position.y = -0.2 + Math.sin(t * Math.PI) * 1.8;
-            meteor.position.z = -t * 4;
-            meteor.material.rotation = -t * 0.6;
-            meteor.scale.setScalar(3.2 + Math.sin(t * Math.PI) * 0.6);
-            /* Параллакс мыши применяется только в hero-зоне. */
-            const heroWeight = Math.max(0, 1 - t * 4);
-            meteor.position.x += mouse.x * 0.6 * heroWeight;
-            meteor.position.y += -mouse.y * 0.4 * heroWeight;
+        /* Кольца вращаются с разной скоростью. */
+        ring1.rotation.z += 0.004;
+        ring2.rotation.z -= 0.0028;
+        ring3.rotation.x += 0.0022;
+
+        /* Внутренняя сфера пульсирует. */
+        const pulse = 1 + Math.sin(tt * 1.2) * 0.04;
+        innerSphere.scale.setScalar(pulse);
+        wire.rotation.y += 0.003;
+        wire.rotation.x += 0.0015;
+
+        /* Орбитальные частицы. */
+        const arr = trailGeo.attributes.position.array;
+        for (let i = 0; i < trailCount; i++) {
+            trailAngle[i] += trailSpeed[i];
+            const a = trailAngle[i], r = trailRadius[i];
+            arr[i*3+0] = Math.cos(a) * r;
+            arr[i*3+2] = Math.sin(a) * r;
         }
+        trailGeo.attributes.position.needsUpdate = true;
 
-        camera.position.x = mouse.x * 0.3;
+        /* Скролл-анимация: ядро уходит вверх и в глубину, потом возвращается. */
+        const t = scrollProgress;
+        const heroFactor = Math.max(0, 1 - t * 1.6);
+        const finalFactor = Math.max(0, t * 1.6 - 0.6);
+        core.position.x = mouse.x * 1.2 * heroFactor;
+        core.position.y = -mouse.y * 0.8 * heroFactor + Math.sin(t * Math.PI) * -1.2 + finalFactor * 0.4;
+        core.position.z = -t * 4 + finalFactor * 4.5;
+        core.scale.setScalar(0.9 + heroFactor * 0.4 + finalFactor * 0.7);
+        core.rotation.y = t * Math.PI * 0.6;
+
+        camera.position.x = mouse.x * 0.4;
         camera.position.y = -mouse.y * 0.3;
         camera.lookAt(0, 0, 0);
 
