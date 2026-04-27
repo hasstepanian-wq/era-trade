@@ -282,7 +282,9 @@ body > footer img[alt="Форсаж"] {
     animation: corePulse 1.4s ease-in-out infinite;
 }
 .drag-hint.hidden { opacity: 0; transform: translateY(8px); }
-@media (max-width: 480px) { .drag-hint { left: 14px; bottom: 14px; font-size: 10px; padding: 6px 10px; } }
+/* На мобильной (≤480px) 3D-сцена отключена — прячем подсказку полностью,
+   чтобы не вводить в заблуждение «потяните, чтобы вращать», когда вращать нечего. */
+@media (max-width: 480px) { .drag-hint { display: none !important; } }
 
 @media (prefers-reduced-motion: reduce) {
     *,*::before,*::after { animation: none !important; transition: none !important; }
@@ -834,9 +836,12 @@ function startScrollTimeline() {
     }, 2000);
 }
 
-/* Если 3D отключён — анимации hero всё равно нужно показать сразу. */
+/* Если 3D отключён — анимации hero всё равно нужно показать сразу,
+   а подсказку про вращение прячем (нечего вращать). */
 if (skip3D) {
     document.querySelectorAll('[data-anim]').forEach(el => { el.style.opacity = 1; el.style.transform = 'none'; });
+    const dh = document.getElementById('drag-hint');
+    if (dh) dh.style.display = 'none';
 }
 
 /* Плавный скролл — через нативный CSS scroll-behavior: smooth (см. стили).
