@@ -169,12 +169,38 @@ try {
                 ? "upgrade_receipt.php?id={$upgrade_id}"
                 : "upgrade_qr.php?id={$upgrade_id}";
 
+            /* Готовим данные для встраивания QR прямо в модалку регистрации,
+               чтобы пользователь не уходил со страницы (как в profile.php).
+               ST00012 — российский стандарт QR для СБП-переводов. */
+            $purpose    = "Повышение статуса Ответственный ID{$user_id} {$username}";
+            $sumKopecks = (int)round($total * 100);
+            $qrPayload  = "ST00012"
+                . "|Name=ООО Форсаж"
+                . "|PersonalAcc=40702810101500033019"
+                . "|BankName=ООО Банк Точка"
+                . "|BIC=044525104"
+                . "|CorrespAcc=30101810745374525104"
+                . "|PayeeINN=7728282160"
+                . "|KPP=773001001"
+                . "|Sum={$sumKopecks}"
+                . "|Purpose={$purpose}";
+            $qr_image_url = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&data='
+                . urlencode($qrPayload);
+
             echo json_encode([
-                'success'     => true,
-                'message'     => 'Регистрация успешна. Откройте страницу оплаты.',
-                'user_id'     => $user_id,
-                'upgrade_id'  => $upgrade_id,
-                'payment_url' => $payment_url,
+                'success'      => true,
+                'message'      => 'Регистрация успешна. Оплатите статус «Ответственный».',
+                'user_id'      => $user_id,
+                'upgrade_id'   => $upgrade_id,
+                'payment_url'  => $payment_url,
+                'payment_method' => $payment_method,
+                'qr_image_url' => $qr_image_url,
+                'qr_purpose'   => $purpose,
+                'qr_amount'    => $total,
+                'qr_inn'       => '7728282160',
+                'qr_account'   => '40702810101500033019',
+                'qr_bank'      => 'ООО Банк Точка',
+                'qr_bic'       => '044525104',
             ]);
             exit;
         } catch (Exception $upErr) {

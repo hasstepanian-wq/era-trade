@@ -103,8 +103,9 @@ header{position:fixed;top:0;left:0;right:0;height:80px;background:#e5e4e2;displa
 /* На мобильных блок имени/баланса из хедера убираем — в бургер-меню они уже есть. */
 @media(max-width:768px){.header-auth-block{display:none}}
 @media(max-width:600px){header{height:70px;padding:0 3%}body{padding-top:70px}.logo-img{height:32px}.msc-box{font-size:11px;padding:4px 9px}.btn-login{padding:7px 14px;font-size:12px}.header-right{gap:8px}}
-/* На самых узких экранах часы остаются — просто компактные (без подписи «МСК»). */
-@media(max-width:480px){.msc-box{font-size:10px;padding:3px 8px;gap:4px}.msc-box .msc-label{display:none}.btn-login{padding:6px 12px;font-size:12px}}
+/* На самых узких экранах часы остаются такими же, как на десктопе (с подписью
+   «МСК») — просто меньшим шрифтом, чтобы не вылезали за экран. */
+@media(max-width:480px){.msc-box{font-size:10px;padding:3px 8px;gap:4px}.btn-login{padding:6px 12px;font-size:12px}}
 @media(max-width:380px){.btn-login{padding:6px 10px;font-size:11px}.logo-img{height:28px}.header-right{gap:6px}.msc-box{font-size:9px;padding:3px 7px}}
 </style>
 </head>

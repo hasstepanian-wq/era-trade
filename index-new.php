@@ -89,10 +89,16 @@ header .header-auth-block > div:first-child > div:first-child { color: #e2e8f0 !
 .btn-cta.outline:hover { border-color: #38bdf8; background: rgba(56,189,248,.08); }
 
 /* --- 3D холст ------------------------------------------------------------- */
+/* pointer-events: auto — чтобы пользователь мог «крутить» 3D-сцену мышкой
+   (drag-to-rotate). Контент секций имеет z-index: 2, поэтому клики по тексту,
+   ссылкам и кнопкам по-прежнему доходят до них, а не до канваса. */
 #hero-bg-canvas {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    position: fixed; inset: 0; z-index: 0;
     width: 100vw; height: 100vh;
+    pointer-events: auto;
+    cursor: grab;
 }
+#hero-bg-canvas.dragging { cursor: grabbing; }
 .starfield {
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background:
@@ -252,6 +258,26 @@ body > footer img[alt="Форсаж"] {
 #to-top:hover { box-shadow: 0 16px 38px rgba(8, 145, 178, .65), 0 0 32px rgba(56,189,248,.8); transform: translateY(-3px); }
 @media (max-width: 480px) { #to-top { right: 14px; bottom: 14px; width: 46px; height: 46px; } }
 
+/* --- Подсказка про интерактивность 3D ------------------------------------ */
+.drag-hint {
+    position: fixed; left: 24px; bottom: 22px; z-index: 50;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 999px;
+    background: rgba(15,23,42,.65);
+    border: 1px solid rgba(56,189,248,.35);
+    color: #cbd5e1; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    pointer-events: none;
+    transition: opacity .35s ease, transform .35s ease;
+}
+.drag-hint .dh-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: #38bdf8;
+    box-shadow: 0 0 10px #38bdf8;
+    animation: corePulse 1.4s ease-in-out infinite;
+}
+.drag-hint.hidden { opacity: 0; transform: translateY(8px); }
+@media (max-width: 480px) { .drag-hint { left: 14px; bottom: 14px; font-size: 10px; padding: 6px 10px; } }
+
 @media (prefers-reduced-motion: reduce) {
     *,*::before,*::after { animation: none !important; transition: none !important; }
 }
@@ -391,6 +417,12 @@ body > footer img[alt="Форсаж"] {
 
 <?php /* Стандартный подвал сайта, как и на остальных страницах. */ ?>
 <?php include 'footer.php'; ?>
+
+<!-- Подсказка: «потяните, чтобы вращать 3D». Прячется после первого взаимодействия. -->
+<div id="drag-hint" class="drag-hint" aria-hidden="true">
+    <span class="dh-dot"></span>
+    <span>Потяните, чтобы вращать сцену</span>
+</div>
 
 <!-- Кнопка «Наверх» — фикс справа внизу, появляется после прокрутки. -->
 <button id="to-top" type="button" aria-label="Наверх" title="Наверх">
@@ -555,18 +587,97 @@ function initThreeScene(THREE) {
     }));
     core.add(trail);
 
-    /* --- Реакция на курсор --- */
-    const mouse = { x: 0, y: 0 };
+    /* --- Икосаэдр с гранями (поверх wireframe-сферы для большей «3D-сти») --- */
+    const ico = new THREE.Mesh(
+        new THREE.IcosahedronGeometry(1.2, 1),
+        new THREE.MeshBasicMaterial({ color: 0x7dd3fc, wireframe: true,
+            transparent: true, opacity: 0.35,
+            blending: THREE.AdditiveBlending, depthWrite: false })
+    );
+    core.add(ico);
+
+    /* --- Летящий метеор: длинная линия с хвостом, пересекает сцену --- */
+    const meteorPts = [];
+    for (let i = 0; i < 16; i++) meteorPts.push(new THREE.Vector3(0, 0, 0));
+    const meteorGeo = new THREE.BufferGeometry().setFromPoints(meteorPts);
+    const meteor = new THREE.Line(meteorGeo, new THREE.LineBasicMaterial({
+        color: 0x38bdf8, transparent: true, opacity: 0.9,
+        blending: THREE.AdditiveBlending
+    }));
+    scene.add(meteor);
+    let meteorT = 0;
+
+    /* --- Реакция на курсор + drag-to-rotate --- */
+    const mouse = { x: 0, y: 0, raw: { x: 0, y: 0 } };
     window.addEventListener('mousemove', (e) => {
         mouse.x = (e.clientX / window.innerWidth  - 0.5) * 0.5;
         mouse.y = (e.clientY / window.innerHeight - 0.5) * 0.5;
+        mouse.raw.x = e.clientX;
+        mouse.raw.y = e.clientY;
     });
+
+    /* Drag-to-rotate: пользователь тянет фон мышью/пальцем — сцена вращается.
+       Когда отпускает — лёгкая инерция, потом возврат к авто-вращению. */
+    const drag = { active: false, x: 0, y: 0, vx: 0, vy: 0, userYaw: 0, userPitch: 0 };
+    const dragHint = document.getElementById('drag-hint');
+    let dragHinted = false;
+    function hideDragHint() {
+        if (dragHinted || !dragHint) return;
+        dragHinted = true;
+        dragHint.classList.add('hidden');
+        setTimeout(() => dragHint.remove(), 600);
+    }
+    function dragStart(e) {
+        const p = (e.touches ? e.touches[0] : e);
+        drag.active = true; drag.x = p.clientX; drag.y = p.clientY;
+        canvas.classList.add('dragging');
+        hideDragHint();
+    }
+    function dragMove(e) {
+        if (!drag.active) return;
+        const p = (e.touches ? e.touches[0] : e);
+        const dx = p.clientX - drag.x;
+        const dy = p.clientY - drag.y;
+        drag.x = p.clientX; drag.y = p.clientY;
+        drag.userYaw   += dx * 0.005;
+        drag.userPitch += dy * 0.005;
+        drag.vx = dx * 0.005;
+        drag.vy = dy * 0.005;
+    }
+    function dragEnd() {
+        drag.active = false;
+        canvas.classList.remove('dragging');
+    }
+    canvas.addEventListener('mousedown', dragStart);
+    window.addEventListener('mousemove', dragMove);
+    window.addEventListener('mouseup',   dragEnd);
+    canvas.addEventListener('touchstart', dragStart, { passive: true });
+    window.addEventListener('touchmove',  dragMove,  { passive: true });
+    window.addEventListener('touchend',   dragEnd);
+    /* Скрыть подсказку при первом скролле тоже. */
+    window.addEventListener('scroll', hideDragHint, { passive: true, once: true });
 
     startScrollTimeline();
 
     let scrollProgress = 0; // 0..1 от всей длины страницы
     const docHeight = () => document.documentElement.scrollHeight - window.innerHeight;
     const clock = new THREE.Clock();
+
+    /* Проектируем экранные координаты курсора в плоскость z=0 сцены — нужно,
+       чтобы частицы могли «уворачиваться» от курсора в 3D. */
+    const ndc = new THREE.Vector3();
+    const cursorWorld = new THREE.Vector3();
+    function projectCursor() {
+        ndc.set(
+            (mouse.raw.x / window.innerWidth)  * 2 - 1,
+            -(mouse.raw.y / window.innerHeight) * 2 + 1,
+            0.5
+        );
+        ndc.unproject(camera);
+        const dir = ndc.sub(camera.position).normalize();
+        const t = -camera.position.z / dir.z;
+        cursorWorld.copy(camera.position).add(dir.multiplyScalar(t));
+    }
 
     function tick() {
         const dt = clock.getDelta();
@@ -582,21 +693,53 @@ function initThreeScene(THREE) {
         ring2.rotation.z -= 0.0028;
         ring3.rotation.x += 0.0022;
 
-        /* Внутренняя сфера пульсирует. */
-        const pulse = 1 + Math.sin(tt * 1.2) * 0.04;
+        /* Внутренняя сфера пульсирует. Wireframe и икосаэдр живо вращаются. */
+        const pulse = 1 + Math.sin(tt * 1.2) * 0.06;
         innerSphere.scale.setScalar(pulse);
         wire.rotation.y += 0.003;
         wire.rotation.x += 0.0015;
+        ico.rotation.x -= 0.004;
+        ico.rotation.y += 0.006;
+        /* Лёгкое «дыхание» икосаэдра (масштаб). */
+        ico.scale.setScalar(1 + Math.sin(tt * 0.9) * 0.05);
 
-        /* Орбитальные частицы. */
+        /* Орбитальные частицы — отклоняются от курсора (репульсия). */
+        projectCursor();
         const arr = trailGeo.attributes.position.array;
         for (let i = 0; i < trailCount; i++) {
             trailAngle[i] += trailSpeed[i];
             const a = trailAngle[i], r = trailRadius[i];
-            arr[i*3+0] = Math.cos(a) * r;
-            arr[i*3+2] = Math.sin(a) * r;
+            let px = Math.cos(a) * r;
+            let pz = Math.sin(a) * r;
+            let py = (i % 2 === 0 ? 0.2 : -0.2) * Math.sin(tt * 0.6 + i);
+            const dx = px - cursorWorld.x;
+            const dy = py - cursorWorld.y;
+            const dz = pz - cursorWorld.z;
+            const dist2 = dx*dx + dy*dy + dz*dz;
+            if (dist2 < 1.6) {
+                const k = (1 - dist2 / 1.6) * 0.6;
+                px += dx * k; py += dy * k; pz += dz * k;
+            }
+            arr[i*3+0] = px;
+            arr[i*3+1] = py;
+            arr[i*3+2] = pz;
         }
         trailGeo.attributes.position.needsUpdate = true;
+
+        /* Метеор: летит по спирали, оставляя хвост из 16 точек. */
+        meteorT += 0.012;
+        const mArr = meteorGeo.attributes.position.array;
+        const mLoop = (meteorT % 6.28) - 3.14; // [-π..π]
+        for (let i = 0; i < 16; i++) {
+            const lag = i * 0.06;
+            const a = meteorT - lag;
+            const r = 5 + Math.sin(a * 0.7) * 1.8;
+            mArr[i*3+0] = Math.cos(a) * r;
+            mArr[i*3+1] = Math.sin(a * 0.9) * 2.4 + Math.sin(a * 0.4) * 1.2;
+            mArr[i*3+2] = Math.sin(a) * r * 0.6 - 2;
+        }
+        meteorGeo.attributes.position.needsUpdate = true;
+        meteor.material.opacity = 0.45 + 0.45 * (Math.sin(meteorT * 1.2) * 0.5 + 0.5);
 
         /* Скролл-анимация: ядро уходит вверх и в глубину, потом возвращается. */
         const t = scrollProgress;
@@ -606,10 +749,24 @@ function initThreeScene(THREE) {
         core.position.y = -mouse.y * 0.8 * heroFactor + Math.sin(t * Math.PI) * -1.2 + finalFactor * 0.4;
         core.position.z = -t * 4 + finalFactor * 4.5;
         core.scale.setScalar(0.9 + heroFactor * 0.4 + finalFactor * 0.7);
-        core.rotation.y = t * Math.PI * 0.6;
 
-        camera.position.x = mouse.x * 0.4;
-        camera.position.y = -mouse.y * 0.3;
+        /* Авто-вращение по Y + пользовательский yaw/pitch (drag-to-rotate). */
+        if (!drag.active) {
+            drag.userYaw   += drag.vx * 0.92;
+            drag.userPitch += drag.vy * 0.92;
+            drag.vx *= 0.94; drag.vy *= 0.94;
+            /* Плавный возврат пользовательского сдвига к нулю — но очень
+               медленный, чтобы пользователь чувствовал, что «он крутил». */
+            drag.userYaw   *= 0.995;
+            drag.userPitch *= 0.995;
+        }
+        core.rotation.y = t * Math.PI * 0.6 + drag.userYaw + tt * 0.05;
+        core.rotation.x = drag.userPitch;
+
+        /* Камера: parallax от курсора + лёгкая «дыхалка» по скроллу. */
+        camera.position.x = mouse.x * 0.6;
+        camera.position.y = -mouse.y * 0.45;
+        camera.position.z = 6 - Math.min(t, 0.5) * 1.5;
         camera.lookAt(0, 0, 0);
 
         renderer.render(scene, camera);
@@ -699,38 +856,72 @@ setTimeout(() => {
    transform:none) — чтобы при любых сбоях скриптов страница не оставалась
    пустой. До добавления .in-view элемент чуть сдвинут и слегка прозрачный,
    но НИКОГДА не невидим. После .in-view встаёт на место с плавной анимацией. */
+.tiles-grid, .h-scroll-track, .adv-grid { perspective: 1400px; }
+
 .section-head .section-eyebrow,
 .section-head .section-title,
 .tile, .auc-card, .adv,
 .act-5 .title-mega, .act-5 .subtitle, .act-5 .hero-actions {
     opacity: 0.0001;  /* почти невидим до анимации, но layout посчитан */
-    transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);
+    transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1), box-shadow .9s ease;
+    transform-style: preserve-3d;
+    will-change: transform, opacity;
 }
 .section-head .section-eyebrow,
 .section-head .section-title,
 .act-5 .title-mega, .act-5 .subtitle, .act-5 .hero-actions {
     transform: translateY(40px);
 }
-.tile { transform: translateY(60px) scale(.92); }
-.auc-card                   { transform: translateX(-60px) scale(.92); }
-.auc-card:nth-child(even)   { transform: translateX( 60px) scale(.92); }
-.adv  { transform: translateY(50px) scale(.95); }
+/* Плитки трёх ролей: «выезжают» сверху с поворотом по X — как переворот карты. */
+.tile { transform: translateY(80px) rotateX(28deg) scale(.9); }
+/* Карточки шести форматов торгов: каждая «открывается» в 3D поворотом по Y,
+   с разных сторон, со staggered-задержкой и подсветкой при появлении. */
+.auc-card                  { transform: rotateY(-55deg) translate3d(-40px, 0, -120px) scale(.85); }
+.auc-card:nth-child(even)  { transform: rotateY( 55deg) translate3d( 40px, 0, -120px) scale(.85); }
+/* Преимущества: «всплывают» снизу с лёгким Y-наклоном. */
+.adv  { transform: translateY(70px) rotateX(20deg) scale(.95); }
 
 .in-view, .in-view .section-eyebrow, .in-view .section-title { opacity: 1; transform: none; }
 .tile.in-view, .auc-card.in-view, .adv.in-view,
 .act-5 .title-mega.in-view, .act-5 .subtitle.in-view, .act-5 .hero-actions.in-view {
-    opacity: 1; transform: none;
+    opacity: 1; transform: rotateY(0) rotateX(0) translate3d(0,0,0) scale(1);
 }
+/* Кратковременное свечение при появлении карточки формата торгов. */
+.auc-card.in-view {
+    box-shadow: 0 18px 48px rgba(0,0,0,.45),
+                0 0 0 1px rgba(56,189,248,.55),
+                0 0 64px rgba(56,189,248,.45);
+    animation: cardGlowPulse 1.4s ease-out 1;
+}
+@keyframes cardGlowPulse {
+    0%   { box-shadow: 0 18px 48px rgba(0,0,0,.45), 0 0 0 1px rgba(56,189,248,.85), 0 0 90px rgba(56,189,248,.7); }
+    100% { box-shadow: 0 18px 48px rgba(0,0,0,.45), 0 0 0 1px rgba(148,163,184,.15), 0 0 0 rgba(56,189,248,0); }
+}
+
 .section-head.in-view .section-eyebrow { transition-delay: .05s; }
 .section-head.in-view .section-title   { transition-delay: .15s; }
-.tile:nth-child(1).in-view { transition-delay: .05s; }
-.tile:nth-child(2).in-view { transition-delay: .20s; }
-.tile:nth-child(3).in-view { transition-delay: .35s; }
+.tile:nth-child(1).in-view { transition-delay: .08s; }
+.tile:nth-child(2).in-view { transition-delay: .24s; }
+.tile:nth-child(3).in-view { transition-delay: .42s; }
+/* Карточки форматов торгов появляются волной — каждая на 0.18с позже. */
+.auc-card:nth-child(1).in-view { transition-delay: .05s; }
+.auc-card:nth-child(2).in-view { transition-delay: .18s; }
+.auc-card:nth-child(3).in-view { transition-delay: .32s; }
+.auc-card:nth-child(4).in-view { transition-delay: .46s; }
+.auc-card:nth-child(5).in-view { transition-delay: .60s; }
+.auc-card:nth-child(6).in-view { transition-delay: .74s; }
 .adv:nth-child(1).in-view { transition-delay: .05s; }
 .adv:nth-child(2).in-view { transition-delay: .20s; }
 .adv:nth-child(3).in-view { transition-delay: .35s; }
 .act-5 .subtitle.in-view    { transition-delay: .15s; }
 .act-5 .hero-actions.in-view{ transition-delay: .30s; }
+
+/* Hover на карточке формата — лёгкий 3D-наклон, чтобы было ощущение «живой» сцены. */
+.auc-card.in-view { transition: box-shadow .6s ease, transform .35s cubic-bezier(.2,.7,.2,1); }
+.auc-card.in-view:hover {
+    transform: translateY(-6px) rotateX(-3deg) rotateY(3deg) scale(1.02);
+    box-shadow: 0 26px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(56,189,248,.55), 0 0 60px rgba(56,189,248,.35);
+}
 
 @media (prefers-reduced-motion: reduce) {
     [data-anim],

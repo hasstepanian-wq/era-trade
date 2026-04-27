@@ -289,6 +289,44 @@ if (!isset($lang)) $lang = $_SESSION['lang'] ?? 'ru';
 }
 .auth-organizer-info.visible { display: block; }
 
+/* Блок «спасибо + QR» — показывается прямо в модалке после успешной регистрации
+   с платным статусом. Никакого редиректа: пользователь видит QR-код, реквизиты
+   и кнопку «Открыть квитанцию» (откроется в новом окне). */
+.auth-pay-result { display: none; padding: 6px 4px 4px; }
+.auth-pay-result.visible { display: block; }
+.auth-pay-result h3 {
+    margin: 0 0 6px; color: #f8fafc; font-size: 16px; font-weight: 700;
+}
+.auth-pay-result .auth-pay-sub {
+    margin: 0 0 14px; color: #94a3b8; font-size: 12px;
+}
+.auth-pay-qr {
+    background: #fff; padding: 14px; border-radius: 14px; text-align: center;
+    margin: 0 auto 12px; max-width: 280px;
+}
+.auth-pay-qr img { width: 100%; height: auto; display: block; }
+.auth-pay-details {
+    background: rgba(15,23,42,0.7); border: 1px solid #334155;
+    border-radius: 10px; padding: 12px 14px; font-size: 12px;
+    color: #cbd5e1; line-height: 1.7;
+}
+.auth-pay-details b { color: #f1f5f9; }
+.auth-pay-actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.auth-pay-actions button, .auth-pay-actions a {
+    flex: 1; min-width: 130px; padding: 10px 14px;
+    border-radius: 10px; font-size: 13px; font-weight: 700;
+    border: none; cursor: pointer; text-align: center; text-decoration: none;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+.auth-pay-actions .btn-receipt {
+    background: linear-gradient(135deg, #0088cc, #38bdf8); color: #fff;
+}
+.auth-pay-actions .btn-done {
+    background: rgba(34,197,94,0.15); color: #4ade80;
+    border: 1px solid rgba(34,197,94,0.4);
+}
+.auth-pay-actions button:hover, .auth-pay-actions a:hover { transform: translateY(-1px); }
+
 @media(max-width:380px) {
     .auth-status-grid { grid-template-columns: 1fr; }
     .auth-status-card { flex-direction: row; justify-content: flex-start; padding: 10px 12px; gap: 10px; text-align: left; }
@@ -384,8 +422,8 @@ if (!isset($lang)) $lang = $_SESSION['lang'] ?? 'ru';
                         </label>
                         <div class="auth-payment-info">
                             <?= $lang === 'en'
-                                ? 'After registration you will be redirected to a payment page with QR / receipt. The Responsible status is activated by the administrator after the payment is verified.'
-                                : 'После регистрации откроется страница с QR-кодом или квитанцией. Статус «Ответственный» активируется администратором после подтверждения оплаты.' ?>
+                                ? 'After clicking «Create account» the QR-code will appear right here. You can also open a printable receipt in a new window. The Responsible status is activated by the administrator after the payment is verified.'
+                                : 'После нажатия «Зарегистрироваться» QR-код появится прямо здесь. Также можно открыть печатную квитанцию в новом окне. Статус «Ответственный» активируется администратором после подтверждения оплаты.' ?>
                         </div>
                     </div>
 
@@ -466,9 +504,41 @@ if (!isset($lang)) $lang = $_SESSION['lang'] ?? 'ru';
                         : 'Согласен на <a href="personal_data.php" target="_blank" style="color:#0ea5e9;">обработку персональных данных</a>' ?></span>
                 </label>
 
-                <button class="auth-btn auth-btn-primary" onclick="authDoRegister()" style="margin-top:6px;">
+                <button id="auth-r-submit" class="auth-btn auth-btn-primary" onclick="authDoRegister()" style="margin-top:6px;">
                     <?= $lang === 'en' ? 'CREATE ACCOUNT' : 'ЗАРЕГИСТРИРОВАТЬСЯ' ?>
                 </button>
+
+                <!-- Блок «оплата прямо в модалке» — показываем после успешной
+                     регистрации с платным статусом «Ответственный». -->
+                <div id="auth-pay-result" class="auth-pay-result">
+                    <h3 id="auth-pay-title">
+                        <?= $lang === 'en' ? 'Pay for Responsible status' : 'Оплата статуса «Ответственный»' ?>
+                    </h3>
+                    <p class="auth-pay-sub" id="auth-pay-subtitle">
+                        <?= $lang === 'en'
+                            ? 'Your account is created. To activate the Responsible status pay 8 000 ₽ via SBP-QR or by receipt.'
+                            : 'Аккаунт создан. Для активации статуса «Ответственный» оплатите 8 000 ₽ по QR или квитанции.' ?>
+                    </p>
+                    <div id="auth-pay-qr-wrap" class="auth-pay-qr" style="display:none;">
+                        <img id="auth-pay-qr-img" src="" alt="QR ST00012">
+                    </div>
+                    <div class="auth-pay-details">
+                        <div><b><?= $lang === 'en' ? 'Recipient:' : 'Получатель:' ?></b> ООО «Форсаж»</div>
+                        <div><b>ИНН / КПП:</b> 7728282160 / 773001001</div>
+                        <div><b><?= $lang === 'en' ? 'Account:' : 'Счёт:' ?></b> 40702810101500033019</div>
+                        <div><b><?= $lang === 'en' ? 'Bank:' : 'Банк:' ?></b> ООО Банк Точка, БИК 044525104</div>
+                        <div><b><?= $lang === 'en' ? 'Amount:' : 'Сумма:' ?></b> 8 000 ₽ (<?= $lang === 'en' ? 'incl. VAT 22%' : 'в т.ч. НДС 22%' ?>)</div>
+                        <div><b><?= $lang === 'en' ? 'Purpose:' : 'Назначение:' ?></b> <span id="auth-pay-purpose">—</span></div>
+                    </div>
+                    <div class="auth-pay-actions">
+                        <a id="auth-pay-receipt-btn" class="btn-receipt" href="#" target="_blank" rel="noopener">
+                            🧾 <?= $lang === 'en' ? 'Open receipt' : 'Открыть квитанцию' ?>
+                        </a>
+                        <button type="button" class="btn-done" onclick="authFinishPayResult()">
+                            ✅ <?= $lang === 'en' ? 'Done' : 'Готово' ?>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -611,8 +681,15 @@ function authDoRegister() {
         if (data.success) {
             msg.textContent = '✅ ' + (data.message || '<?= $lang === "en" ? "Registration successful!" : "Регистрация отправлена!" ?>');
             msg.className = 'success';
-            /* Для Ответственного — открываем страницу оплаты QR/квитанции. */
-            if (data.payment_url) {
+            /* Платный статус «Ответственный» — показываем QR/квитанцию прямо
+               в модалке, как в profile.php. Никакого редиректа: пользователь
+               остаётся на странице, видит реквизиты, может открыть квитанцию
+               в новом окне или закрыть модалку. */
+            if (data.payment_url && (data.qr_image_url || data.payment_method)) {
+                authShowPayResult(data);
+            } else if (data.payment_url) {
+                /* Бэкенд по какой-то причине не вернул QR-данные — старый путь,
+                   с переходом на отдельную страницу. */
                 setTimeout(function(){ location.href = data.payment_url; }, 1000);
             } else {
                 setTimeout(function(){ location.reload(); }, 1200);
@@ -626,6 +703,51 @@ function authDoRegister() {
         msg.textContent = '❌ <?= $lang === "en" ? "Connection error" : "Ошибка соединения" ?>';
         msg.className = 'error';
     });
+}
+
+/* Показать блок оплаты внутри модалки. Скрывает форму регистрации, оставляет
+   только заголовок и блок «оплата». QR-картинку показываем всегда (даже если
+   пользователь выбрал «квитанцию» — пусть видит, что можно оплатить и так). */
+function authShowPayResult(data) {
+    var fields = [
+        'auth-status-grid','auth-payment-block','auth-organizer-info',
+        'auth-r-fullname','auth-r-user','auth-r-email','auth-r-pass',
+        'auth-r-file1','auth-r-file2','auth-r-file3','auth-r-express',
+        'auth-r-submit'
+    ];
+    fields.forEach(function(id){
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+    /* Скрываем все label и checkbox-ряды формы регистрации. */
+    var regTab = document.getElementById('auth-tab-register');
+    if (regTab) {
+        var labels = regTab.querySelectorAll('.auth-label, .auth-file-block, .auth-checkbox-row, .auth-status-block-title');
+        labels.forEach(function(el){ el.style.display = 'none'; });
+    }
+    var qrWrap = document.getElementById('auth-pay-qr-wrap');
+    var qrImg  = document.getElementById('auth-pay-qr-img');
+    if (data.qr_image_url && qrWrap && qrImg) {
+        qrImg.src = data.qr_image_url;
+        qrWrap.style.display = 'block';
+    }
+    var purposeEl = document.getElementById('auth-pay-purpose');
+    if (purposeEl && data.qr_purpose) purposeEl.textContent = data.qr_purpose;
+    /* Кнопка «Открыть квитанцию» — целевая ссылка на upgrade_receipt.php?id=N
+       с target="_blank" (откроется в новом окне). */
+    var rec = document.getElementById('auth-pay-receipt-btn');
+    if (rec && data.upgrade_id) {
+        rec.href = 'upgrade_receipt.php?id=' + data.upgrade_id;
+    }
+    var resBlock = document.getElementById('auth-pay-result');
+    if (resBlock) resBlock.classList.add('visible');
+}
+
+/* «Готово» — закрываем модалку и перезагружаем страницу, чтобы шапка
+   обновилась под нового авторизованного пользователя. */
+function authFinishPayResult() {
+    closeAuth();
+    setTimeout(function(){ location.reload(); }, 200);
 }
 
 document.getElementById('auth-modal-overlay').addEventListener('click', function(e) {
