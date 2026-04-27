@@ -13,57 +13,76 @@
        пустым, его заменяет CSS-параллакс с PNG-логотипом).
      - prefers-reduced-motion: reduce — анимации полностью выключаются.
      - deviceMemory<4 или hardwareConcurrency<4 — тоже фолбэк на статику. */
-session_start();
-$lang = $_SESSION['lang'] ?? 'ru';
-$is_auth   = !empty($_SESSION['user']);
-$user_name = $is_auth ? ($_SESSION['user']['full_name'] ?? $_SESSION['user']['username']) : '';
+/* index-new.php подключает стандартный header.php (часы МСК, бургер, баланс,
+   переключатель языка, мобильное меню — всё штатное) и переопределяет
+   светлую тему хедера на тёмную, чтобы она лежала на космическом фоне. */
 ?>
-<!DOCTYPE html>
-<html lang="<?= htmlspecialchars($lang) ?>">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ЭРА ЭТП — следующее поколение торгов</title>
-<meta name="description" content="Открытые, скандинавские, закрытые аукционы, запрос предложений и котировок. Прозрачные торги под защитой 152-ФЗ.">
-
-<link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#0f172a">
-<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
-
+<?php include 'header.php'; ?>
 <style>
-*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
-html { scroll-behavior: auto; }
+/* ---- Тёмная тема для пилотной 3D-страницы (поверх стилей header.php) ----- */
+html { overflow-x: hidden; }
 body {
+    background: #050913 !important;
+    color: #e2e8f0 !important;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #050913;
-    color: #e2e8f0;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
 
-/* --- Шапка ---------------------------------------------------------------- */
-.nav-shell {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 5%;
-    background: rgba(5, 9, 19, 0); transition: background .35s ease, backdrop-filter .35s ease;
+/* Штатный <header> из header.php в тёмной обёртке. */
+header {
+    background: rgba(5, 9, 19, 0) !important;
+    box-shadow: none !important;
+    transition: background .35s ease, backdrop-filter .35s ease, box-shadow .35s ease;
 }
-.nav-shell.solid { background: rgba(5, 9, 19, .82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
-.nav-shell .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #fff; font-weight: 900; }
-.nav-shell .brand img { height: 36px; filter: drop-shadow(0 0 12px rgba(56,189,248,.55)); }
-.nav-shell .links { display: flex; gap: 28px; align-items: center; }
-.nav-shell .links a { color: #cbd5e1; text-decoration: none; font-weight: 700; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; transition: color .2s; }
-.nav-shell .links a:hover { color: #38bdf8; }
+body.scrolled header {
+    background: rgba(5, 9, 19, .85) !important;
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 4px 20px rgba(0,0,0,.35) !important;
+}
+/* Логотип в шапке — исходный PNG чёрный, делаем светлым через filter. */
+header .logo-img {
+    filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(56,189,248,.55));
+}
+header .nav-link { color: #cbd5e1 !important; }
+header .nav-link.active, header .nav-link:hover { color: #38bdf8 !important; }
+/* Часы МСК — белая «таблетка» превращается в стеклянную тёмную. */
+header .msc-box {
+    background: rgba(15, 23, 42, .65) !important;
+    border-color: rgba(148,163,184,.25) !important;
+    color: #e2e8f0 !important;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+header .msc-box .dot { background: #38bdf8 !important; box-shadow: 0 0 8px #38bdf8; }
+/* Переключатель языка. */
+header .lang-btn { color: #94a3b8 !important; }
+header .lang-btn.active { color: #38bdf8 !important; background: rgba(56,189,248,.1) !important; }
+/* Бургер на мобильных — белая иконка. */
+header .burger-trigger i { color: #e2e8f0 !important; }
+/* Кнопка «Войти». */
+header .btn-login {
+    background: linear-gradient(135deg, #0088cc, #38bdf8) !important;
+    color: #fff !important;
+    border: none !important;
+    box-shadow: 0 6px 18px rgba(0,136,204,.35);
+}
+header .header-auth-block > div:first-child > div:first-child { color: #e2e8f0 !important; }
+/* Мобильное меню в тёмной палитре. */
+#mobileMenu { background: #050913 !important; }
+#mobileMenu .mob-nav-link { color: #e2e8f0 !important; border-bottom-color: rgba(148,163,184,.15) !important; }
+#mobileMenu .mob-close i { color: #e2e8f0 !important; }
+#mobileMenu .mob-lang-btn { color: #94a3b8 !important; }
+#mobileMenu .mob-lang-btn.active { color: #fff !important; background: #0088cc !important; }
+#mobileMenu .mob-username { color: #e2e8f0 !important; }
+#mobileMenu .mob-balance { color: #22c55e !important; }
+#mobileMenu .mob-link-lk { color: #38bdf8 !important; border-color: rgba(56,189,248,.3) !important; }
+
+/* --- Кнопки CTA внутри страницы ------------------------------------------- */
 .btn-cta { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 10px; background: linear-gradient(135deg, #0088cc, #38bdf8); color: #fff; font-weight: 800; text-decoration: none; font-size: 13px; letter-spacing: .05em; text-transform: uppercase; box-shadow: 0 8px 24px rgba(0,136,204,.35); transition: transform .2s, box-shadow .2s; border: none; cursor: pointer; }
 .btn-cta:hover { transform: translateY(-1px); box-shadow: 0 12px 32px rgba(0,136,204,.5); }
 .btn-cta.outline { background: transparent; border: 1.5px solid rgba(56,189,248,.5); box-shadow: none; color: #38bdf8; }
 .btn-cta.outline:hover { border-color: #38bdf8; background: rgba(56,189,248,.08); }
-@media (max-width: 768px) { .nav-shell .links { display: none; } .nav-shell { padding: 14px 5%; } }
 
 /* --- 3D холст ------------------------------------------------------------- */
 #hero-bg-canvas {
@@ -240,23 +259,6 @@ footer.f-foot a:hover { color: #38bdf8; }
     <div class="core"></div>
 </div>
 
-<header class="nav-shell" id="navShell">
-    <a href="/index-new.php" class="brand">
-        <img src="/logo-forsage-white.png" alt="ЭРА ЭТП">
-    </a>
-    <nav class="links">
-        <a href="/reestr.php">Реестр торгов</a>
-        <a href="/torgi_list.php">Комиссионная продажа</a>
-        <a href="/tariffs.php">Тарифы</a>
-        <a href="/regulations.php">Регламент</a>
-    </nav>
-    <?php if ($is_auth): ?>
-        <a class="btn-cta" href="/profile.php">Кабинет</a>
-    <?php else: ?>
-        <button class="btn-cta" onclick="openAuth && openAuth('login')">Войти</button>
-    <?php endif; ?>
-</header>
-
 <section class="act-1" id="act1">
     <div class="eyebrow" data-anim="eyebrow">Электронная торговая площадка нового поколения</div>
     <h1 class="title-mega" data-anim="title">Торгуйте<br>прозрачно и быстро</h1>
@@ -394,7 +396,7 @@ footer.f-foot a:hover { color: #38bdf8; }
     <div class="legal">© 2024–2026 ООО «Форсаж» · ERA ETP · ФЗ-152 · Все права защищены</div>
 </footer>
 
-<?php include 'auth_modal.php'; ?>
+<?php /* auth_modal.php уже подключён в header.php, не дублируем. */ ?>
 
 <script type="importmap">
 {
@@ -409,10 +411,9 @@ footer.f-foot a:hover { color: #38bdf8; }
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 
 <script>
-/* Шапка темнеет после прокрутки на ~80px. */
-const navShell = document.getElementById('navShell');
+/* Шапка из header.php темнеет после прокрутки на ~80px. */
 window.addEventListener('scroll', () => {
-    navShell.classList.toggle('solid', window.scrollY > 80);
+    document.body.classList.toggle('scrolled', window.scrollY > 80);
 }, { passive: true });
 
 /* Решаем, нужно ли вообще пытаться рисовать 3D. */
