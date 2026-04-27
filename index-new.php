@@ -20,12 +20,16 @@
 <?php include 'header.php'; ?>
 <style>
 /* ---- Тёмная тема для пилотной 3D-страницы (поверх стилей header.php) ----- */
+/* header.php ставит html,body{height:100%}, из-за чего скролл уходит на body
+   и window.scrollY всегда 0. Возвращаем нормальный документный скролл. */
+html, body { height: auto !important; min-height: 100%; }
 html { overflow-x: hidden; scroll-behavior: smooth; }
 body {
     background: #050913 !important;
     color: #e2e8f0 !important;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     overflow-x: hidden;
+    overflow-y: visible !important;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
@@ -233,6 +237,21 @@ body > footer img[alt="Форсаж"] {
     opacity: 1 !important;
 }
 
+/* --- Кнопка «Наверх» — фикс справа внизу ---------------------------------- */
+#to-top {
+    position: fixed; right: 22px; bottom: 22px; z-index: 60;
+    width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(56,189,248,.5);
+    background: linear-gradient(135deg, #0088cc, #38bdf8);
+    color: #fff; cursor: pointer;
+    box-shadow: 0 12px 30px rgba(8, 145, 178, .45), 0 0 24px rgba(56,189,248,.5);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transform: translateY(12px);
+    transition: opacity .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+#to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+#to-top:hover { box-shadow: 0 16px 38px rgba(8, 145, 178, .65), 0 0 32px rgba(56,189,248,.8); transform: translateY(-3px); }
+@media (max-width: 480px) { #to-top { right: 14px; bottom: 14px; width: 46px; height: 46px; } }
+
 @media (prefers-reduced-motion: reduce) {
     *,*::before,*::after { animation: none !important; transition: none !important; }
 }
@@ -373,6 +392,14 @@ body > footer img[alt="Форсаж"] {
 <?php /* Стандартный подвал сайта, как и на остальных страницах. */ ?>
 <?php include 'footer.php'; ?>
 
+<!-- Кнопка «Наверх» — фикс справа внизу, появляется после прокрутки. -->
+<button id="to-top" type="button" aria-label="Наверх" title="Наверх">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 19V5"/><path d="M5 12l7-7 7 7"/>
+    </svg>
+</button>
+
 <?php /* auth_modal.php уже подключён в header.php, не дублируем. */ ?>
 
 <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
@@ -387,10 +414,17 @@ window.dispatchEvent(new Event('three-ready'));
 </script>
 
 <script>
-/* Шапка из header.php темнеет после прокрутки на ~80px. */
+/* Шапка темнеет после прокрутки на ~80px, кнопка «Наверх» — после ~400px. */
+const toTopBtn = document.getElementById('to-top');
 window.addEventListener('scroll', () => {
     document.body.classList.toggle('scrolled', window.scrollY > 80);
+    if (toTopBtn) toTopBtn.classList.toggle('visible', window.scrollY > 400);
 }, { passive: true });
+if (toTopBtn) {
+    toTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
 
 /* Решаем, нужно ли вообще пытаться рисовать 3D. */
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
