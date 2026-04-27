@@ -20,7 +20,7 @@
 <?php include 'header.php'; ?>
 <style>
 /* ---- Тёмная тема для пилотной 3D-страницы (поверх стилей header.php) ----- */
-html { overflow-x: hidden; }
+html { overflow-x: hidden; scroll-behavior: smooth; }
 body {
     background: #050913 !important;
     color: #e2e8f0 !important;
@@ -226,21 +226,12 @@ section {
 .act-5 .title-mega { margin-left: auto; margin-right: auto; max-width: 900px; }
 .act-5 .subtitle { margin: 0 auto 40px; }
 
-/* --- Подвал --------------------------------------------------------------- */
-footer.f-foot {
-    position: relative; z-index: 5;
-    background: #050913;
-    border-top: 1px solid rgba(148,163,184,.1);
-    padding: 50px 5% 32px; color: #64748b; font-size: 13px; line-height: 1.7;
-    text-align: center;
+/* --- Подвал (штатный footer.php — слегка корректируем для тёмной темы) ----- */
+body > footer { position: relative; z-index: 5; }
+body > footer img[alt="Форсаж"] {
+    filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(56,189,248,.4));
+    opacity: 1 !important;
 }
-footer.f-foot .foot-brand { display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 22px; }
-footer.f-foot .foot-brand img { height: 38px; filter: drop-shadow(0 0 14px rgba(56,189,248,.4)); }
-footer.f-foot .foot-brand span { font-weight: 900; color: #cbd5e1; letter-spacing: .15em; font-size: 13px; text-transform: uppercase; }
-footer.f-foot a { color: #94a3b8; text-decoration: none; margin: 0 10px; }
-footer.f-foot a:hover { color: #38bdf8; }
-.f-foot .req { margin-bottom: 10px; }
-.f-foot .legal { margin-top: 16px; font-size: 11px; color: #475569; letter-spacing: .04em; }
 
 @media (prefers-reduced-motion: reduce) {
     *,*::before,*::after { animation: none !important; transition: none !important; }
@@ -379,36 +370,21 @@ footer.f-foot a:hover { color: #38bdf8; }
     </div>
 </section>
 
-<footer class="f-foot">
-    <div class="foot-brand">
-        <img src="/logo-forsage-white.png" alt="ЭРА ЭТП">
-        <span>Электронная торговая площадка</span>
-    </div>
-    <div class="req">
-        ООО «Форсаж» · ИНН 7728282160 · ОГРН 1037728010396 · 121059, г. Москва, ул. Киевская, д. 14, оф. 2а
-    </div>
-    <div>
-        <a href="/user_agreement.php">Пользовательское соглашение</a>
-        <a href="/personal_data.php">Обработка ПДн</a>
-        <a href="/cookie_policy.php">Cookie</a>
-        <a href="/regulations.php">Регламент</a>
-    </div>
-    <div class="legal">© 2024–2026 ООО «Форсаж» · ERA ETP · ФЗ-152 · Все права защищены</div>
-</footer>
+<?php /* Стандартный подвал сайта, как и на остальных страницах. */ ?>
+<?php include 'footer.php'; ?>
 
 <?php /* auth_modal.php уже подключён в header.php, не дублируем. */ ?>
 
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-  }
-}
-</script>
 <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+
+<!-- Three.js грузится как ES-модуль и кладётся в window.THREE.
+     Этот вариант работает во всех современных браузерах без importmap. -->
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+window.THREE = THREE;
+window.dispatchEvent(new Event('three-ready'));
+</script>
 
 <script>
 /* Шапка из header.php темнеет после прокрутки на ~80px. */
@@ -423,23 +399,26 @@ const lowDevice    = (navigator.deviceMemory && navigator.deviceMemory < 2) ||
                      (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 2);
 const skip3D       = reduceMotion || tooSmall || lowDevice;
 
-/* CSS-ядро (.hero-orb-css) видно ВСЕГДА. Three.js накладывается поверх как
-   усиление, но и без него страница уже визуально 3D. */
+/* Three.js приходит асинхронно — ждём его готовности и стартуем сцену. */
 if (!skip3D) {
-    import('three').then(THREE => {
-        try {
-            initThreeScene(THREE);
-            document.body.classList.add('webgl-on');
-        } catch (err) {
-            console.warn('Three.js init failed, CSS orb остаётся.', err);
-        }
-    }).catch(err => {
-        console.warn('Three.js failed to load, CSS orb остаётся.', err);
-    });
-} else {
-    /* На очень слабых устройствах ничего больше не делаем — CSS-ядро уже на месте. */
-    startScrollTimeline();
+    if (window.THREE) {
+        bootThree();
+    } else {
+        window.addEventListener('three-ready', bootThree, { once: true });
+        /* Защита от тихого зависания загрузки модуля. */
+        setTimeout(() => { if (!window.THREE) console.warn('Three.js не загрузился за 6с — остаётся CSS-ядро.'); }, 6000);
+    }
 }
+function bootThree() {
+    try {
+        initThreeScene(window.THREE);
+        document.body.classList.add('webgl-on');
+    } catch (err) {
+        console.warn('Three.js init failed, CSS orb остаётся.', err);
+    }
+}
+/* Скролл-таймлайн запускаем в любом случае — он не требует Three.js. */
+startScrollTimeline();
 
 function initThreeScene(THREE) {
     const canvas = document.getElementById('hero-bg-canvas');
@@ -611,50 +590,123 @@ function initThreeScene(THREE) {
     });
 }
 
-/* GSAP-таймлайн на появление элементов hero. */
+/* Анимации появления секций. Используем IntersectionObserver — это нативно,
+   надёжно, и не зависит от scroll-движков типа Lenis. GSAP оставляем только
+   для входной анимации hero (она запускается сразу, без скролла). */
 function startScrollTimeline() {
-    if (typeof gsap === 'undefined') return;
-    gsap.registerPlugin(ScrollTrigger);
-
-    gsap.timeline({ defaults: { ease: 'power3.out' } })
-        .to('[data-anim="eyebrow"]',  { opacity: 1, y: 0, duration: 0.7 }, 0.2)
-        .to('[data-anim="title"]',    { opacity: 1, y: 0, duration: 0.9 }, 0.35)
-        .to('[data-anim="subtitle"]', { opacity: 1, y: 0, duration: 0.8 }, 0.55)
-        .to('[data-anim="cta"]',      { opacity: 1, y: 0, duration: 0.7 }, 0.7);
-
-    /* Появление плиток / преимуществ при скролле. */
-    gsap.utils.toArray('.tile, .adv, .auc-card').forEach((el, i) => {
-        gsap.from(el, {
-            opacity: 0, y: 40, duration: 0.7, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 80%', once: true }
-        });
-    });
-}
-
-/* Если 3D отключён — анимации hero всё равно нужно показать. */
-if (skip3D) {
-    document.querySelectorAll('[data-anim]').forEach(el => { el.style.opacity = 1; el.style.transform = 'none'; });
-    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-        gsap.registerPlugin(ScrollTrigger);
-        gsap.utils.toArray('.tile, .adv, .auc-card').forEach((el) => {
-            gsap.from(el, {
-                opacity: 0, y: 30, duration: 0.6, ease: 'power3.out',
-                scrollTrigger: { trigger: el, start: 'top 85%', once: true }
-            });
+    /* HERO: текст влетает снизу при загрузке страницы. */
+    if (typeof gsap !== 'undefined') {
+        gsap.timeline({ defaults: { ease: 'power3.out' } })
+            .to('[data-anim="eyebrow"]',  { opacity: 1, y: 0, duration: 0.7 }, 0.2)
+            .to('[data-anim="title"]',    { opacity: 1, y: 0, duration: 0.9 }, 0.35)
+            .to('[data-anim="subtitle"]', { opacity: 1, y: 0, duration: 0.8 }, 0.55)
+            .to('[data-anim="cta"]',      { opacity: 1, y: 0, duration: 0.7 }, 0.7);
+    } else {
+        document.querySelectorAll('[data-anim]').forEach(el => {
+            el.style.opacity = 1; el.style.transform = 'none';
         });
     }
+
+    /* СЕКЦИИ: класс .in-view даёт CSS-плавную анимацию. */
+    const reveal = document.querySelectorAll('.section-head, .tile, .auc-card, .adv, .act-5 .title-mega, .act-5 .subtitle, .act-5 .hero-actions');
+    if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    io.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0, rootMargin: '0px 0px -5% 0px' });
+        reveal.forEach(el => io.observe(el));
+    } else {
+        reveal.forEach(el => el.classList.add('in-view'));
+    }
+    /* СТРАХОВКА: если по любой причине через 1.2 с элемент остался невидимым
+       (например, IO не успел сработать или баг в браузере), форсим показ. */
+    setTimeout(() => {
+        reveal.forEach(el => {
+            if (!el.classList.contains('in-view')) {
+                const r = el.getBoundingClientRect();
+                if (r.top < window.innerHeight * 1.5) el.classList.add('in-view');
+            }
+        });
+    }, 1200);
 }
 
-/* Плавный скролл (Lenis) — только на десктопе с включённой анимацией. */
-if (!skip3D && typeof Lenis !== 'undefined') {
-    const lenis = new Lenis({ duration: 1.1, easing: t => 1 - Math.pow(1 - t, 3), smoothWheel: true });
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-    requestAnimationFrame(raf);
+/* Если 3D отключён — анимации hero всё равно нужно показать сразу. */
+if (skip3D) {
+    document.querySelectorAll('[data-anim]').forEach(el => { el.style.opacity = 1; el.style.transform = 'none'; });
 }
+
+/* Плавный скролл — через нативный CSS scroll-behavior: smooth (см. стили).
+   Lenis убрали — он конфликтовал с ScrollTrigger и блокировал анимации секций. */
+
+/* Страховка: если GSAP по любой причине не отработал за 2 с — выводим всё как есть. */
+setTimeout(() => {
+    if (typeof gsap === 'undefined' || !document.querySelector('.tile')) return;
+    /* Ничего не делаем — GSAP уже сам поставил элементы в нужное положение.
+       Но если секции остались с opacity: 0 — принудительно сбрасываем. */
+    document.querySelectorAll('.tile, .auc-card, .adv').forEach(el => {
+        const cs = getComputedStyle(el);
+        if (parseFloat(cs.opacity) < 0.05) {
+            el.style.opacity = 1; el.style.transform = 'none';
+        }
+    });
+    if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+}, 2000);
 </script>
 
 <style>
+/* Hero — текст спрятан до запуска GSAP-таймлайна. */
 [data-anim] { opacity: 0; transform: translateY(24px); }
+
+/* Reveal-анимации секций. Делаем контент ВИДИМЫМ по умолчанию (opacity:1 +
+   transform:none) — чтобы при любых сбоях скриптов страница не оставалась
+   пустой. До добавления .in-view элемент чуть сдвинут и слегка прозрачный,
+   но НИКОГДА не невидим. После .in-view встаёт на место с плавной анимацией. */
+.section-head .section-eyebrow,
+.section-head .section-title,
+.tile, .auc-card, .adv,
+.act-5 .title-mega, .act-5 .subtitle, .act-5 .hero-actions {
+    opacity: 0.0001;  /* почти невидим до анимации, но layout посчитан */
+    transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);
+}
+.section-head .section-eyebrow,
+.section-head .section-title,
+.act-5 .title-mega, .act-5 .subtitle, .act-5 .hero-actions {
+    transform: translateY(40px);
+}
+.tile { transform: translateY(60px) scale(.92); }
+.auc-card                   { transform: translateX(-60px) scale(.92); }
+.auc-card:nth-child(even)   { transform: translateX( 60px) scale(.92); }
+.adv  { transform: translateY(50px) scale(.95); }
+
+.in-view, .in-view .section-eyebrow, .in-view .section-title { opacity: 1; transform: none; }
+.tile.in-view, .auc-card.in-view, .adv.in-view,
+.act-5 .title-mega.in-view, .act-5 .subtitle.in-view, .act-5 .hero-actions.in-view {
+    opacity: 1; transform: none;
+}
+.section-head.in-view .section-eyebrow { transition-delay: .05s; }
+.section-head.in-view .section-title   { transition-delay: .15s; }
+.tile:nth-child(1).in-view { transition-delay: .05s; }
+.tile:nth-child(2).in-view { transition-delay: .20s; }
+.tile:nth-child(3).in-view { transition-delay: .35s; }
+.adv:nth-child(1).in-view { transition-delay: .05s; }
+.adv:nth-child(2).in-view { transition-delay: .20s; }
+.adv:nth-child(3).in-view { transition-delay: .35s; }
+.act-5 .subtitle.in-view    { transition-delay: .15s; }
+.act-5 .hero-actions.in-view{ transition-delay: .30s; }
+
+@media (prefers-reduced-motion: reduce) {
+    [data-anim],
+    .section-head .section-eyebrow,
+    .section-head .section-title,
+    .tile, .auc-card, .adv,
+    .act-5 .title-mega, .act-5 .subtitle, .act-5 .hero-actions {
+        opacity: 1 !important; transform: none !important; transition: none !important;
+    }
+}
 </style>
 
 </body>
