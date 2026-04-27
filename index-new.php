@@ -201,22 +201,28 @@ section {
 .tile .tile-cta { display: inline-flex; align-items: center; gap: 6px; color: #38bdf8; font-weight: 800; font-size: 13px; text-decoration: none; }
 @media (max-width: 900px) { .tiles-grid { grid-template-columns: 1fr; } }
 
-/* --- Акт 3: типы аукционов (горизонтальный скролл) ------------------------ */
-.act-3 { padding: 140px 0; }
-.act-3 .section-head { padding: 0 5%; }
-.h-scroll-track { display: flex; gap: 22px; padding: 0 5% 30px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-.h-scroll-track::-webkit-scrollbar { display: none; }
+/* --- Акт 3: типы аукционов — сетка 3x2 (раньше был горизонтальный скролл,
+   но 6 карточек по 320px не помещались в 1568px-десктоп) -------------------- */
+.act-3 { padding: 140px 5%; }
+.h-scroll-track {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
+    max-width: 1200px; margin: 0 auto; padding: 0;
+    overflow: visible;
+}
 .auc-card {
-    flex: 0 0 320px; scroll-snap-align: start;
     padding: 30px 26px; border-radius: 22px;
     background: linear-gradient(160deg, var(--c1, #0f172a), var(--c2, #1e293b));
     border: 1px solid rgba(148,163,184,.15);
     box-shadow: 0 18px 48px rgba(0,0,0,.45);
+    /* Чтобы 3D-перевороты выглядели объёмнее. */
+    transform-style: preserve-3d;
 }
 .auc-card .ac-icon { font-size: 38px; margin-bottom: 18px; }
 .auc-card h4 { font-size: 19px; font-weight: 900; color: #fff; margin-bottom: 12px; }
 .auc-card p { font-size: 13.5px; color: rgba(255,255,255,.78); line-height: 1.55; min-height: 64px; }
 .auc-card .badge { display: inline-block; margin-top: 16px; padding: 5px 11px; border-radius: 999px; background: rgba(255,255,255,.16); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+@media (max-width: 900px) { .h-scroll-track { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .h-scroll-track { grid-template-columns: 1fr; } }
 
 /* --- Акт 4: преимущества -------------------------------------------------- */
 .act-4 { padding: 140px 5%; }
@@ -852,18 +858,16 @@ setTimeout(() => {
 /* Hero — текст спрятан до запуска GSAP-таймлайна. */
 [data-anim] { opacity: 0; transform: translateY(24px); }
 
-/* Reveal-анимации секций. Делаем контент ВИДИМЫМ по умолчанию (opacity:1 +
-   transform:none) — чтобы при любых сбоях скриптов страница не оставалась
-   пустой. До добавления .in-view элемент чуть сдвинут и слегка прозрачный,
-   но НИКОГДА не невидим. После .in-view встаёт на место с плавной анимацией. */
-.tiles-grid, .h-scroll-track, .adv-grid { perspective: 1400px; }
+/* Глубокая 3D-перспектива — нужна, чтобы перевороты карточек выглядели
+   объёмными, а не плоскими. Чем меньше perspective, тем сильнее искажение. */
+.tiles-grid, .h-scroll-track, .adv-grid { perspective: 1100px; perspective-origin: 50% 30%; }
 
 .section-head .section-eyebrow,
 .section-head .section-title,
 .tile, .auc-card, .adv,
 .act-5 .title-mega, .act-5 .subtitle, .act-5 .hero-actions {
     opacity: 0.0001;  /* почти невидим до анимации, но layout посчитан */
-    transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1), box-shadow .9s ease;
+    transition: opacity 1.1s cubic-bezier(.2,.7,.2,1), transform 1.1s cubic-bezier(.2,.7,.2,1), box-shadow .9s ease;
     transform-style: preserve-3d;
     will-change: transform, opacity;
 }
@@ -873,54 +877,86 @@ setTimeout(() => {
     transform: translateY(40px);
 }
 /* Плитки трёх ролей: «выезжают» сверху с поворотом по X — как переворот карты. */
-.tile { transform: translateY(80px) rotateX(28deg) scale(.9); }
-/* Карточки шести форматов торгов: каждая «открывается» в 3D поворотом по Y,
-   с разных сторон, со staggered-задержкой и подсветкой при появлении. */
-.auc-card                  { transform: rotateY(-55deg) translate3d(-40px, 0, -120px) scale(.85); }
-.auc-card:nth-child(even)  { transform: rotateY( 55deg) translate3d( 40px, 0, -120px) scale(.85); }
-/* Преимущества: «всплывают» снизу с лёгким Y-наклоном. */
-.adv  { transform: translateY(70px) rotateX(20deg) scale(.95); }
+.tile { transform: translateY(80px) rotateX(35deg) scale(.85); }
+/* Карточки шести форматов торгов: переворот в 3D на 90° + сдвиг в глубину.
+   Чётные/нечётные строки разворачиваются в разные стороны — эффект «открытия
+   книги» с каждой стороны экрана. */
+.auc-card                          { transform: rotateY(-90deg) translate3d(-80px, 30px, -140px) scale(.7); }
+.auc-card:nth-child(3n+2)          { transform: rotateX(-70deg)  translate3d(  0px, 60px, -140px) scale(.7); }
+.auc-card:nth-child(3n)            { transform: rotateY( 90deg) translate3d( 80px, 30px, -140px) scale(.7); }
+/* Преимущества: «всплывают» снизу с заметным Y-наклоном. */
+.adv  { transform: translateY(80px) rotateX(28deg) scale(.92); }
 
 .in-view, .in-view .section-eyebrow, .in-view .section-title { opacity: 1; transform: none; }
 .tile.in-view, .auc-card.in-view, .adv.in-view,
 .act-5 .title-mega.in-view, .act-5 .subtitle.in-view, .act-5 .hero-actions.in-view {
     opacity: 1; transform: rotateY(0) rotateX(0) translate3d(0,0,0) scale(1);
 }
-/* Кратковременное свечение при появлении карточки формата торгов. */
+/* Заметная вспышка-свечение при появлении карточки формата торгов
+   (~2.2с — чтобы пользователь точно увидел эффект). */
 .auc-card.in-view {
-    box-shadow: 0 18px 48px rgba(0,0,0,.45),
-                0 0 0 1px rgba(56,189,248,.55),
-                0 0 64px rgba(56,189,248,.45);
-    animation: cardGlowPulse 1.4s ease-out 1;
+    animation: cardAppearGlow 2.2s ease-out 1;
 }
-@keyframes cardGlowPulse {
-    0%   { box-shadow: 0 18px 48px rgba(0,0,0,.45), 0 0 0 1px rgba(56,189,248,.85), 0 0 90px rgba(56,189,248,.7); }
-    100% { box-shadow: 0 18px 48px rgba(0,0,0,.45), 0 0 0 1px rgba(148,163,184,.15), 0 0 0 rgba(56,189,248,0); }
+@keyframes cardAppearGlow {
+    0%   { box-shadow: 0 18px 48px rgba(0,0,0,.45), 0 0 0 2px rgba(56,189,248,1), 0 0 120px rgba(56,189,248,.95), inset 0 0 60px rgba(56,189,248,.25); }
+    35%  { box-shadow: 0 18px 48px rgba(0,0,0,.45), 0 0 0 2px rgba(56,189,248,.85), 0 0 100px rgba(56,189,248,.65), inset 0 0 30px rgba(56,189,248,.12); }
+    100% { box-shadow: 0 18px 48px rgba(0,0,0,.45), 0 0 0 1px rgba(148,163,184,.15), 0 0 0 rgba(56,189,248,0), inset 0 0 0 rgba(56,189,248,0); }
 }
 
 .section-head.in-view .section-eyebrow { transition-delay: .05s; }
 .section-head.in-view .section-title   { transition-delay: .15s; }
 .tile:nth-child(1).in-view { transition-delay: .08s; }
-.tile:nth-child(2).in-view { transition-delay: .24s; }
-.tile:nth-child(3).in-view { transition-delay: .42s; }
-/* Карточки форматов торгов появляются волной — каждая на 0.18с позже. */
-.auc-card:nth-child(1).in-view { transition-delay: .05s; }
-.auc-card:nth-child(2).in-view { transition-delay: .18s; }
-.auc-card:nth-child(3).in-view { transition-delay: .32s; }
-.auc-card:nth-child(4).in-view { transition-delay: .46s; }
-.auc-card:nth-child(5).in-view { transition-delay: .60s; }
-.auc-card:nth-child(6).in-view { transition-delay: .74s; }
+.tile:nth-child(2).in-view { transition-delay: .26s; }
+.tile:nth-child(3).in-view { transition-delay: .44s; }
+/* Карточки форматов торгов появляются волной — каждая на ~0.20с позже. */
+.auc-card:nth-child(1).in-view { transition-delay: .05s; animation-delay: .05s; }
+.auc-card:nth-child(2).in-view { transition-delay: .22s; animation-delay: .22s; }
+.auc-card:nth-child(3).in-view { transition-delay: .39s; animation-delay: .39s; }
+.auc-card:nth-child(4).in-view { transition-delay: .56s; animation-delay: .56s; }
+.auc-card:nth-child(5).in-view { transition-delay: .73s; animation-delay: .73s; }
+.auc-card:nth-child(6).in-view { transition-delay: .90s; animation-delay: .90s; }
 .adv:nth-child(1).in-view { transition-delay: .05s; }
-.adv:nth-child(2).in-view { transition-delay: .20s; }
-.adv:nth-child(3).in-view { transition-delay: .35s; }
+.adv:nth-child(2).in-view { transition-delay: .22s; }
+.adv:nth-child(3).in-view { transition-delay: .39s; }
 .act-5 .subtitle.in-view    { transition-delay: .15s; }
 .act-5 .hero-actions.in-view{ transition-delay: .30s; }
 
-/* Hover на карточке формата — лёгкий 3D-наклон, чтобы было ощущение «живой» сцены. */
-.auc-card.in-view { transition: box-shadow .6s ease, transform .35s cubic-bezier(.2,.7,.2,1); }
+/* Заметный hover: 3D-наклон с подъёмом и активным свечением. После переходов
+   .in-view карточка уже стоит на месте — на hover плавно перетекаем в наклон. */
+.auc-card.in-view {
+    transition: box-shadow .35s ease, transform .4s cubic-bezier(.2,.7,.2,1), border-color .35s;
+}
 .auc-card.in-view:hover {
-    transform: translateY(-6px) rotateX(-3deg) rotateY(3deg) scale(1.02);
-    box-shadow: 0 26px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(56,189,248,.55), 0 0 60px rgba(56,189,248,.35);
+    transform: translateY(-12px) rotateX(-8deg) rotateY(8deg) scale(1.05);
+    border-color: rgba(56,189,248,.7);
+    box-shadow:
+        0 32px 70px rgba(0,0,0,.6),
+        0 0 0 2px rgba(56,189,248,.85),
+        0 0 80px rgba(56,189,248,.65),
+        inset 0 0 40px rgba(56,189,248,.18);
+    animation: none; /* hover отменяет затухающий glow */
+    z-index: 3;
+}
+.auc-card.in-view:hover .ac-icon { transform: translateZ(40px) scale(1.15); transition: transform .4s ease; }
+.auc-card.in-view:hover h4       { transform: translateZ(28px); transition: transform .4s ease; }
+.auc-card.in-view:hover p        { transform: translateZ(14px); transition: transform .4s ease; }
+.auc-card.in-view:hover .badge   { transform: translateZ(34px) scale(1.08); transition: transform .4s ease;
+    background: rgba(56,189,248,.35); }
+.auc-card.in-view .ac-icon, .auc-card.in-view h4,
+.auc-card.in-view p, .auc-card.in-view .badge { transition: transform .4s ease; }
+
+/* Аналогичный hover-эффект на плитках трёх ролей и преимуществах. */
+.tile.in-view { transition: box-shadow .35s ease, transform .4s cubic-bezier(.2,.7,.2,1), border-color .35s; }
+.tile.in-view:hover {
+    transform: translateY(-10px) rotateX(-6deg) rotateY(6deg) scale(1.04);
+    border-color: rgba(56,189,248,.7);
+    box-shadow: 0 24px 54px rgba(0,0,0,.55), 0 0 0 1.5px rgba(56,189,248,.6), 0 0 60px rgba(56,189,248,.45);
+}
+.adv.in-view { transition: box-shadow .35s ease, transform .4s cubic-bezier(.2,.7,.2,1), border-color .35s; }
+.adv.in-view:hover {
+    transform: translateY(-8px) rotateX(-5deg) scale(1.04);
+    border-color: rgba(56,189,248,.55);
+    box-shadow: 0 22px 50px rgba(0,0,0,.55), 0 0 0 1.5px rgba(56,189,248,.5), 0 0 50px rgba(56,189,248,.35);
 }
 
 @media (prefers-reduced-motion: reduce) {
