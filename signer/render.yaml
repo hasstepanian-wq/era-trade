@@ -1,0 +1,25 @@
+# Render.com Free tier — деплоится в один клик кнопкой "Deploy on Render".
+# Free инстанс засыпает после 15 мин неактивности; первый запрос ~30 сек.
+# Для прода рекомендуется Starter ($7/мес, не спит) или Beget VPS.
+services:
+  - type: web
+    name: era-esia-signer
+    runtime: docker
+    plan: free
+    region: frankfurt
+    rootDir: signer
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: false
+    envVars:
+      - key: SIGNER_API_KEY
+        sync: false        # задаётся вручную в Render dashboard
+      - key: SIGNER_CERT_PATH
+        value: /etc/secrets/cert.pem
+      - key: SIGNER_KEY_PATH
+        value: /etc/secrets/key.pem
+      - key: PORT
+        value: "10000"
+    # Render Secret Files: добавьте в dashboard
+    #   /etc/secrets/cert.pem  ← содержимое тестового сертификата ESIA
+    #   /etc/secrets/key.pem   ← содержимое приватного ключа
