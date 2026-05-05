@@ -6,6 +6,12 @@ if (!class_exists('EsiaConfig')) {
     @require_once __DIR__ . '/esia/EsiaConfig.php';
 }
 $esia_enabled = class_exists('EsiaConfig') && EsiaConfig::isEnabled();
+
+if (!class_exists('OAuthConfig')) {
+    @require_once __DIR__ . '/oauth/OAuthConfig.php';
+}
+$yandex_enabled = class_exists('OAuthConfig') && OAuthConfig::yandexEnabled();
+$vk_enabled     = class_exists('OAuthConfig') && OAuthConfig::vkEnabled();
 ?>
 
 <style>
@@ -164,6 +170,34 @@ $esia_enabled = class_exists('EsiaConfig') && EsiaConfig::isEnabled();
     box-shadow: 0 8px 16px rgba(13,76,211,0.32);
 }
 .auth-btn-esia svg { flex-shrink: 0; }
+
+.auth-btn-yandex {
+    background: #fc3f1d;
+    color: #fff;
+    display: flex; align-items: center;
+    justify-content: center; gap: 10px;
+    margin-top: 8px;
+}
+.auth-btn-yandex:hover {
+    background: #e63312;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(252,63,29,0.32);
+}
+.auth-btn-yandex svg { flex-shrink: 0; }
+
+.auth-btn-vk {
+    background: #0077ff;
+    color: #fff;
+    display: flex; align-items: center;
+    justify-content: center; gap: 10px;
+    margin-top: 8px;
+}
+.auth-btn-vk:hover {
+    background: #0066dd;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0,119,255,0.32);
+}
+.auth-btn-vk svg { flex-shrink: 0; }
 
 .auth-divider {
     display: flex; align-items: center;
@@ -393,6 +427,24 @@ $esia_enabled = class_exists('EsiaConfig') && EsiaConfig::isEnabled();
                     </svg>
                     <?= $lang === 'en' ? 'Sign in with Telegram' : 'Войти через Telegram' ?>
                 </button>
+                <?php if ($yandex_enabled): ?>
+                <button class="auth-btn auth-btn-yandex" onclick="authViaYandex()" type="button" aria-label="<?= $lang === 'en' ? 'Sign in with Yandex' : 'Войти через Яндекс' ?>">
+                    <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="24" height="24" rx="5" fill="#fff"/>
+                        <path d="M13.7 18.7h2.1V5.3h-2.9c-2.94 0-4.5 1.5-4.5 3.74 0 1.79.84 2.84 2.34 3.9l-2.6 4.95-.16.81h2.27l3.45-6.6V18.7zm0-7.86c-1.5-.36-2.16-1.06-2.16-2.4 0-1.41.86-2.27 2.16-2.27v4.67z" fill="#fc3f1d"/>
+                    </svg>
+                    <?= $lang === 'en' ? 'Sign in with Yandex' : 'Войти через Яндекс' ?>
+                </button>
+                <?php endif; ?>
+                <?php if ($vk_enabled): ?>
+                <button class="auth-btn auth-btn-vk" onclick="authViaVk()" type="button" aria-label="<?= $lang === 'en' ? 'Sign in with VK' : 'Войти через ВКонтакте' ?>">
+                    <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="24" height="24" rx="5" fill="#fff"/>
+                        <path d="M12.7 17.3c-4.85 0-7.62-3.33-7.74-8.86h2.43c.08 4.06 1.86 5.78 3.27 6.13V8.43h2.29v3.51c1.39-.15 2.86-1.74 3.36-3.5h2.29c-.38 2.18-1.97 3.77-3.1 4.42 1.13.53 2.94 1.92 3.62 4.45h-2.51c-.53-1.66-1.87-2.95-3.66-3.13v3.13H12.7z" fill="#0077ff"/>
+                    </svg>
+                    <?= $lang === 'en' ? 'Sign in with VK' : 'Войти через ВКонтакте' ?>
+                </button>
+                <?php endif; ?>
                 <?php if ($esia_enabled): ?>
                 <button class="auth-btn auth-btn-esia" onclick="authViaEsia()" type="button" aria-label="<?= $lang === 'en' ? 'Sign in with Gosuslugi' : 'Войти через Госуслуги' ?>">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -602,6 +654,14 @@ function authViaTelegram() {
 function authViaEsia() {
     var rt = encodeURIComponent(window.location.pathname + window.location.search);
     window.location.href = 'esia_login.php?return_to=' + rt;
+}
+function authViaYandex() {
+    var rt = encodeURIComponent(window.location.pathname + window.location.search);
+    window.location.href = 'yandex_login.php?return_to=' + rt;
+}
+function authViaVk() {
+    var rt = encodeURIComponent(window.location.pathname + window.location.search);
+    window.location.href = 'vk_login.php?return_to=' + rt;
 }
 
 function authDoLogin() {
