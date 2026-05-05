@@ -1,0 +1,23 @@
+{
+  "appId": "ws.ct.forsage.era",
+  "appName": "ЭРА ЭТП",
+  "webDir": "www",
+  "server": {
+    "url": "https://forsage.ct.ws/index.php",
+    "cleartext": false,
+    "androidScheme": "https",
+    "allowNavigation": [
+      "forsage.ct.ws",
+      "*.forsage.ct.ws",
+      "api.qrserver.com",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "unpkg.com"
+    ]
+  },
+  "android": {
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  }
+}
