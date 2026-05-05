@@ -1,6 +1,11 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
 if (!isset($lang)) $lang = $_SESSION['lang'] ?? 'ru';
+
+if (!class_exists('EsiaConfig')) {
+    @require_once __DIR__ . '/esia/EsiaConfig.php';
+}
+$esia_enabled = class_exists('EsiaConfig') && EsiaConfig::isEnabled();
 ?>
 
 <style>
@@ -147,6 +152,18 @@ if (!isset($lang)) $lang = $_SESSION['lang'] ?? 'ru';
     transform: translateY(-2px);
     box-shadow: 0 8px 16px rgba(42,171,238,0.3);
 }
+.auth-btn-esia {
+    background: #0d4cd3;
+    display: flex; align-items: center;
+    justify-content: center; gap: 10px;
+    margin-top: 8px;
+}
+.auth-btn-esia:hover {
+    background: #0a3fb0;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(13,76,211,0.32);
+}
+.auth-btn-esia svg { flex-shrink: 0; }
 
 .auth-divider {
     display: flex; align-items: center;
@@ -376,6 +393,15 @@ if (!isset($lang)) $lang = $_SESSION['lang'] ?? 'ru';
                     </svg>
                     <?= $lang === 'en' ? 'Sign in with Telegram' : 'Войти через Telegram' ?>
                 </button>
+                <?php if ($esia_enabled): ?>
+                <button class="auth-btn auth-btn-esia" onclick="authViaEsia()" type="button" aria-label="<?= $lang === 'en' ? 'Sign in with Gosuslugi' : 'Войти через Госуслуги' ?>">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="24" height="24" rx="5" fill="#fff"/>
+                        <path d="M7 12.5l3 3 7-7" stroke="#0d4cd3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <?= $lang === 'en' ? 'Sign in with Gosuslugi' : 'Войти через Госуслуги' ?>
+                </button>
+                <?php endif; ?>
             </div>
 
             <!-- РЕГИСТРАЦИЯ -->
@@ -571,6 +597,11 @@ function authTab(tab) {
 
 function authViaTelegram() {
     window.location.href = 'telegram_auth.php';
+}
+
+function authViaEsia() {
+    var rt = encodeURIComponent(window.location.pathname + window.location.search);
+    window.location.href = 'esia_login.php?return_to=' + rt;
 }
 
 function authDoLogin() {
