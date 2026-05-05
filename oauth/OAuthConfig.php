@@ -19,31 +19,71 @@
 
 class OAuthConfig
 {
-    public static function yandexEnabled(): bool
+    /** Кэш для значений из локального secrets.local.php. */
+    private static ?array $localCache = null;
+
+    /**
+     * Возвращает значение по имени переменной. Источники приоритета:
+     *   1. getenv()        — обычные сервера, Apache SetEnv → mod_php.
+     *   2. $_SERVER        — большинство FastCGI / PHP-FPM (включая InfinityFree),
+     *                        куда SetEnv пробрасывается, но getenv() их не видит.
+     *   3. $_ENV           — если PHP с auto_globals_jit и enable variables_order=E.
+     *   4. oauth/secrets.local.php — fallback-файл с массивом значений.
+     *      Файл не коммитится в git, лежит только на сервере.
+     */
+    public static function get(string $name): string
     {
-        return !empty(getenv('YANDEX_CLIENT_ID'))
-            && !empty(getenv('YANDEX_CLIENT_SECRET'))
-            && !empty(getenv('YANDEX_REDIRECT_URI'));
+        $v = getenv($name);
+        if ($v !== false && $v !== '') return (string)$v;
+
+        if (isset($_SERVER[$name]) && $_SERVER[$name] !== '') {
+            return (string)$_SERVER[$name];
+        }
+        $redirectKey = 'REDIRECT_' . $name;
+        if (isset($_SERVER[$redirectKey]) && $_SERVER[$redirectKey] !== '') {
+            return (string)$_SERVER[$redirectKey];
+        }
+        if (isset($_ENV[$name]) && $_ENV[$name] !== '') {
+            return (string)$_ENV[$name];
+        }
+
+        if (self::$localCache === null) {
+            $localPath = __DIR__ . '/secrets.local.php';
+            if (is_file($localPath)) {
+                $loaded = @include $localPath;
+                self::$localCache = is_array($loaded) ? $loaded : [];
+            } else {
+                self::$localCache = [];
+            }
+        }
+        return (string)(self::$localCache[$name] ?? '');
     }
 
-    public static function yandexClientId(): string     { return (string)getenv('YANDEX_CLIENT_ID'); }
-    public static function yandexClientSecret(): string { return (string)getenv('YANDEX_CLIENT_SECRET'); }
-    public static function yandexRedirectUri(): string  { return (string)getenv('YANDEX_REDIRECT_URI'); }
+    public static function yandexEnabled(): bool
+    {
+        return self::get('YANDEX_CLIENT_ID') !== ''
+            && self::get('YANDEX_CLIENT_SECRET') !== ''
+            && self::get('YANDEX_REDIRECT_URI') !== '';
+    }
+
+    public static function yandexClientId(): string     { return self::get('YANDEX_CLIENT_ID'); }
+    public static function yandexClientSecret(): string { return self::get('YANDEX_CLIENT_SECRET'); }
+    public static function yandexRedirectUri(): string  { return self::get('YANDEX_REDIRECT_URI'); }
 
     public static function vkEnabled(): bool
     {
-        return !empty(getenv('VK_CLIENT_ID'))
-            && !empty(getenv('VK_CLIENT_SECRET'))
-            && !empty(getenv('VK_REDIRECT_URI'));
+        return self::get('VK_CLIENT_ID') !== ''
+            && self::get('VK_CLIENT_SECRET') !== ''
+            && self::get('VK_REDIRECT_URI') !== '';
     }
 
-    public static function vkClientId(): string     { return (string)getenv('VK_CLIENT_ID'); }
-    public static function vkClientSecret(): string { return (string)getenv('VK_CLIENT_SECRET'); }
-    public static function vkRedirectUri(): string  { return (string)getenv('VK_REDIRECT_URI'); }
+    public static function vkClientId(): string     { return self::get('VK_CLIENT_ID'); }
+    public static function vkClientSecret(): string { return self::get('VK_CLIENT_SECRET'); }
+    public static function vkRedirectUri(): string  { return self::get('VK_REDIRECT_URI'); }
     public static function vkApiVersion(): string
     {
-        $v = getenv('VK_API_VERSION');
-        return $v !== false && $v !== '' ? $v : '5.199';
+        $v = self::get('VK_API_VERSION');
+        return $v !== '' ? $v : '5.199';
     }
 
     /** Хотя бы один провайдер настроен — показываем разделитель и блок «Войти через». */

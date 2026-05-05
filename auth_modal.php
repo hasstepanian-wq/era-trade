@@ -3,12 +3,14 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 if (!isset($lang)) $lang = $_SESSION['lang'] ?? 'ru';
 
 if (!class_exists('EsiaConfig')) {
-    @require_once __DIR__ . '/esia/EsiaConfig.php';
+    $__esia_cfg = __DIR__ . '/esia/EsiaConfig.php';
+    if (is_file($__esia_cfg)) { include_once $__esia_cfg; }
 }
 $esia_enabled = class_exists('EsiaConfig') && EsiaConfig::isEnabled();
 
 if (!class_exists('OAuthConfig')) {
-    @require_once __DIR__ . '/oauth/OAuthConfig.php';
+    $__oauth_cfg = __DIR__ . '/oauth/OAuthConfig.php';
+    if (is_file($__oauth_cfg)) { include_once $__oauth_cfg; }
 }
 $yandex_enabled = class_exists('OAuthConfig') && OAuthConfig::yandexEnabled();
 $vk_enabled     = class_exists('OAuthConfig') && OAuthConfig::vkEnabled();
