@@ -47,6 +47,7 @@ try {
     $missing_cols = [
         'time_before_start' => 'INT DEFAULT 0',
         'extra_params'      => 'TEXT NULL',
+        'requires_ecp'      => 'TINYINT(1) NOT NULL DEFAULT 0',
     ];
     foreach ($missing_cols as $col => $def) {
         try {
