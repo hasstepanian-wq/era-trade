@@ -1,6 +1,8 @@
 <?php
 /**
- * Стартовая точка входа через VK ID. Генерирует state, редиректит на oauth.vk.com.
+ * Стартовая точка входа через VK ID (id.vk.com).
+ * Генерирует state + PKCE (code_verifier/code_challenge),
+ * сохраняет в сессии, редиректит на https://id.vk.com/authorize.
  */
 if (session_status() === PHP_SESSION_NONE) session_start();
 
@@ -17,10 +19,14 @@ if (!OAuthConfig::vkEnabled()) {
     exit;
 }
 
-$state = OAuthHelper::randomState();
-$_SESSION['vk_state']     = $state;
-$_SESSION['vk_return_to'] = (string)($_GET['return_to'] ?? '/profile.php');
+$state         = OAuthHelper::randomState();
+$codeVerifier  = VkClient::generateCodeVerifier();
+$codeChallenge = VkClient::codeChallengeFromVerifier($codeVerifier);
+
+$_SESSION['vk_state']         = $state;
+$_SESSION['vk_code_verifier'] = $codeVerifier;
+$_SESSION['vk_return_to']     = (string)($_GET['return_to'] ?? '/profile.php');
 
 $client = new VkClient();
-header('Location: ' . $client->buildAuthUrl($state));
+header('Location: ' . $client->buildAuthUrl($state, $codeChallenge));
 exit;
