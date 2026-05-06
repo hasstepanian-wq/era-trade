@@ -14,7 +14,9 @@ $_lang_pwa = $_SESSION['lang'] ?? 'ru';
 
 <style>
 #pwa-promo {
-    position: fixed; left: 16px; right: 16px; bottom: 16px;
+    /* bottom: 96px — поднимаем над плавающим чат-виджетом (~64+16),
+       чтобы кнопка × не уходила под зелёный пузырёк мессенджера. */
+    position: fixed; left: 16px; right: 16px; bottom: 96px;
     z-index: 9000; display: none;
     background: rgba(15,23,42,0.96); color: #e2e8f0;
     border: 1px solid rgba(56,189,248,0.35); border-radius: 14px;
