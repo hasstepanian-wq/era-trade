@@ -677,12 +677,33 @@ function authDoLogin() {
         return;
     }
 
+    /* Просим бэкенд ответить JSON-ом (response=json + Accept: application/json),
+       иначе login_ajax.php вернёт 302-редирект на index.php, fetch его проследует,
+       получит HTML, r.json() упадёт в catch и пользователь увидит «Ошибка соединения». */
     fetch('login_ajax.php', {
         method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: 'username=' + encodeURIComponent(user) + '&password=' + encodeURIComponent(pass)
+        credentials: 'same-origin',
+        redirect: 'manual',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: 'response=json&action=login'
+            + '&username=' + encodeURIComponent(user)
+            + '&password=' + encodeURIComponent(pass)
     })
-    .then(function(r){ return r.json(); })
+    .then(function(r){
+        return r.text().then(function(t){
+            try { return JSON.parse(t); }
+            catch (e) {
+                /* Не JSON — скорее всего антибот-челлендж InfinityFree
+                   (HTML с slowAES). Пусть пользователь нажмёт ещё раз —
+                   к этому моменту __test cookie уже выставлен. */
+                return { success: false, error: '<?= $lang === "en" ? "Server is warming up. Please try again." : "Хостинг разогревается, попробуйте ещё раз." ?>' };
+            }
+        });
+    })
     .then(function(data){
         if (data.success) {
             msg.textContent = '✅ ' + (data.message || '<?= $lang === "en" ? "Signed in!" : "Вход выполнен!" ?>');
