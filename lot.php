@@ -9,6 +9,7 @@ if (session_status() === PHP_SESSION_NONE) {
 // ini_set('display_errors', 0);
 
 include 'db.php';
+require_once __DIR__ . '/error_helper.php';
 date_default_timezone_set('Europe/Moscow');
 
 $id      = isset($_GET['id']) ? (int)$_GET['id'] : 6;
@@ -20,8 +21,7 @@ try {
     $lot = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$lot) {
-        http_response_code(404);
-        die("Лот №" . $id . " не найден.");
+        era_error_page(404, 'Лот не найден', 'Лот №' . $id . ' не существует или был удалён.');
     }
 
     $end_ts        = (int)strtotime($lot['end_time']);
@@ -43,8 +43,7 @@ try {
     $bids = $stmt_b->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (Exception $e) {
-    http_response_code(500);
-    die("Ошибка БД.");
+    era_error_page(500, 'Ошибка базы данных', 'Не удалось загрузить лот. Попробуйте обновить страницу.');
 }
 
 $title_safe = htmlspecialchars($lot['title'], ENT_QUOTES, 'UTF-8');

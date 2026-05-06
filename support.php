@@ -14,9 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['msg'])) {
 <head>
     <meta charset="UTF-8">
     <title>Поддержка — ФОРСАЖ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <style>
-        body { background: #0f172a; color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .chat-box { background: #1e293b; padding: 30px; border-radius: 15px; border: 1px solid #334155; width: 400px; text-align: center; }
+        body { background: #0f172a; color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 16px; box-sizing: border-box; }
+        .chat-box { background: #1e293b; padding: clamp(20px, 5vw, 30px); border-radius: 15px; border: 1px solid #334155; width: 100%; max-width: 420px; box-sizing: border-box; text-align: center; }
         textarea { width: 100%; height: 100px; background: #0f172a; border: 1px solid #334155; color: white; padding: 10px; border-radius: 8px; box-sizing: border-box; resize: none; }
         .btn { width: 100%; padding: 12px; background: #38bdf8; color: #0f172a; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; }
     </style>

@@ -26,6 +26,7 @@ if (isset($_GET['restore'])) {
 <head>
     <meta charset="UTF-8">
     <title>Корзина (Архив)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <style>
         body { background: #020617; color: white; font-family: sans-serif; padding: 20px; }
         .item { background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }

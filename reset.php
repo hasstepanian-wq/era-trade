@@ -46,6 +46,7 @@ try {
 <!DOCTYPE html>
 <html>
 <head><title>Сброс аукциона</title></head>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <body style="background:#0f172a;color:#fff;font-family:sans-serif;text-align:center;padding-top:50px;">
 <?php if ($success): ?>
     <h2 style="color:#4ade80;">✅ Лот №<?= $lot_id ?> перезапущен</h2>

@@ -3,7 +3,8 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 include 'header.php';
 ?>
 <style>
-.doc-wrap { max-width: 860px; margin: 0 auto; padding: 40px 20px 60px; }
+.doc-wrap { max-width: 860px; margin: 0 auto; padding: 40px 20px 60px; box-sizing: border-box; }
+.doc-wrap .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 12px 0; }
 .doc-wrap h1 { font-size: 26px; font-weight: 900; color: #0f172a; margin-bottom: 6px; }
 .doc-wrap .doc-date { font-size: 13px; color: #94a3b8; margin-bottom: 32px; }
 .doc-wrap h2 { font-size: 17px; font-weight: 800; color: #0f172a; margin: 28px 0 10px; }
@@ -20,10 +21,12 @@ include 'header.php';
     <h2>1. Что такое Cookie</h2>
     <p>Cookie — небольшие текстовые файлы, сохраняемые браузером на устройстве Пользователя при посещении сайта. Они позволяют сайту «запомнить» действия и предпочтения Пользователя.</p>
     <h2>2. Какие Cookie мы используем</h2>
+    <div class="table-scroll">
     <table><tr><th>Тип</th><th>Название</th><th>Цель</th><th>Срок</th></tr>
     <tr><td>Обязательные</td><td>PHPSESSID</td><td>Поддержание пользовательской сессии (авторизация)</td><td>Сессия</td></tr>
     <tr><td>Функциональные</td><td>lang</td><td>Сохранение языка интерфейса</td><td>30 дней</td></tr>
     </table>
+    </div>
     <h2>3. Управление Cookie</h2>
     <p>Вы можете отключить Cookie в настройках браузера. Обратите внимание: отключение обязательных Cookie приведёт к невозможности авторизации на сайте.</p>
     <h2>4. Контакты</h2>

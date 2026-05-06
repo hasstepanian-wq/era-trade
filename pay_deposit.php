@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'db.php';
+require_once __DIR__ . '/error_helper.php';
 
 // Если сессия слетела — подхватываем Dealer1
 if (!isset($_SESSION['user_id'])) {
@@ -21,8 +22,8 @@ if ($lot_id > 0) {
         header("Location: lot_details.php?id=$lot_id");
         exit();
     } catch (Exception $e) {
-        die("Ошибка базы: " . $e->getMessage());
+        era_error_page(500, 'Ошибка базы данных', 'Не удалось подтвердить участие. Попробуйте ещё раз.');
     }
 } else {
-    die("ID лота не получен");
+    era_error_page(400, 'ID лота не передан', 'Откройте страницу из реестра торгов.');
 }

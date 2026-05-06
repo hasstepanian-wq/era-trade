@@ -2,13 +2,16 @@
 ob_start();
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once 'db.php';
+require_once __DIR__ . '/error_helper.php';
 date_default_timezone_set('Europe/Moscow');
 
 $lot_id = isset($_GET['lot_id']) ? (int)$_GET['lot_id'] : 0;
 $tariff = isset($_GET['tariff']) ? trim($_GET['tariff']) : '';
 $amount = isset($_GET['amount']) ? (int)$_GET['amount'] : 0;
 
-if (!$lot_id || !$tariff || !$amount) die('Неверные параметры');
+if (!$lot_id || !$tariff || !$amount) {
+    era_error_page(400, 'Неверные параметры', 'Откройте квитанцию из раздела торгов.');
+}
 
 $stmt = $pdo->prepare("SELECT title FROM torgi WHERE id = ?");
 $stmt->execute([$lot_id]);
@@ -90,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_payment'])) {
 <head>
     <meta charset="UTF-8">
     <title>Квитанция на оплату — ООО Форсаж</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <style>
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background: #f8fafc; color: #333; margin: 0; }

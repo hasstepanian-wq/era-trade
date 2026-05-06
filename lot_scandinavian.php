@@ -4,6 +4,8 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
 include 'db.php';
 include 'bid_config.php';
+require_once __DIR__ . '/ecp_gate.php';
+require_once __DIR__ . '/error_helper.php';
 date_default_timezone_set('Europe/Moscow');
 
 $id      = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -99,9 +101,9 @@ try {
     ");
     $stmt->execute([$user_id ?: 0, $id]);
     $lot = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (!$lot) { http_response_code(404); die("Лот не найден."); }
+    if (!$lot) { era_error_page(404, 'Лот не найден', 'Запрошенный лот не существует или был удалён.'); }
 } catch (Exception $e) {
-    http_response_code(500); die("Ошибка БД.");
+    era_error_page(500, 'Ошибка базы данных', 'Попробуйте обновить страницу.');
 }
 
 $now = time();
@@ -142,6 +144,7 @@ $total_price_increase = $bid_step_amount + $tariff;
 <head>
     <meta charset="UTF-8">
     <title>🔥 <?= htmlspecialchars($lot['title'], ENT_QUOTES, 'UTF-8') ?> — Скандинавский аукцион</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <style>
         *, *::before, *::after { box-sizing: border-box; }
         body { background: #0a0f1e; color: #fff; font-family: sans-serif; margin: 0; padding: 20px 16px 40px; display: flex; flex-direction: column; align-items: center; }
@@ -200,6 +203,7 @@ $total_price_increase = $bid_step_amount + $tariff;
     <div class="lot-header">
         <div class="lot-badge">Лот №<?= $id ?></div>
         <div class="lot-title"><?= htmlspecialchars($lot['title'], ENT_QUOTES, 'UTF-8') ?></div>
+        <div style="margin:4px 0 8px;"><?= render_ecp_badge($lot, 'ru') ?></div>
         <div class="lot-type">🔥 СКАНДИНАВСКИЙ АУКЦИОН</div>
     </div>
 
@@ -293,7 +297,23 @@ $total_price_increase = $bid_step_amount + $tariff;
         </div>
 
         <div id="msg"></div>
-        <button class="btn-bid" id="bid-btn" onclick="makeBid()">🔥 СДЕЛАТЬ СТАВКУ</button>
+        <?php
+        /* ЭЦП-гейт: если лот требует ЭЦП и юзер не авторизован через ЕСИА / без УКЭП — показываем
+           вместо кнопки ставки сообщение и блокируем форму. */
+        $ecp_gate_user = check_ecp_or_block($lot, $user_id ?: null);
+        ?>
+        <?php if (!$ecp_gate_user['ok']): ?>
+            <div style="padding:14px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);border-radius:12px;color:#fca5a5;font-size:13px;line-height:1.5;">
+                🔐 <?= htmlspecialchars($ecp_gate_user['reason']) ?>
+                <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+                    <a href="esia_login.php?return=<?= urlencode('lot_scandinavian.php?id='.(int)$lot['id']) ?>" style="padding:8px 14px;background:#0d4cd3;color:#fff;border-radius:8px;font-weight:600;text-decoration:none;font-size:12px;">Войти через Госуслуги</a>
+                    <a href="profile.php?tab=ecp" style="padding:8px 14px;background:#334155;color:#fff;border-radius:8px;font-weight:600;text-decoration:none;font-size:12px;">Привязать УКЭП</a>
+                </div>
+            </div>
+            <button class="btn-bid" id="bid-btn" disabled style="margin-top:8px;opacity:0.5;cursor:not-allowed;">🔐 Доступно только с ЭЦП</button>
+        <?php else: ?>
+            <button class="btn-bid" id="bid-btn" onclick="makeBid()">🔥 СДЕЛАТЬ СТАВКУ</button>
+        <?php endif; ?>
         <div class="status-bar">
             <div id="leader-status">
                 <?php if (!$user_id): ?><span style="color:#64748b;">Войдите для участия</span>
@@ -494,11 +514,41 @@ function makeBid() {
                 document.getElementById('qr-amount').textContent = d.bid_cost.toLocaleString('ru-RU') + ' ₽';
                 openModal('modal-qr');
                 showMsg('⏳ Оплатите ставку', '#f59e0b');
+            } else if (d.offer_pack) {
+                /* Кредитные исчерпаны или нет пакета — предлагаем купить пакет 10 ставок.
+                   Пополнение баланса/QR/квитанция в это время заблокировано. */
+                showMsg(d.msg || 'Купите пакет ставок', '#f59e0b');
+                showPackOfferModal(d.pack_url || 'topup.php?pack_only=1&amount=18680');
             } else {
                 showMsg(d.msg || 'Ошибка', '#f87171');
             }
             btn.disabled = false; btn.textContent = '🔥 СДЕЛАТЬ СТАВКУ';
         }).catch(()=>{ showMsg('Ошибка связи', '#f87171'); btn.disabled = false; btn.textContent = '🔥 СДЕЛАТЬ СТАВКУ'; });
+}
+
+function showPackOfferModal(url) {
+    /* Лёгкая модалка: подтверждение перехода к покупке пакета. Не блокирующая,
+       чтобы юзер мог отказаться и попробовать другой способ. */
+    let m = document.getElementById('pack-offer-modal');
+    if (!m) {
+        m = document.createElement('div');
+        m.id = 'pack-offer-modal';
+        m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;';
+        m.innerHTML = `
+            <div style="background:#1e293b;border-radius:16px;padding:24px;max-width:420px;width:100%;color:#fff;border:1px solid #334155;">
+                <h3 style="margin:0 0 12px;color:#f59e0b;">📦 Купить пакет ставок?</h3>
+                <p style="font-size:14px;line-height:1.5;color:#cbd5e1;margin:0 0 8px;">У вас закончились средства на балансе и кредитные ставки.</p>
+                <p style="font-size:13px;line-height:1.5;color:#94a3b8;margin:0 0 16px;">⚠ Во время активного аукциона обычное пополнение баланса (QR-код, квитанция) недоступно. Доступен только пакет из 10 ставок за 18 680 ₽.</p>
+                <div style="display:flex;gap:8px;">
+                    <button id="pack-offer-cancel" style="flex:1;padding:12px;background:#334155;color:#fff;border:none;border-radius:10px;font-weight:600;cursor:pointer;">Отмена</button>
+                    <button id="pack-offer-buy" style="flex:1;padding:12px;background:#f59e0b;color:#000;border:none;border-radius:10px;font-weight:700;cursor:pointer;">Купить пакет</button>
+                </div>
+            </div>`;
+        document.body.appendChild(m);
+    }
+    m.style.display = 'flex';
+    document.getElementById('pack-offer-cancel').onclick = () => { m.style.display = 'none'; };
+    document.getElementById('pack-offer-buy').onclick = () => { window.open(url, '_blank'); m.style.display = 'none'; };
 }
 
 function showMsg(text, color) { let m = document.getElementById('msg'); if(m){ m.textContent=text; m.style.color=color; } }

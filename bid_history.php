@@ -11,6 +11,7 @@ $lot = $stmt->fetch();
 <head>
     <meta charset="UTF-8">
     <title>Протокол торгов</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 40px 20px; }
         .box { background: #fff; width: 100%; max-width: 600px; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }

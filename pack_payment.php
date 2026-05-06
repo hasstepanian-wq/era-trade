@@ -2,10 +2,11 @@
 ob_start();
 if (session_status() === PHP_SESSION_NONE) session_start();
 include 'db.php';
+require_once __DIR__ . '/error_helper.php';
 date_default_timezone_set('Europe/Moscow');
 
 if (empty($_SESSION['user_id'])) {
-    die('Требуется авторизация');
+    era_error_page(401, 'Требуется авторизация', 'Войдите в личный кабинет, чтобы оплатить пакет ставок.', '/index.php?reason=login', '← На главную');
 }
 $user_id = $_SESSION['user_id'];
 $amount = isset($_GET['amount']) ? (int)$_GET['amount'] : 18680;
@@ -53,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_payment'])) {
 <head>
     <meta charset="UTF-8">
     <title>Оплата пакета ставок</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <style>
         body { background: #0f172a; color: #fff; font-family: sans-serif; padding: 20px; }
         .container { max-width: 600px; margin: auto; background: #1e293b; border-radius: 24px; padding: 24px; }

@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'db.php';
-if (!isset($_SESSION['user_id'])) { header("Location: auth.php"); exit; }
+if (!isset($_SESSION['user_id'])) { header("Location: index.php?reason=login"); exit; }
 
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -17,9 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Смена пароля</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <style>
-        body { background: #0f172a; color: white; font-family: sans-serif; display: flex; justify-content: center; padding: 50px; }
-        .card { background: #1e293b; padding: 30px; border-radius: 15px; width: 350px; }
+        body { background: #0f172a; color: white; font-family: sans-serif; display: flex; justify-content: center; padding: clamp(16px, 5vw, 50px); margin: 0; box-sizing: border-box; }
+        .card { background: #1e293b; padding: clamp(20px, 5vw, 30px); border-radius: 15px; width: 100%; max-width: 360px; box-sizing: border-box; }
         input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
         button { width: 100%; padding: 10px; background: #3b82f6; color: white; border: none; cursor: pointer; }
     </style>

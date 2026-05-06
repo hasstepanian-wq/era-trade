@@ -1,10 +1,11 @@
 <?php
+require_once __DIR__ . '/error_helper.php';
 $lot_id  = isset($_GET['lot_id']) ? (int)$_GET['lot_id'] : 0;
 $tariff  = isset($_GET['tariff']) ? trim($_GET['tariff']) : '';
 $amount  = isset($_GET['amount']) ? (int)$_GET['amount'] : 0;
 
 if (!$lot_id || !$tariff || !$amount) {
-    die('Неверные параметры');
+    era_error_page(400, 'Неверные параметры', 'Откройте квитанцию из раздела пополнения баланса.');
 }
 
 $company   = "ООО «Форсаж»";
@@ -26,6 +27,7 @@ $qr_url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" . url
 <head>
     <meta charset="UTF-8">
     <title>Квитанция на оплату — ООО Форсаж</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background: #fff; color: #333; margin: 0; }
         .receipt-box { max-width: 700px; margin: 0 auto; border: 1px solid #000; padding: 20px; background: #fff; }

@@ -1,12 +1,12 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+error_reporting(0);
+ini_set('display_errors', 0);
 
 $lots_file = __DIR__ . '/database.json';
 $bids_file = __DIR__ . '/bids.json';
 
-$lots_data = json_decode(file_get_contents($lots_file), true);
-$bids_data = json_decode(file_get_contents($bids_file), true);
+$lots_data = is_file($lots_file) ? (json_decode(@file_get_contents($lots_file), true) ?: []) : [];
+$bids_data = is_file($bids_file) ? (json_decode(@file_get_contents($bids_file), true) ?: []) : [];
 
 $current_id = "2"; // Наш юзер
 $my_bids = [];
@@ -35,16 +35,26 @@ foreach ($bids_data as $bid) {
 <head>
     <meta charset="UTF-8">
     <title>Мои заявки - ЕРА</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; }
+        * { box-sizing: border-box; }
+        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; margin: 0; }
         .container { max-width: 900px; margin: auto; }
         .header { background: #fff; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .bid-card { background: #fff; padding: 20px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid #28a745; }
+        .bid-card { background: #fff; padding: 20px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; border-left: 6px solid #28a745; }
+        .bid-card > div { min-width: 0; flex: 1 1 240px; word-break: break-word; }
+        .bid-card > div:last-child { text-align: right; flex: 0 0 auto; }
         .expired { border-left-color: #dc3545; opacity: 0.8; }
-        .btn-action { text-decoration: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; font-size: 14px; }
+        .btn-action { display: inline-block; text-decoration: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; font-size: 14px; }
         .btn-edit { background: #e3f2fd; color: #1976d2; border: 1px solid #1976d2; }
         .btn-wait { background: #f8f9fa; color: #666; border: 1px solid #ddd; cursor: default; }
         .price-tag { font-size: 18px; font-weight: bold; color: #28a745; }
+        @media (max-width: 480px) {
+            body { padding: 12px; }
+            .bid-card { padding: 16px; gap: 12px; }
+            .bid-card > div:last-child { text-align: left; width: 100%; }
+            .btn-action { width: 100%; text-align: center; padding: 12px; }
+        }
     </style>
 </head>
 <body>
