@@ -435,6 +435,14 @@ body > footer img[alt="Форсаж"] {
     <div class="hero-actions">
         <button class="btn-cta" onclick="openAuth && openAuth('register')"><?= $lang === 'en' ? 'Create an account' : 'Создать аккаунт' ?></button>
         <a class="btn-cta outline" href="/reestr.php"><?= $lang === 'en' ? 'View auctions →' : 'Посмотреть торги →' ?></a>
+        <button class="btn-cta outline" id="pwa-organic-install" type="button"
+                style="display:none"
+                onclick="if(window.pwaInstallShow){window.pwaInstallShow();}return false;">
+            <span style="display:inline-flex;align-items:center;gap:8px;">
+                <span aria-hidden="true">📲</span>
+                <span><?= $lang === 'en' ? 'Install as app' : 'Установить как приложение' ?></span>
+            </span>
+        </button>
     </div>
 </section>
 
