@@ -1,0 +1,35 @@
+# Fly.io — бесплатные 3 shared-cpu-1x@256MB машины.
+# Запуск:
+#   fly launch --name era-esia-signer --region fra --copy-config
+#   fly secrets set SIGNER_API_KEY=...
+#   fly secrets set SIGNER_CERT_PEM="$(cat cert.pem)"
+#   fly secrets set SIGNER_KEY_PEM="$(cat key.pem)"
+# (cert/key читаются из env через PEM, а не файлов — см. note внизу)
+app = "era-esia-signer"
+primary_region = "fra"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[http_service.checks]]
+  grace_period = "10s"
+  interval = "30s"
+  method = "get"
+  path = "/health"
+  protocol = "http"
+  timeout = "5s"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256

@@ -1,0 +1,6 @@
+/signer
+*.pem
+*.key
+*.cer
+*.pfx
+.env
